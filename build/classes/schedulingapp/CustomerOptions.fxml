@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedulingapp.CustomerOptionsController">
+   <children>
+      <Label layoutX="30.0" layoutY="15.0" prefHeight="20.0" prefWidth="140.0" text="Select an option below.">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Button fx:id="addCustomerButton" layoutX="40.0" layoutY="50.0" mnemonicParsing="false" onAction="#handleAddCustomerButton" prefHeight="30.0" prefWidth="120.0" text="Add Customer" />
+      <Button fx:id="editCustomerButton" layoutX="40.0" layoutY="95.0" mnemonicParsing="false" onAction="#handleEditCustomerButton" prefHeight="30.0" prefWidth="120.0" text="Edit Customer" />
+      <Button fx:id="deleteCustomerButton" layoutX="40.0" layoutY="140.0" mnemonicParsing="false" onAction="#handleDeleteCustomerButton" prefHeight="30.0" prefWidth="120.0" text="Delete Customer" />
+   </children>
+</AnchorPane>
