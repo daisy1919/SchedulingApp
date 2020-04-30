@@ -200,7 +200,7 @@ public class DBConnection {
         return -1;
     }
     
-    public static void addCustomer(String custName, String custAddress, String custAddress2, String custCity, String custZip, String custCountry, String custPhone) {                          
+    public static void addCustomer(String custName, String custAddress, String custAddress2, String custCity, String custZip, String custCountry, String custPhone, String unameEntered) {                          
         PreparedStatement sqlStmtCo = null;
         PreparedStatement sqlStmtCi = null;
         PreparedStatement sqlStmtA = null;
@@ -213,8 +213,7 @@ public class DBConnection {
         
         String currDateTime = java.time.LocalDateTime.now().toString();
         
-        try {
-            //countryId -> cityId -> addressId -> customerId                        
+        try {                   
             String newCityId = String.valueOf(generateNewCityId());
             String newCountryId = String.valueOf(generateNewCountryId());
             String newAddId = String.valueOf(generateNewAddId());
@@ -224,9 +223,9 @@ public class DBConnection {
             sqlStmtCo.setString(1, newCountryId);
             sqlStmtCo.setString(2, custCountry);
             sqlStmtCo.setString(3, currDateTime);
-            sqlStmtCo.setString(4, "testuss");
+            sqlStmtCo.setString(4, unameEntered);
             sqlStmtCo.setString(5, currDateTime);
-            sqlStmtCo.setString(6, "testuss");
+            sqlStmtCo.setString(6, unameEntered);
             sqlStmtCo.executeUpdate();
             
             sqlStmtCi = conn.prepareStatement(sqlCityToEx);
@@ -234,9 +233,9 @@ public class DBConnection {
             sqlStmtCi.setString(2, custCity);
             sqlStmtCi.setString(3, newCountryId);
             sqlStmtCi.setString(4, currDateTime);
-            sqlStmtCi.setString(5, "testuss");
+            sqlStmtCi.setString(5, unameEntered);
             sqlStmtCi.setString(6, currDateTime);
-            sqlStmtCi.setString(7, "testuss");
+            sqlStmtCi.setString(7, unameEntered);
             sqlStmtCi.executeUpdate();
             
             sqlStmtA = conn.prepareStatement(sqlAddToEx);
@@ -247,9 +246,9 @@ public class DBConnection {
             sqlStmtA.setString(5, custZip);
             sqlStmtA.setString(6, custPhone);
             sqlStmtA.setString(7, currDateTime);
-            sqlStmtA.setString(8, "testuss");
+            sqlStmtA.setString(8, unameEntered);
             sqlStmtA.setString(9, currDateTime);
-            sqlStmtA.setString(10, "testuss");
+            sqlStmtA.setString(10, unameEntered);
             sqlStmtA.executeUpdate();
             
             sqlStmtC = conn.prepareStatement(sqlCustToEx);
@@ -258,9 +257,9 @@ public class DBConnection {
             sqlStmtC.setString(3, newAddId);
             sqlStmtC.setString(4, "1");
             sqlStmtC.setString(5, currDateTime);
-            sqlStmtC.setString(6, "testus");
+            sqlStmtC.setString(6, unameEntered);
             sqlStmtC.setString(7, currDateTime);
-            sqlStmtC.setString(8, "testuss");
+            sqlStmtC.setString(8, unameEntered);
             sqlStmtC.executeUpdate();
         }
         catch(SQLException sqEx) {

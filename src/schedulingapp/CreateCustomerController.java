@@ -5,11 +5,15 @@
  */
 package schedulingapp;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utils.DBConnection;
 
@@ -29,26 +33,54 @@ public class CreateCustomerController implements Initializable {
     @FXML javafx.scene.control.TextField addCityText;
     @FXML javafx.scene.control.TextField addCountryText;
     @FXML javafx.scene.control.TextField addPhoneText;
+    @FXML javafx.scene.control.Label errorMessageLabel;
     
     @FXML
-    void handleAddButton(ActionEvent event) {    
-        String custName = this.addFirstNameText.getText() + " " + this.addLastNameText.getText();
-        String custAddress1 = this.addAddressText.getText();
-        String custAddress2;
-        if (this.addAddress2Text.getText() == null) { custAddress2 = ""; }
-        else{ custAddress2 = this.addAddress2Text.getText(); }        
-        String custCity = this.addCityText.getText();
-        String custZip = this.addZipText.getText();
-        String custCountry = this.addCountryText.getText();
-        String custPhone = this.addPhoneText.getText();
-        
-        DBConnection.addCustomer(custName, custAddress1, custAddress2, custCity, custZip, custCountry, custPhone);
+    void handleAddButton(ActionEvent event) throws IOException {    
+        try {
+            //get data that was entered
+            String custName = this.addFirstNameText.getText() + " " + this.addLastNameText.getText();
+            String custAddress1 = this.addAddressText.getText();
+            String custAddress2;
+            if (this.addAddress2Text.getText() == null) { custAddress2 = ""; }
+            else{ custAddress2 = this.addAddress2Text.getText(); }        
+            String custCity = this.addCityText.getText();
+            String custZip = this.addZipText.getText();
+            String custCountry = this.addCountryText.getText();
+            String custPhone = this.addPhoneText.getText();
+            //add customer using entered data unless fields are empty
+            if (custName.isEmpty() || custAddress1.isEmpty()
+                    || custCity.isEmpty() || custZip.isEmpty()
+                    || custCountry.isEmpty() || custPhone.isEmpty()) {
+                errorMessageLabel.setText("Enter all information to continue.");                                
+            }
+            else {            
+                //unameE will be username entered in FXMLDocument
+                String unameE = UserCredentials.getUsername();
+                DBConnection.addCustomer(custName, custAddress1, custAddress2, custCity, custZip, custCountry, custPhone, unameE);
+                //clear data from form and ask what the user wants to do next
+                addFirstNameText.clear();
+                addLastNameText.clear();
+                addAddressText.clear();
+                addAddress2Text.clear();
+                addCityText.clear();
+                addZipText.clear();
+                addCountryText.clear();
+                addPhoneText.clear();
+                errorMessageLabel.setText("");
+                Parent root = FXMLLoader.load(getClass().getResource("ContinueDialogue.fxml"));
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.show();            
+            }            
+        }
+        catch (IOException ioEx) { System.out.println("Error " + ioEx.getMessage()); }
     }
     
     @FXML
     void handleBackButton(ActionEvent event) {        
         Stage stage = (Stage) backButton.getScene().getWindow();
-        stage.close();        
+        stage.close();      
     }
     
     

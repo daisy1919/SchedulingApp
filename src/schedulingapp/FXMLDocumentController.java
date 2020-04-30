@@ -59,6 +59,7 @@ private Boolean isAuthenticated(User userToAuth) {
     @FXML
     void handleLoginButton (ActionEvent event) throws SQLException, IOException {        
         String usernameEntered = this.usernameText.getText();
+        UserCredentials.setUsername(usernameEntered);
         LinkedList<User> allUsers = (LinkedList<User>) DBConnection.getUsers();
         User userToAuth = null;
         
@@ -69,17 +70,19 @@ private Boolean isAuthenticated(User userToAuth) {
         }
         
         try {            
+            //if user credentials are in db, open options window and clear credentials
+            //otherwise, state the credentials are incorrect
             if(isAuthenticated(userToAuth) == true) {                
                 Parent root = FXMLLoader.load(getClass().getResource("OnLogin.fxml"));
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.show();
-                //close login window upon correct credentials
+                usernameText.clear();
+                passwordText.clear();
             }            
             else { errorMessages.setText("Credentials incorrect"); }            
         }            
-        catch(IOException ioEx) { System.out.println("Error"); }
-        
+        catch(IOException ioEx) { System.out.println("Error " + ioEx.getMessage()); }        
     } 
     
     @FXML
