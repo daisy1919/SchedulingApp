@@ -79,6 +79,7 @@ private Boolean isAuthenticated(User userToAuth) {
                 stage.show();
                 usernameText.clear();
                 passwordText.clear();
+                errorMessages.setText("");
             }            
             else { errorMessages.setText("Credentials incorrect"); }            
         }            

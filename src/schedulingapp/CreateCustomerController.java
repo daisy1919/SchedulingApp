@@ -55,7 +55,6 @@ public class CreateCustomerController implements Initializable {
                 errorMessageLabel.setText("Enter all information to continue.");                                
             }
             else {            
-                //unameE will be username entered in FXMLDocument
                 String unameE = UserCredentials.getUsername();
                 DBConnection.addCustomer(custName, custAddress1, custAddress2, custCity, custZip, custCountry, custPhone, unameE);
                 //clear data from form and ask what the user wants to do next

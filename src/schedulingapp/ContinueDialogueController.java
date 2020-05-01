@@ -31,14 +31,14 @@ public class ContinueDialogueController implements Initializable {
     @FXML javafx.scene.control.Button goBackButton;
     
     @FXML
-    void handleAddAnotherButton(ActionEvent event) {        
+    void handleAddAnotherButton(ActionEvent event) {
         Stage stage = (Stage) addAnotherButton.getScene().getWindow();
         stage.close();            
     }
     
     @FXML
     void handleGoBackButton(ActionEvent event) {
-        //close current window, close createcustomer window as well
+        //still need to close createcustomer window as well
         Stage stage = (Stage) goBackButton.getScene().getWindow();
         stage.close();
     }

@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
+import schedulingapp.Models.Customer;
 import schedulingapp.Models.User;
 
 /**
@@ -72,8 +73,7 @@ public class DBConnection {
             List<User> allUsers = new LinkedList<>();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");            
             while(sqlRs.next()) {            
-                User userToAdd = new User();
-                
+                User userToAdd = new User();                
                 userToAdd.setUserId(Integer.parseInt(sqlRs.getString("userId")));
                 userToAdd.setUserName(sqlRs.getString("userName"));
                 userToAdd.setPassword(sqlRs.getString("password"));
@@ -82,7 +82,6 @@ public class DBConnection {
                 userToAdd.setCreatedBy(sqlRs.getString("createdBy"));
                 userToAdd.setLastUpdate(Timestamp.valueOf(LocalDateTime.parse(sqlRs.getString("lastUpdate"), formatter)));
                 userToAdd.setLastUpdateBy(sqlRs.getString("lastUpdateBy"));
-
                 allUsers.add(userToAdd);                
             }            
             return allUsers;            
@@ -103,7 +102,111 @@ public class DBConnection {
         }             
         return null;        
     }
+        
+    public static Iterable<Customer> getCustTableInfo() throws SQLException{
+        Statement sqlStmt = null;
+        ResultSet sqlRs = null;
+        
+        try {            
+            sqlStmt = conn.createStatement();
+            sqlRs = sqlStmt.executeQuery("SELECT * FROM customer");
+            List<Customer> customerTableInfo = new LinkedList<>();            
+            while(sqlRs.next()) {
+                Customer customerToAdd = new Customer();
+                customerToAdd.setName(sqlRs.getString("customerName"));
+                customerToAdd.setCustId(sqlRs.getString("customerId"));
+                customerToAdd.setAddId(sqlRs.getString("addressId"));
+                customerTableInfo.add(customerToAdd);
+            }            
+            return customerTableInfo;            
+        }        
+        catch(SQLException ex) {            
+            System.out.println("Exception " + ex.getMessage());            
+        }        
+        finally {            
+            if(sqlRs != null || sqlStmt != null) {                
+                try {                    
+                    sqlRs.close();
+                    sqlStmt.close();                    
+                }                 
+                catch(SQLException sqlEx) {}                
+                sqlRs = null;
+                sqlStmt = null;        
+            }            
+        }             
+        return null;   
+    }
     
+    public static Iterable<Customer> getCustomers() throws SQLException {                
+        Statement sqlStmt = null;
+        ResultSet sqlRs = null;
+        
+        Statement sqlStmt2 = null;
+        ResultSet sqlRs2 = null;
+        
+        Statement sqlStmt3 = null;
+        ResultSet sqlRs3 = null;
+        
+        Statement sqlStmt4 = null;
+        ResultSet sqlRs4 = null;
+
+        try {            
+            sqlStmt = conn.createStatement();
+            sqlRs = sqlStmt.executeQuery("SELECT * FROM customer");
+            
+            sqlStmt2 = conn.createStatement();
+            sqlRs2 = sqlStmt2.executeQuery("SELECT * FROM address");
+            
+            sqlStmt3 = conn.createStatement();
+            sqlRs3 = sqlStmt3.executeQuery("SELECT * FROM city");
+            
+            sqlStmt4 = conn.createStatement();
+            sqlRs4 = sqlStmt4.executeQuery("SELECT * FROM country");            
+            
+            List<Customer> allCustomers = new LinkedList<>();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+            
+            while(sqlRs.next()) {
+                Customer customerToAdd = new Customer();
+                customerToAdd.setName(sqlRs.getString("customerName")); //customerName is first and last, will need to split for forms
+                customerToAdd.setAddId(sqlRs.getString("addressId"));                
+                /*while(sqlRs2.next()) {
+                    customerToAdd.setAdd1(sqlRs2.getString(""));
+                    customerToAdd.setAdd2();
+                    customerToAdd.setCityId();
+                    customerToAdd.setZip();
+                    customerToAdd.setPhone();
+                    
+                    while(sqlRs3.next()) {
+                        customerToAdd.setCity();
+                        customerToAdd.setCountryId();
+                        
+                        while(sqlRs4.next()) {
+                            customerToAdd.setCountry();
+                        }
+                    }
+                }    
+                allCustomers.add(customerToAdd);*/
+            }            
+            return allCustomers;            
+        }        
+        catch(SQLException ex) {            
+            System.out.println("Exception " + ex.getMessage());            
+        }        
+        finally {            
+            if(sqlRs != null || sqlStmt != null) {                
+                try {                    
+                    sqlRs.close();
+                    sqlStmt.close();                    
+                }                 
+                catch(SQLException sqlEx) {}                
+                sqlRs = null;
+                sqlStmt = null;        
+            }            
+        }             
+        return null;        
+    }
+
     public static int generateNewCustId() {                         
         Statement sqlStmtCId = null;
         ResultSet sqlRsCId = null;
@@ -213,9 +316,9 @@ public class DBConnection {
         
         String currDateTime = java.time.LocalDateTime.now().toString();
         
-        try {                   
-            String newCityId = String.valueOf(generateNewCityId());
+        try {                               
             String newCountryId = String.valueOf(generateNewCountryId());
+            String newCityId = String.valueOf(generateNewCityId());
             String newAddId = String.valueOf(generateNewAddId());
             String newCustId = String.valueOf(generateNewCustId());
             

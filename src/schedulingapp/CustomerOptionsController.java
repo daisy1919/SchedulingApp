@@ -23,18 +23,21 @@ import javafx.stage.Stage;
  * @author daisy
  */
 public class CustomerOptionsController implements Initializable {
-
+    
     @FXML
     void handleAddCustomerButton(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("CreateCustomer.fxml"));
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.show();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
     
     @FXML
-    void handleEditCustomerButton() {
-        
+    void handleEditCustomerButton() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("EditCustomer.fxml"));
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
     
     @FXML
