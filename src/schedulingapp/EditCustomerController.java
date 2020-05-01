@@ -6,7 +6,10 @@
 package schedulingapp;
 
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,6 +17,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import schedulingapp.Models.Customer;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import schedulingapp.Models.Address;
+import utils.DBConnection;
 
 /**
  * FXML Controller class
@@ -40,34 +46,34 @@ public class EditCustomerController implements Initializable {
     private TableColumn custAddCol;
     
     @FXML 
-    void handleSearchCustomerButton(ActionEvent event) {        
-        String custToFind = searchCustomerText.getText();
-        ObservableList<Customer> foundCustomers; /*= InventoryManager.getInventory().lookupPart(partToFind)*/;        
-        //customersFound.setItems(foundCustomers);        
+    void handleSearchCustomerButton(ActionEvent event) throws SQLException {        
+        String nameToSearch = searchCustomerText.getText();        
+        Iterable<Customer> fCustomers = DBConnection.searchByName(nameToSearch);
+        ObservableList<Customer> foundCustomers = FXCollections.observableArrayList();
+        fCustomers.forEach(foundCustomers::add);   
+        customersFound.setItems(foundCustomers);
     }
     
     @FXML 
-    void handleUpdateCustomerButton() {
-        
+    void handleUpdateCustomerButton() {        
         //customerToAdd.setCreateDate(LocalDateTime.parse(sqlRs.getString("createDate"), formatter));   
-        //customerToAdd.setLastUpdateBy; get user from static fnctn    
-        
+        //customerToAdd.setLastUpdateBy; get user from static fnctn            
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        //the following is from a previous project for ideas
-        /*
-        productIDC.setCellValueFactory(new PropertyValueFactory<>("pID"));
-        productNameC.setCellValueFactory(new PropertyValueFactory<>("name"));
-        productInvC.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        productCostC.setCellValueFactory(new PropertyValueFactory<>("price"));
-
-        partList.setItems(InventoryManager.getInventory().getAllParts());
-        productList.setItems(InventoryManager.getInventory().getAllProducts());
-        
-        */        
+        try {
+            //custNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            custNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("cName"));
+            custPhoneCol.setCellValueFactory(new PropertyValueFactory<Address, String>("phone"));
+            custAddCol.setCellValueFactory(new PropertyValueFactory<Address, String>("address1"));
+            
+            Iterable<Customer> fCustomers = DBConnection.getCustomers();
+            ObservableList<Customer> foundCustomers = FXCollections.observableArrayList();
+            fCustomers.forEach(foundCustomers::add);
+            customersFound.setItems(foundCustomers);  
+        }
+        catch(SQLException sqEx) { System.out.println("Error " + sqEx.getMessage()); }
     }    
     
 }

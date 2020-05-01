@@ -150,6 +150,7 @@ public class DBConnection {
             List<Address> addressTableInfo = new LinkedList<>();            
             while(sqlRs.next()) {
                 Address addressToAdd = new Address();
+                addressToAdd.setAddressId(sqlRs.getString("addressId"));
                 addressToAdd.setAddress1(sqlRs.getString("address"));
                 addressToAdd.setAddress2(sqlRs.getString("address2"));
                 addressToAdd.setCityId(sqlRs.getString("cityId"));                
@@ -186,6 +187,7 @@ public class DBConnection {
             List<City> cityTableInfo = new LinkedList<>();            
             while(sqlRs.next()) {
                 City cityToAdd = new City();
+                cityToAdd.setCityId(sqlRs.getString("cityId"));
                 cityToAdd.setCity(sqlRs.getString("city"));
                 cityToAdd.setCountryId(sqlRs.getString("countryId"));
                 cityTableInfo.add(cityToAdd);
@@ -219,6 +221,7 @@ public class DBConnection {
             List<Country> countryTableInfo = new LinkedList<>();            
             while(sqlRs.next()) {
                 Country countryToAdd = new Country();
+                countryToAdd.setCountryId(sqlRs.getString("countryId"));
                 countryToAdd.setCountry(sqlRs.getString("country"));
                 countryTableInfo.add(countryToAdd);
             }            
@@ -241,11 +244,10 @@ public class DBConnection {
         return null;
     }
 
-    //------needs to be finished------//
     public static Iterable<Customer> getCustomers() throws SQLException {                
         try {            
             Iterable<Customer> customers = getCustomerTableInfo();
-            Iterable<Address> addresses = getAddressTableInfo();
+            Iterable<Address> addresses = getAddresses();
             for(Customer customer : customers) {
                 customer.getAddId();
                 for(Address address : addresses) {
@@ -253,14 +255,104 @@ public class DBConnection {
                         customer.setAddress(address);
                     }
                 }
-            }           
+            }
+            return customers;
         }        
         catch(SQLException ex) {            
             System.out.println("Exception " + ex.getMessage());            
         }            
         return null;  
     }
+    
+    public static Iterable<Address> getAddresses() throws SQLException {
+        try {
+            Iterable<Address> addresses = getAddressTableInfo();
+            addresses = DBConnection.attachCity(addresses);
+            return addresses;
+        }
+        catch(SQLException sqEx) { System.out.println("Error " + sqEx.getMessage()); }
+        return null;
+    }
+    
+    public static Iterable<Address> attachCity(Iterable<Address> addresses) throws SQLException {
+        try {
+            Iterable<City> cities = getCities();
+            for(Address address : addresses) {
+                address.getCityId();
+                for(City city : cities) {
+                    if(address.getCityId().equals(city.getCityId())) {
+                        address.setCity(city);
+                    }
+                }
+            }
+            return addresses;
+        }        
+        catch(SQLException ex) { System.out.println("Exception " + ex.getMessage()); }            
+        return null;
+    }
+    
+    public static Iterable<City> getCities() throws SQLException {
+        try {
+            Iterable<City> cities = getCityTableInfo();
+            cities = DBConnection.attachCountry(cities);
+            return cities;
+        }
+        catch(SQLException sqEx) { System.out.println("Error " + sqEx.getMessage()); }
+        return null;
+    }
 
+    public static Iterable<City> attachCountry(Iterable<City> cities) throws SQLException {
+        try {
+            Iterable<Country> countries = getCountryTableInfo();
+            for(City city : cities) {
+                city.getCountryId();
+                for(Country country : countries) {
+                    if(city.getCountryId().equals(country.getCountryId())) {
+                        city.setCountry(country);
+                    }
+                }
+            }
+            return cities;
+        }
+        catch(SQLException sqEx) { System.out.println("Error " + sqEx.getMessage()); }
+        return null;
+    }
+    
+    public static Iterable<Country> getCountries() throws SQLException {
+        try {            
+            Iterable<City> cities = getCityTableInfo();
+            Iterable<Country> countries = getCountryTableInfo();
+            for(City city : cities) {
+                city.getCountryId();
+                for(Country country : countries) {
+                    if(city.getCountryId().equals(country.getCountryId())) {
+                        city.setCountry(country);
+                    }
+                }
+            }
+            return countries;
+        }        
+        catch(SQLException ex) {            
+            System.out.println("Exception " + ex.getMessage());            
+        }            
+        return null;
+    }
+    
+    public static Iterable<Customer> searchByName(String customerName) throws SQLException {
+        try {
+            Iterable<Customer> customers = getCustomers();
+            List<Customer> foundCustomers = new LinkedList<>();
+            for(Customer customer : customers) {
+                if(customer.getName().contains(customerName)) {
+                    foundCustomers.add(customer);
+                }
+            }
+            return foundCustomers;
+        }
+        catch(SQLException sqEx) {  System.out.println("Error " + sqEx.getMessage()); }
+        return null;
+    }
+    
     public static int generateNewCustId() {                         
         Statement sqlStmtCId = null;
         ResultSet sqlRsCId = null;

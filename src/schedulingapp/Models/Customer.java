@@ -6,6 +6,8 @@
 package schedulingapp.Models;
 
 import java.sql.Timestamp;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  *
@@ -18,6 +20,7 @@ public class Customer {
     private Address custAddress;
     private Timestamp lastUpdate;
     private String lastUpdateBy;
+    private SimpleStringProperty cName;
 
     public void setName (String customerName) { this.customerName = customerName; }
     public String getName() { return customerName; }   
@@ -31,4 +34,8 @@ public class Customer {
     public Timestamp getLastUpdate() { return lastUpdate; }
     public void setLastUpdateBy(String lastUpdateBy) { this.lastUpdateBy = lastUpdateBy; }
     public String getLastUpdateBy() { return lastUpdateBy; }
+    //public Customer(String cName) { this.cName = new SimpleStringProperty(cName); }
+    public void setCName(String customerName) { cName.set(this.customerName); }
+    public String getCName() { return cName.get(); }
+    public StringProperty cNameProperty() { return cName; }
 }

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="370.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedulingapp.EditCustomerController">
+<AnchorPane id="AnchorPane" prefHeight="370.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedulingapp.EditCustomerController">
    <children>
       <Label layoutX="20.0" layoutY="15.0" text="Search for a customer by name to edit their information">
          <font>
@@ -42,7 +42,7 @@
       <TextField fx:id="addPhoneText" layoutX="487.0" layoutY="288.0" />
       <Label fx:id="errorMessageLabel" layoutX="35.0" layoutY="335.0" prefHeight="20.0" prefWidth="300.0" textFill="RED" />      
       <Button fx:id="updateCustomerButton" layoutX="534.0" layoutY="328.0" mnemonicParsing="false" onAction="#handleUpdateCustomerButton" prefHeight="30.0" prefWidth="80.0" text="Update" />
-      <Label layoutX="357.0" layoutY="46.0" text="Edit information below, then Update to save changes">
+      <Label layoutX="357.0" layoutY="46.0" text="Edit information below; press Update to save changes">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
