@@ -18,6 +18,9 @@ import java.util.LinkedList;
 import java.util.List;
 import schedulingapp.Models.Customer;
 import schedulingapp.Models.User;
+import schedulingapp.Models.Address;
+import schedulingapp.Models.City;
+import schedulingapp.Models.Country;
 
 /**
  *
@@ -103,7 +106,7 @@ public class DBConnection {
         return null;        
     }
         
-    public static Iterable<Customer> getCustTableInfo() throws SQLException{
+    public static Iterable<Customer> getCustomerTableInfo() throws SQLException{
         Statement sqlStmt = null;
         ResultSet sqlRs = null;
         
@@ -136,59 +139,25 @@ public class DBConnection {
         }             
         return null;   
     }
-    
-    public static Iterable<Customer> getCustomers() throws SQLException {                
+
+    public static Iterable<Address> getAddressTableInfo() throws SQLException {
         Statement sqlStmt = null;
         ResultSet sqlRs = null;
         
-        Statement sqlStmt2 = null;
-        ResultSet sqlRs2 = null;
-        
-        Statement sqlStmt3 = null;
-        ResultSet sqlRs3 = null;
-        
-        Statement sqlStmt4 = null;
-        ResultSet sqlRs4 = null;
-
         try {            
             sqlStmt = conn.createStatement();
-            sqlRs = sqlStmt.executeQuery("SELECT * FROM customer");
-            
-            sqlStmt2 = conn.createStatement();
-            sqlRs2 = sqlStmt2.executeQuery("SELECT * FROM address");
-            
-            sqlStmt3 = conn.createStatement();
-            sqlRs3 = sqlStmt3.executeQuery("SELECT * FROM city");
-            
-            sqlStmt4 = conn.createStatement();
-            sqlRs4 = sqlStmt4.executeQuery("SELECT * FROM country");            
-            
-            List<Customer> allCustomers = new LinkedList<>();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-            
+            sqlRs = sqlStmt.executeQuery("SELECT * FROM address");
+            List<Address> addressTableInfo = new LinkedList<>();            
             while(sqlRs.next()) {
-                Customer customerToAdd = new Customer();
-                customerToAdd.setName(sqlRs.getString("customerName")); //customerName is first and last, will need to split for forms
-                customerToAdd.setAddId(sqlRs.getString("addressId"));                
-                /*while(sqlRs2.next()) {
-                    customerToAdd.setAdd1(sqlRs2.getString(""));
-                    customerToAdd.setAdd2();
-                    customerToAdd.setCityId();
-                    customerToAdd.setZip();
-                    customerToAdd.setPhone();
-                    
-                    while(sqlRs3.next()) {
-                        customerToAdd.setCity();
-                        customerToAdd.setCountryId();
-                        
-                        while(sqlRs4.next()) {
-                            customerToAdd.setCountry();
-                        }
-                    }
-                }    
-                allCustomers.add(customerToAdd);*/
+                Address addressToAdd = new Address();
+                addressToAdd.setAddress1(sqlRs.getString("address"));
+                addressToAdd.setAddress2(sqlRs.getString("address2"));
+                addressToAdd.setCityId(sqlRs.getString("cityId"));                
+                addressToAdd.setPostalCode(sqlRs.getString("postalCode"));
+                addressToAdd.setPhone(sqlRs.getString("phone"));
+                addressTableInfo.add(addressToAdd);
             }            
-            return allCustomers;            
+            return addressTableInfo;            
         }        
         catch(SQLException ex) {            
             System.out.println("Exception " + ex.getMessage());            
@@ -204,7 +173,92 @@ public class DBConnection {
                 sqlStmt = null;        
             }            
         }             
-        return null;        
+        return null;
+    }
+    
+    public static Iterable<City> getCityTableInfo() throws SQLException {
+        Statement sqlStmt = null;
+        ResultSet sqlRs = null;
+        
+        try {            
+            sqlStmt = conn.createStatement();
+            sqlRs = sqlStmt.executeQuery("SELECT * FROM city");
+            List<City> cityTableInfo = new LinkedList<>();            
+            while(sqlRs.next()) {
+                City cityToAdd = new City();
+                cityToAdd.setCity(sqlRs.getString("city"));
+                cityToAdd.setCountryId(sqlRs.getString("countryId"));
+                cityTableInfo.add(cityToAdd);
+            }            
+            return cityTableInfo;            
+        }        
+        catch(SQLException ex) {            
+            System.out.println("Exception " + ex.getMessage());            
+        }        
+        finally {            
+            if(sqlRs != null || sqlStmt != null) {                
+                try {                    
+                    sqlRs.close();
+                    sqlStmt.close();                    
+                }                 
+                catch(SQLException sqlEx) {}                
+                sqlRs = null;
+                sqlStmt = null;        
+            }            
+        }             
+        return null;
+    }
+        
+    public static Iterable<Country> getCountryTableInfo() throws SQLException {
+        Statement sqlStmt = null;
+        ResultSet sqlRs = null;
+        
+        try {            
+            sqlStmt = conn.createStatement();
+            sqlRs = sqlStmt.executeQuery("SELECT * FROM country");
+            List<Country> countryTableInfo = new LinkedList<>();            
+            while(sqlRs.next()) {
+                Country countryToAdd = new Country();
+                countryToAdd.setCountry(sqlRs.getString("country"));
+                countryTableInfo.add(countryToAdd);
+            }            
+            return countryTableInfo;            
+        }        
+        catch(SQLException ex) {            
+            System.out.println("Exception " + ex.getMessage());            
+        }        
+        finally {            
+            if(sqlRs != null || sqlStmt != null) {                
+                try {                    
+                    sqlRs.close();
+                    sqlStmt.close();                    
+                }                 
+                catch(SQLException sqlEx) {}                
+                sqlRs = null;
+                sqlStmt = null;        
+            }            
+        }             
+        return null;
+    }
+
+    //------needs to be finished------//
+    public static Iterable<Customer> getCustomers() throws SQLException {                
+        try {            
+            Iterable<Customer> customers = getCustomerTableInfo();
+            Iterable<Address> addresses = getAddressTableInfo();
+            for(Customer customer : customers) {
+                customer.getAddId();
+                for(Address address : addresses) {
+                    if(customer.getAddId().equals(address.getAddressId())) {
+                        customer.setAddress(address);
+                    }
+                }
+            }           
+        }        
+        catch(SQLException ex) {            
+            System.out.println("Exception " + ex.getMessage());            
+        }            
+        return null;  
     }
 
     public static int generateNewCustId() {                         
