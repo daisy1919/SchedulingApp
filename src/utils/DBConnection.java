@@ -116,7 +116,7 @@ public class DBConnection {
             List<Customer> customerTableInfo = new LinkedList<>();            
             while(sqlRs.next()) {
                 Customer customerToAdd = new Customer();
-                customerToAdd.setName(sqlRs.getString("customerName"));
+                customerToAdd.setCustomerName(sqlRs.getString("customerName"));
                 customerToAdd.setCustId(sqlRs.getString("customerId"));
                 customerToAdd.setAddId(sqlRs.getString("addressId"));
                 customerTableInfo.add(customerToAdd);
@@ -334,7 +334,7 @@ public class DBConnection {
         }        
         catch(SQLException ex) {            
             System.out.println("Exception " + ex.getMessage());            
-        }            
+        }
         return null;
     }
     
@@ -343,7 +343,7 @@ public class DBConnection {
             Iterable<Customer> customers = getCustomers();
             List<Customer> foundCustomers = new LinkedList<>();
             for(Customer customer : customers) {
-                if(customer.getName().contains(customerName)) {
+                if(customer.getCustomerName().toLowerCase().contains(customerName.toLowerCase())) {
                     foundCustomers.add(customer);
                 }
             }

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="370.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedulingapp.EditCustomerController">
+<AnchorPane id="AnchorPane" prefHeight="380.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedulingapp.EditCustomerController">
    <children>
       <Label layoutX="20.0" layoutY="15.0" text="Search for a customer by name to edit their information">
          <font>
@@ -17,32 +17,32 @@
       </Label>
       <TextField fx:id="searchCustomerText" layoutX="33.0" layoutY="50.0" prefHeight="25.0" prefWidth="210.0" />
       <Button fx:id="searchCustomerButton" layoutX="259.0" layoutY="50.0" mnemonicParsing="false" onAction="#handleSearchCustomerButton" text="Search" />
-      <TableView fx:id="customersFound" layoutX="35.0" layoutY="100.0" prefHeight="240.0" prefWidth="280.0">
+      <TableView fx:id="customersFound" layoutX="35.0" layoutY="100.0" prefHeight="240.0" prefWidth="380.0">
         <columns>
-          <TableColumn fx:id="custNameCol" maxWidth="85.0" prefWidth="85.0" resizable="false" text="Name" />
-          <TableColumn fx:id="custPhoneCol" maxWidth="75.0" prefWidth="75.0" resizable="false" text="Phone" />
-          <TableColumn fx:id="custAddCol" maxWidth="120.0" prefWidth="120.0" resizable="false" text="Address" />
+          <TableColumn fx:id="custNameCol" maxWidth="125.0" prefWidth="125.0" resizable="false" text="Name" />
+          <TableColumn fx:id="custPhoneCol" maxWidth="105.0" prefWidth="105.0" resizable="false" text="Phone" />
+          <TableColumn fx:id="custAddCol" maxWidth="135.0" prefWidth="135.0" resizable="false" text="Address" />
         </columns>
       </TableView>      
-      <Label layoutX="393.0" layoutY="80.0" text="First name: " />
-      <TextField fx:id="addFirstNameText" layoutX="487.0" layoutY="78.0" />
-      <Label layoutX="393.0" layoutY="110.0" text="Last name: " />
-      <TextField fx:id="addLastNameText" layoutX="487.0" layoutY="108.0" />
-      <Label layoutX="393.0" layoutY="140.0" text="Address line 1:" />
-      <TextField fx:id="addAddressText" layoutX="487.0" layoutY="138.0" />
-      <Label layoutX="393.0" layoutY="170.0" text="Address line 2:" />
-      <TextField fx:id="addAddress2Text" layoutX="487.0" layoutY="168.0" />
-      <Label layoutX="393.0" layoutY="200.0" text="City: " />
-      <TextField fx:id="addCityText" layoutX="487.0" layoutY="198.0" />
-      <Label layoutX="393.0" layoutY="230.0" text="Postal code: " />
-      <TextField fx:id="addZipText" layoutX="487.0" layoutY="228.0" />
-      <Label layoutX="393.0" layoutY="260.0" text="Country:" />
-      <TextField fx:id="addCountryText" layoutX="487.0" layoutY="258.0" />
-      <Label layoutX="393.0" layoutY="290.0" text="Phone number:" />
-      <TextField fx:id="addPhoneText" layoutX="487.0" layoutY="288.0" />
+      <Label layoutX="449.0" layoutY="80.0" text="First name: " />
+      <TextField fx:id="addFirstNameText" layoutX="543.0" layoutY="78.0" />
+      <Label layoutX="449.0" layoutY="110.0" text="Last name: " />
+      <TextField fx:id="addLastNameText" layoutX="543.0" layoutY="108.0" />
+      <Label layoutX="449.0" layoutY="140.0" text="Address line 1:" />
+      <TextField fx:id="addAddressText" layoutX="543.0" layoutY="138.0" />
+      <Label layoutX="449.0" layoutY="170.0" text="Address line 2:" />
+      <TextField fx:id="addAddress2Text" layoutX="543.0" layoutY="168.0" />
+      <Label layoutX="449.0" layoutY="200.0" text="City: " />
+      <TextField fx:id="addCityText" layoutX="543.0" layoutY="198.0" />
+      <Label layoutX="449.0" layoutY="230.0" text="Postal code: " />
+      <TextField fx:id="addZipText" layoutX="543.0" layoutY="228.0" />
+      <Label layoutX="449.0" layoutY="260.0" text="Country:" />
+      <TextField fx:id="addCountryText" layoutX="543.0" layoutY="258.0" />
+      <Label layoutX="449.0" layoutY="290.0" text="Phone number:" />
+      <TextField fx:id="addPhoneText" layoutX="543.0" layoutY="288.0" />
       <Label fx:id="errorMessageLabel" layoutX="35.0" layoutY="335.0" prefHeight="20.0" prefWidth="300.0" textFill="RED" />      
       <Button fx:id="updateCustomerButton" layoutX="534.0" layoutY="328.0" mnemonicParsing="false" onAction="#handleUpdateCustomerButton" prefHeight="30.0" prefWidth="80.0" text="Update" />
-      <Label layoutX="357.0" layoutY="46.0" text="Edit information below; press Update to save changes">
+      <Label layoutX="413.0" layoutY="46.0" text="Edit information below; press Update to save changes">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

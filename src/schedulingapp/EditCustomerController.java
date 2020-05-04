@@ -9,6 +9,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -37,13 +39,13 @@ public class EditCustomerController implements Initializable {
     private TableView<Customer> customersFound;
     
     @FXML
-    private TableColumn custNameCol;
+    private TableColumn<Customer, String> custNameCol;
     
     @FXML
-    private TableColumn custPhoneCol;
+    private TableColumn<Customer, String> custPhoneCol;
     
     @FXML
-    private TableColumn custAddCol;
+    private TableColumn<Customer, String> custAddCol;
     
     @FXML 
     void handleSearchCustomerButton(ActionEvent event) throws SQLException {        
@@ -59,21 +61,20 @@ public class EditCustomerController implements Initializable {
         //customerToAdd.setCreateDate(LocalDateTime.parse(sqlRs.getString("createDate"), formatter));   
         //customerToAdd.setLastUpdateBy; get user from static fnctn            
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            //custNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-            custNameCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("cName"));
-            custPhoneCol.setCellValueFactory(new PropertyValueFactory<Address, String>("phone"));
-            custAddCol.setCellValueFactory(new PropertyValueFactory<Address, String>("address1"));
+        /*try {*/
+            custNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            custPhoneCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getAddress().getPhone()));//new PropertyValueFactory<>("phone"));
+            custAddCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getAddress().getAddress1())); //(new PropertyValueFactory<>("address1"));
             
-            Iterable<Customer> fCustomers = DBConnection.getCustomers();
-            ObservableList<Customer> foundCustomers = FXCollections.observableArrayList();
-            fCustomers.forEach(foundCustomers::add);
-            customersFound.setItems(foundCustomers);  
-        }
-        catch(SQLException sqEx) { System.out.println("Error " + sqEx.getMessage()); }
+            //Iterable<Customer> fCustomers = DBConnection.getCustomers();
+            //ObservableList<Customer> foundCustomers = FXCollections.observableArrayList();
+            //fCustomers.forEach(foundCustomers::add);
+            //customersFound.setItems(foundCustomers);       
+        //}
+        //catch(SQLException sqEx) { System.out.println("Error " + sqEx.getMessage()); }
     }    
     
 }

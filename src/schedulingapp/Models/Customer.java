@@ -17,25 +17,20 @@ public class Customer {
     private String customerName;
     private String custId;
     private String custAddId;    
-    private Address custAddress;
+    private Address address;
     private Timestamp lastUpdate;
     private String lastUpdateBy;
-    private SimpleStringProperty cName;
 
-    public void setName (String customerName) { this.customerName = customerName; }
-    public String getName() { return customerName; }   
+    public void setCustomerName (String customerName) { this.customerName = customerName; }
+    public String getCustomerName() { return customerName; }   
     public void setCustId(String custId) { this.custId = custId; }
     public String getCustId() { return custId; }
     public void setAddId(String custAddId) { this.custAddId = custAddId; }
     public String getAddId() { return custAddId; }  
-    public void setAddress(Address custAddress) { this.custAddress = custAddress; }
-    public Address getAddress() { return custAddress;}
+    public void setAddress(Address custAddress) { this.address = custAddress; }
+    public Address getAddress() { return address;}
     public void setLastUpdate(Timestamp lastUpdate) { this.lastUpdate = lastUpdate; }
     public Timestamp getLastUpdate() { return lastUpdate; }
     public void setLastUpdateBy(String lastUpdateBy) { this.lastUpdateBy = lastUpdateBy; }
     public String getLastUpdateBy() { return lastUpdateBy; }
-    //public Customer(String cName) { this.cName = new SimpleStringProperty(cName); }
-    public void setCName(String customerName) { cName.set(this.customerName); }
-    public String getCName() { return cName.get(); }
-    public StringProperty cNameProperty() { return cName; }
 }
