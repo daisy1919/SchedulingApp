@@ -453,7 +453,8 @@ public class DBConnection {
         return -1;
     }
     
-    public static void addCustomer(String custName, String custAddress, String custAddress2, String custCity, String custZip, String custCountry, String custPhone, String unameEntered) {                          
+    public static void addCustomer(String custName, String custAddress, String custAddress2, 
+            String custCity, String custZip, String custCountry, String custPhone, String unameEntered) {                          
         PreparedStatement sqlStmtCo = null;
         PreparedStatement sqlStmtCi = null;
         PreparedStatement sqlStmtA = null;
