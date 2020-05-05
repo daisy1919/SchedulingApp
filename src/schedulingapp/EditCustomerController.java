@@ -39,6 +39,7 @@ public class EditCustomerController implements Initializable {
      * Initializes the controller class.
      */
     @FXML javafx.scene.control.TextField searchCustomerText;
+    @FXML javafx.scene.control.Button goBackButton;
     
     @FXML
     private TableView<Customer> customersFound;
@@ -78,6 +79,12 @@ public class EditCustomerController implements Initializable {
         
         //handleClearPartSearch();
         //searchPartsText.clear();
+    }
+    
+    @FXML
+    void handleGoBackButton(ActionEvent event) {
+        Stage stage = (Stage) goBackButton.getScene().getWindow();
+        stage.close();
     }
 
     @Override

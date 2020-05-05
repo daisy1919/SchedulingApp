@@ -26,6 +26,7 @@ public class CreateCustomerController implements Initializable {
 
     @FXML javafx.scene.control.Button backButton;
     @FXML javafx.scene.control.TextField addFirstNameText;
+    @FXML javafx.scene.control.TextField addMidText;
     @FXML javafx.scene.control.TextField addLastNameText;
     @FXML javafx.scene.control.TextField addAddressText;
     @FXML javafx.scene.control.TextField addAddress2Text;
@@ -39,7 +40,8 @@ public class CreateCustomerController implements Initializable {
     void handleAddButton(ActionEvent event) throws IOException {    
         try {
             //get data that was entered
-            String custName = this.addFirstNameText.getText() + " " + this.addLastNameText.getText();
+            //needs to also have middle initial textfield added in with a space
+            String custName = this.addFirstNameText.getText() + " " + this.addMidText.getText() + " " + this.addLastNameText.getText();
             String custAddress1 = this.addAddressText.getText();
             String custAddress2;
             if (this.addAddress2Text.getText() == null) { custAddress2 = ""; }
@@ -59,6 +61,7 @@ public class CreateCustomerController implements Initializable {
                 DBConnection.addCustomer(custName, custAddress1, custAddress2, custCity, custZip, custCountry, custPhone, unameE);
                 //clear data from form and ask what the user wants to do next
                 addFirstNameText.clear();
+                addMidText.clear();
                 addLastNameText.clear();
                 addAddressText.clear();
                 addAddress2Text.clear();

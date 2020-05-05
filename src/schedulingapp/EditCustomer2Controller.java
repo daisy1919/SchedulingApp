@@ -7,8 +7,10 @@ package schedulingapp;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.stage.Stage;
 import schedulingapp.Models.Customer;
 
 /**
@@ -26,6 +28,7 @@ public class EditCustomer2Controller implements Initializable {
     @FXML javafx.scene.control.TextField zipText;
     @FXML javafx.scene.control.TextField countryText;
     @FXML javafx.scene.control.TextField phoneText;
+    @FXML javafx.scene.control.Button goBackButton;
 
     private static Customer selectedCustomer;
     
@@ -34,12 +37,18 @@ public class EditCustomer2Controller implements Initializable {
     public static void setSelectedCustomer(Customer customer) { selectedCustomer = customer; }
 
     @FXML 
-    void handleUpdateCustomerButton() {        
+    void handleUpdateCustomerButton(ActionEvent event) {        
         //customerToAdd.setCreateDate(LocalDateTime.parse(sqlRs.getString("createDate"), formatter));   
         //customerToAdd.setLastUpdateBy; get user from static fnctn           
         //Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
         //System.out.println(selectedCustomer);
         //call function from DBConnection that updates the selected customer
+    }
+    
+    @FXML
+    void handleGoBackButton(ActionEvent event) {
+        Stage stage = (Stage) goBackButton.getScene().getWindow();
+        stage.close();
     }
     
     @Override

@@ -38,7 +38,6 @@ public class ContinueDialogueController implements Initializable {
     
     @FXML
     void handleGoBackButton(ActionEvent event) {
-        //still need to close createcustomer window as well
         Stage stage = (Stage) goBackButton.getScene().getWindow();
         stage.close();
     }

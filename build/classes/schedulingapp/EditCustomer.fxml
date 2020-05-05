@@ -25,5 +25,6 @@
         </columns>
       </TableView>      
       <Button fx:id="updateSelected" layoutX="235.0" layoutY="358.0" mnemonicParsing="false" onAction="#handleUpdateSelectedButton" text="Update selected customer" />
+      <Button fx:id="goBackButton" layoutX="65.0" layoutY="358.0" mnemonicParsing="false" onAction="#handleGoBackButton" text="Go back" />
    </children>
 </AnchorPane>
