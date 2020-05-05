@@ -5,6 +5,7 @@
  */
 package schedulingapp;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
@@ -15,11 +16,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import schedulingapp.Models.Customer;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import schedulingapp.Models.Address;
 import utils.DBConnection;
 
@@ -57,24 +62,29 @@ public class EditCustomerController implements Initializable {
     }
     
     @FXML 
-    void handleUpdateCustomerButton() {        
-        //customerToAdd.setCreateDate(LocalDateTime.parse(sqlRs.getString("createDate"), formatter));   
-        //customerToAdd.setLastUpdateBy; get user from static fnctn            
+    void handleUpdateSelectedButton(ActionEvent event) throws SQLException {        
+        Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
+        EditCustomer2Controller.setSelectedCustomer(selectedCustomer);
+        
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("EditCustomer2.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(IOException e) {
+            System.out.println("Error " + e.getMessage());
+        }
+        
+        //handleClearPartSearch();
+        //searchPartsText.clear();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        /*try {*/
             custNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-            custPhoneCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getAddress().getPhone()));//new PropertyValueFactory<>("phone"));
-            custAddCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getAddress().getAddress1())); //(new PropertyValueFactory<>("address1"));
-            
-            //Iterable<Customer> fCustomers = DBConnection.getCustomers();
-            //ObservableList<Customer> foundCustomers = FXCollections.observableArrayList();
-            //fCustomers.forEach(foundCustomers::add);
-            //customersFound.setItems(foundCustomers);       
-        //}
-        //catch(SQLException sqEx) { System.out.println("Error " + sqEx.getMessage()); }
+            custPhoneCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getAddress().getPhone()));
+            custAddCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getAddress().getAddress1()));
     }    
     
 }

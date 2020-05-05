@@ -353,6 +353,10 @@ public class DBConnection {
         return null;
     }
     
+    public static void updateCustomer(Customer selectedCustomer) throws SQLException{
+        
+    }
+    
     public static int generateNewCustId() {                         
         Statement sqlStmtCId = null;
         ResultSet sqlRsCId = null;
