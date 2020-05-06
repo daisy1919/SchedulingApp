@@ -26,20 +26,16 @@ import schedulingapp.Models.Country;
  *
  * @author daisy
  */
-public class DBConnection {
-    
+public class DBConnection {    
     //JDBC URL parts
     private static final String protocol = "jdbc";
     private static final String vendorName = ":mysql:";
-    private static final String ipAddress = "//3.227.166.251/U05mZ3";
-    
+    private static final String ipAddress = "//3.227.166.251/U05mZ3";    
     //JDBC URL
-    private static final String jdbcURL = protocol + vendorName + ipAddress;
-    
+    private static final String jdbcURL = protocol + vendorName + ipAddress;    
     //Driver and Connection Interface reference
     private static final String MYSQLJDBCDriver = "com.mysql.jdbc.Driver";
-    private static Connection conn = null;
-    
+    private static Connection conn = null;    
     //Username and Password
     private static final String dbUsername = "U05mZ3";
     private static final String dbPassword = "53688549123";
@@ -64,8 +60,9 @@ public class DBConnection {
         catch(SQLException e) {            
             System.out.println("Error: " + e.getMessage());            
         }        
-    }
-        
+    }    
+    //end of db connection functions//
+    /*****/
     public static Iterable<User> getUsers() throws SQLException {                
         Statement sqlStmt = null;
         ResultSet sqlRs = null;
@@ -353,10 +350,6 @@ public class DBConnection {
         return null;
     }
     
-    public static void updateCustomer(Customer selectedCustomer) throws SQLException{
-        
-    }
-    
     public static int generateNewCustId() {                         
         Statement sqlStmtCId = null;
         ResultSet sqlRsCId = null;
@@ -452,9 +445,11 @@ public class DBConnection {
         catch(SQLException sqEx) { System.out.println("Exception " + sqEx.getMessage()); }
         return -1;
     }
-    
+        
     public static void addCustomer(String custName, String custAddress, String custAddress2, 
-            String custCity, String custZip, String custCountry, String custPhone, String unameEntered) {                          
+                                   String custCity, String custZip, String custCountry, 
+                                   String custPhone, String unameEntered) {                          
+
         PreparedStatement sqlStmtCo = null;
         PreparedStatement sqlStmtCi = null;
         PreparedStatement sqlStmtA = null;
@@ -462,12 +457,14 @@ public class DBConnection {
               
         String sqlCountryToEx = "INSERT INTO country (countryId, country, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?,?,?,?,?,?)";
         String sqlCityToEx = "INSERT INTO city (cityId, city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?,?,?,?,?,?,?)";
-        String sqlAddToEx = "INSERT INTO address (addressId, address, address2, cityId, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?,?,?,?,?,?,?,?,?,?)";
-        String sqlCustToEx = "INSERT INTO customer (customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?,?,?,?,?,?,?,?)";
+        String sqlAddToEx = "INSERT INTO address (addressId, address, address2, cityId, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy) "
+                + "VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String sqlCustToEx = "INSERT INTO customer (customerId, customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy) "
+                + "VALUES (?,?,?,?,?,?,?,?)";
         
         String currDateTime = java.time.LocalDateTime.now().toString();
         
-        try {                               
+        try {
             String newCountryId = String.valueOf(generateNewCountryId());
             String newCityId = String.valueOf(generateNewCityId());
             String newAddId = String.valueOf(generateNewAddId());
@@ -519,5 +516,28 @@ public class DBConnection {
         catch(SQLException sqEx) {
             System.out.println("Exception " + sqEx.getMessage());
         }        
+    }
+    
+    public static void updateCustomer(Customer selectedCustomer) throws SQLException{
+        PreparedStatement stmt = null;
+        String sqlToEx = "";
+        try {
+            stmt = conn.prepareStatement(sqlToEx);
+            //set all the ? marks
+            stmt.setString(1, "");
+            stmt.executeUpdate();
+        }
+        catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
+    }
+    
+    public static void deleteCustomer(String custId) {
+        PreparedStatement stmt = null;
+        String sqlToEx = "DELETE FROM customer WHERE customerId=?";        
+        try {
+            stmt = conn.prepareStatement(sqlToEx);
+            stmt.setString(1, custId);
+            stmt.executeUpdate();
+        }
+        catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
 }

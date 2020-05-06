@@ -40,8 +40,11 @@ public class CreateCustomerController implements Initializable {
     void handleAddButton(ActionEvent event) throws IOException {    
         try {
             //get data that was entered
-            //needs to also have middle initial textfield added in with a space
-            String custName = this.addFirstNameText.getText() + " " + this.addMidText.getText() + " " + this.addLastNameText.getText();
+            String custName = null;
+            if(this.addMidText.getText().isEmpty()) {                
+                custName = this.addFirstNameText.getText() + " " + this.addLastNameText.getText();
+            }
+            else { custName = this.addFirstNameText.getText() + " " + this.addMidText.getText() + " " + this.addLastNameText.getText(); }            
             String custAddress1 = this.addAddressText.getText();
             String custAddress2;
             if (this.addAddress2Text.getText() == null) { custAddress2 = ""; }

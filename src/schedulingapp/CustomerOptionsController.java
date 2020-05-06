@@ -41,8 +41,11 @@ public class CustomerOptionsController implements Initializable {
     }
     
     @FXML
-    void handleDeleteCustomerButton() {
-    
+    void handleDeleteCustomerButton() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("DeleteCustomer.fxml"));
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     /**

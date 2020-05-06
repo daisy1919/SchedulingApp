@@ -21,6 +21,7 @@ import schedulingapp.Models.Customer;
 public class EditCustomer2Controller implements Initializable {
     
     @FXML javafx.scene.control.TextField firstNameText;
+    @FXML javafx.scene.control.TextField middleInitText;
     @FXML javafx.scene.control.TextField lastNameText;
     @FXML javafx.scene.control.TextField addressText;
     @FXML javafx.scene.control.TextField address2Text;
@@ -54,8 +55,8 @@ public class EditCustomer2Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {        
         
-        //split customerName into two strings
-        //set firstNameText to first
+        //split customerName into up to three strings based on spaces
+        //set firstNameText to first, lastNameText to last, middleInitText to middle 
         //when name gets updated in db, need to combine back into one string
         
         addressText.setText(selectedCustomer.getAddress().getAddress1());
