@@ -41,10 +41,12 @@ public class CreateCustomerController implements Initializable {
         try {
             //get data that was entered
             String custName = null;
-            if(this.addMidText.getText().isEmpty()) {                
+            if(this.addMidText.getText().isEmpty() && !this.addFirstNameText.getText().isEmpty() && !this.addLastNameText.getText().isEmpty()) {                
                 custName = this.addFirstNameText.getText() + " " + this.addLastNameText.getText();
             }
-            else { custName = this.addFirstNameText.getText() + " " + this.addMidText.getText() + " " + this.addLastNameText.getText(); }            
+            else if (!this.addFirstNameText.getText().isEmpty() && !this.addMidText.getText().isEmpty() && !this.addLastNameText.getText().isEmpty()) {
+                custName = this.addFirstNameText.getText() + " " + this.addMidText.getText() + " " + this.addLastNameText.getText();
+            }
             String custAddress1 = this.addAddressText.getText();
             String custAddress2;
             if (this.addAddress2Text.getText() == null) { custAddress2 = ""; }
@@ -54,7 +56,7 @@ public class CreateCustomerController implements Initializable {
             String custCountry = this.addCountryText.getText();
             String custPhone = this.addPhoneText.getText();
             //add customer using entered data unless fields are empty
-            if (custName.isEmpty() || custAddress1.isEmpty()
+            if (custName == null || custAddress1.isEmpty()
                     || custCity.isEmpty() || custZip.isEmpty()
                     || custCountry.isEmpty() || custPhone.isEmpty()) {
                 errorMessageLabel.setText("Enter all information to continue.");                                

@@ -6,12 +6,16 @@
 package schedulingapp;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
 import schedulingapp.Models.Customer;
+import utils.DBConnection;
 
 /**
  * FXML Controller class
@@ -37,13 +41,33 @@ public class EditCustomer2Controller implements Initializable {
     
     public static void setSelectedCustomer(Customer customer) { selectedCustomer = customer; }
 
+    //-->the following function updates everything except city and country names
+    //***fix***
     @FXML 
-    void handleUpdateCustomerButton(ActionEvent event) {        
-        //customerToAdd.setCreateDate(LocalDateTime.parse(sqlRs.getString("createDate"), formatter));   
-        //customerToAdd.setLastUpdateBy; get user from static fnctn           
-        //Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
-        //System.out.println(selectedCustomer);
-        //call function from DBConnection that updates the selected customer
+    void handleUpdateCustomerButton(ActionEvent event) throws SQLException {        
+        try {            
+            String custName = null;
+            if(this.middleInitText.getText().isEmpty() && !this.firstNameText.getText().isEmpty() && !this.lastNameText.getText().isEmpty()) {                
+                custName = this.firstNameText.getText() + " " + this.lastNameText.getText();
+            }
+            else if (!this.firstNameText.getText().isEmpty() && !this.middleInitText.getText().isEmpty() && !this.lastNameText.getText().isEmpty()) {
+                custName = this.firstNameText.getText() + " " + this.middleInitText.getText() + " " + this.lastNameText.getText();
+            }            
+            String lastUpdate = java.time.LocalDateTime.now().toString();
+            String lastUpdateBy = UserCredentials.getUsername();
+            String custId = selectedCustomer.getCustId();
+            String add1 = this.addressText.getText();
+            String add2 = this.address2Text.getText();
+            String zip = this.zipText.getText();
+            String phone = this.phoneText.getText();
+            String addId = selectedCustomer.getAddress().getAddressId();
+            String city = this.cityText.getText();
+            String cityId = selectedCustomer.getAddress().getCity().getCityId();            
+            String country = this.countryText.getText();
+            String countryId = selectedCustomer.getAddress().getCity().getCountry().getCountryId();
+            DBConnection.updateCustomer(selectedCustomer, custName, lastUpdate, lastUpdateBy, custId, add1, add2, zip, phone, addId, city, cityId, country, countryId);
+        }
+        catch (SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
     
     @FXML
@@ -54,11 +78,18 @@ public class EditCustomer2Controller implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {        
-        
-        //split customerName into up to three strings based on spaces
-        //set firstNameText to first, lastNameText to last, middleInitText to middle 
-        //when name gets updated in db, need to combine back into one string
-        
+        //when name gets updated in db, need to combine back into one string        
+        String fullName = selectedCustomer.getCustomerName();
+        String[] split = fullName.split(" ");        
+        if(split.length == 3) {
+            firstNameText.setText(split[0]);
+            middleInitText.setText(split[1]);
+            lastNameText.setText(split[2]);
+        }
+        else if (split.length == 2) {
+            firstNameText.setText(split[0]);
+            lastNameText.setText(split[1]);
+        }
         addressText.setText(selectedCustomer.getAddress().getAddress1());
         address2Text.setText(selectedCustomer.getAddress().getAddress2());
         cityText.setText(selectedCustomer.getAddress().getCity().getCity());

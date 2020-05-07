@@ -518,24 +518,58 @@ public class DBConnection {
         }        
     }
     
-    public static void updateCustomer(Customer selectedCustomer) throws SQLException{
+    public static void updateCustomer(Customer selectedCustomer, String custName, String lastUpdate, String lastUpdateBy, String custId, 
+                                      String add1, String add2, String postCode, String phone, String addId,
+                                      String city, String cityId,
+                                      String country, String countryId) throws SQLException{
         PreparedStatement stmt = null;
-        String sqlToEx = "";
+        PreparedStatement stmt2 = null;
+        PreparedStatement stmt3 = null;
+        PreparedStatement stmt4 = null;
+        String sql = "UPDATE customer SET customerName = ?, lastUpdate = ?, lastUpdateBy = ? WHERE customerId = ?";
+        String sql2 = "UPDATE address SET address = ?, address2 = ?, postalCode = ?, phone = ?, lastUpdate = ?, lastUpdateBy = ? WHERE addressId = ?";
+        String sql3 = "UPDATE city SET city = ?, lastUpdate = ?, lastUpdateBy = ? WHERE cityId = ?";
+        String sql4 = "UPDATE country SET country = ?, lastUpdate = ?, lastUpdateBy = ? WHERE countryId = ?";
         try {
-            stmt = conn.prepareStatement(sqlToEx);
-            //set all the ? marks
-            stmt.setString(1, "");
+            stmt = conn.prepareStatement(sql);            
+            stmt.setString(1, custName);
+            stmt.setString(2, lastUpdate);
+            stmt.setString(3, lastUpdateBy);
+            stmt.setString(4, custId);
             stmt.executeUpdate();
+            
+            stmt2 = conn.prepareStatement(sql2);
+            stmt2.setString(1, add1);
+            stmt2.setString(2, add2);
+            stmt2.setString(3, postCode);
+            stmt2.setString(4, phone);
+            stmt2.setString(5, lastUpdate);
+            stmt2.setString(6, lastUpdateBy);
+            stmt2.setString(7, addId);
+            stmt2.executeUpdate();
+            
+            stmt3 = conn.prepareStatement(sql3);
+            stmt3.setString(1, city);
+            stmt3.setString(2, lastUpdate);
+            stmt3.setString(3, lastUpdateBy);
+            stmt3.setString(4, cityId);
+            
+            stmt4 = conn.prepareStatement(sql4);
+            stmt4.setString(1, country);
+            stmt4.setString(2, lastUpdate);
+            stmt4.setString(3, lastUpdateBy);
+            stmt4.setString(4, countryId);
         }
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
-    
+
+    //does this function (and others such as searchByName) need to assume active = 1 means current customer, active = 0 means deleted??
     public static void deleteCustomer(String custId) {
         PreparedStatement stmt = null;
         String sqlToEx = "DELETE FROM customer WHERE customerId=?";        
         try {
             stmt = conn.prepareStatement(sqlToEx);
-            stmt.setString(1, custId);
+            stmt.setString(1, custId);            
             stmt.executeUpdate();
         }
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
