@@ -8,6 +8,8 @@ package schedulingapp;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,15 +36,15 @@ public class EditCustomer2Controller implements Initializable {
     @FXML javafx.scene.control.TextField countryText;
     @FXML javafx.scene.control.TextField phoneText;
     @FXML javafx.scene.control.Button goBackButton;
-
+    
+    //@FXML javafx.scene.control.TextField searchCustomerText;
+    
     private static Customer selectedCustomer;
     
     public static Customer getSelectedCustomer() { return selectedCustomer; }
     
     public static void setSelectedCustomer(Customer customer) { selectedCustomer = customer; }
 
-    //-->the following function updates everything except city and country names
-    //***fix***
     @FXML 
     void handleUpdateCustomerButton(ActionEvent event) throws SQLException {        
         try {            
@@ -66,6 +68,7 @@ public class EditCustomer2Controller implements Initializable {
             String country = this.countryText.getText();
             String countryId = selectedCustomer.getAddress().getCity().getCountry().getCountryId();
             DBConnection.updateCustomer(selectedCustomer, custName, lastUpdate, lastUpdateBy, custId, add1, add2, zip, phone, addId, city, cityId, country, countryId);
+            //-->***need to refresh tableview in previous scene on button click or exit this and previous window
         }
         catch (SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }

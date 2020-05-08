@@ -553,12 +553,14 @@ public class DBConnection {
             stmt3.setString(2, lastUpdate);
             stmt3.setString(3, lastUpdateBy);
             stmt3.setString(4, cityId);
+            stmt3.executeUpdate();
             
             stmt4 = conn.prepareStatement(sql4);
             stmt4.setString(1, country);
             stmt4.setString(2, lastUpdate);
             stmt4.setString(3, lastUpdateBy);
             stmt4.setString(4, countryId);
+            stmt4.executeUpdate();
         }
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }

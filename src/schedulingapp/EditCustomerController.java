@@ -53,7 +53,7 @@ public class EditCustomerController implements Initializable {
     @FXML
     private TableColumn<Customer, String> custAddCol;
     
-    public TableView<Customer> getTableView(){
+    /*public TableView<Customer> getTableView(){
         return customersFound;
     }
     
@@ -68,7 +68,7 @@ public class EditCustomerController implements Initializable {
             customersFound.setItems(allCustomers);
         }
         catch (SQLException ex) { System.out.println("Error " + ex.getMessage()); }
-    }
+    }*/
     
     @FXML 
     void handleSearchCustomerButton(ActionEvent event) throws SQLException {        
@@ -89,6 +89,7 @@ public class EditCustomerController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.show();
+            searchCustomerText.getScene().getWindow().hide();
         }
         catch(IOException e) {
             System.out.println("Error " + e.getMessage());
