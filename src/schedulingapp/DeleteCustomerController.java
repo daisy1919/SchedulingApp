@@ -55,11 +55,14 @@ public class DeleteCustomerController implements Initializable {
     @FXML
     void handleDeleteButton(ActionEvent event) {
         try {
-            //get selected customer from table view, then delete from db 
+            //get selected customer from table view, then delete customer and associated info from db 
             Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
             String custId = selectedCustomer.getCustId();
-            DBConnection.deleteCustomer(custId);
-            //after customer has been deleted, remove them from the tableview
+            String addressId = selectedCustomer.getAddId();
+            String cityId = selectedCustomer.getAddress().getCityId();
+            String countryId = selectedCustomer.getAddress().getCity().getCountryId();
+            DBConnection.deleteCustomer(custId, addressId, cityId, countryId);
+            //after customer has been deleted, this removes them from the tableview
             Iterable<Customer> aCustomers = DBConnection.getCustomers();
             ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
             aCustomers.forEach(allCustomers::add); 

@@ -565,14 +565,36 @@ public class DBConnection {
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
 
-    //does this function (and others such as searchByName) need to assume active = 1 means current customer, active = 0 means deleted??
-    public static void deleteCustomer(String custId) {
+    //deleteCustomer also needs to delete the appointments that the customer has
+    public static void deleteCustomer(String custId, String addressId, String cityId, String countryId) {
         PreparedStatement stmt = null;
-        String sqlToEx = "DELETE FROM customer WHERE customerId=?";        
+        String sqlToEx = "DELETE FROM customer WHERE customerId=?";
+        
+        PreparedStatement stmt2 = null;
+        String sql2ToEx = "DELETE FROM address WHERE addressId=?";
+        
+        PreparedStatement stmt3 = null;
+        String sql3ToEx = "DELETE FROM city WHERE cityId=?";
+        
+        PreparedStatement stmt4 = null;
+        String sql4ToEx = "DELETE FROM country WHERE countryId=?";
+        
         try {
             stmt = conn.prepareStatement(sqlToEx);
             stmt.setString(1, custId);            
             stmt.executeUpdate();
+            
+            stmt2 = conn.prepareStatement(sql2ToEx);
+            stmt2.setString(1, addressId);            
+            stmt2.executeUpdate();
+            
+            stmt3 = conn.prepareStatement(sql3ToEx);
+            stmt3.setString(1, cityId);            
+            stmt3.executeUpdate();
+            
+            stmt4 = conn.prepareStatement(sql4ToEx);
+            stmt4.setString(1, countryId);            
+            stmt4.executeUpdate();
         }
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }

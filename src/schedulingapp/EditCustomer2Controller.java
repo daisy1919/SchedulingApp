@@ -68,7 +68,8 @@ public class EditCustomer2Controller implements Initializable {
             String country = this.countryText.getText();
             String countryId = selectedCustomer.getAddress().getCity().getCountry().getCountryId();
             DBConnection.updateCustomer(selectedCustomer, custName, lastUpdate, lastUpdateBy, custId, add1, add2, zip, phone, addId, city, cityId, country, countryId);
-            //-->***need to refresh tableview in previous scene on button click or exit this and previous window
+            Stage stage = (Stage) firstNameText.getScene().getWindow();
+            stage.close();
         }
         catch (SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
