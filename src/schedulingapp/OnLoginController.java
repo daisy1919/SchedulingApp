@@ -30,8 +30,7 @@ public class OnLoginController implements Initializable {
     private Button customerButton;
     
     @FXML
-    void handleCustomerButton(ActionEvent event) {
-        
+    void handleCustomerButton(ActionEvent event) {        
         try {
             Parent root = FXMLLoader.load(getClass().getResource("CustomerOptions.fxml"));
             Stage stage = new Stage();
@@ -40,15 +39,20 @@ public class OnLoginController implements Initializable {
         }
         catch(IOException e) {
             System.out.println("Error loading window");
-        }
-        
+        }        
     }
     
     @FXML
-    void handleAppointmentButton(ActionEvent event) {
-        
-        
-        
+    void handleAppointmentButton(ActionEvent event) {                
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("AppointmentOptions.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(IOException e) {
+            System.out.println("Error loading window");
+        }
     }
     
     @FXML

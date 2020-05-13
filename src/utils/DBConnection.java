@@ -565,7 +565,7 @@ public class DBConnection {
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
 
-    //deleteCustomer also needs to delete the appointments that the customer has
+    //-->deleteCustomer also needs to delete the appointments that the customer has
     public static void deleteCustomer(String custId, String addressId, String cityId, String countryId) {
         PreparedStatement stmt = null;
         String sqlToEx = "DELETE FROM customer WHERE customerId=?";
@@ -598,4 +598,13 @@ public class DBConnection {
         }
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
+    
+    //getAppointments (generate Appointment model)
+    //getAppointmentTableData (get data from SQL to list of appointments)
+    //generatenewappointmentId
+    //addAppointment
+    //attachCustomer called from within addAppointment and updatedAppointment
+    //updateAppointment
+    //deleteAppointment
+    //searchAppointments (maybe make 1 by name, 1 by date of appt)
 }
