@@ -19,6 +19,7 @@ import java.util.List;
 import schedulingapp.Models.Customer;
 import schedulingapp.Models.User;
 import schedulingapp.Models.Address;
+import schedulingapp.Models.Appointment;
 import schedulingapp.Models.City;
 import schedulingapp.Models.Country;
 
@@ -565,7 +566,7 @@ public class DBConnection {
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
 
-    //-->deleteCustomer also needs to delete the appointments that the customer has
+    //deletes all data related to the selected customer from 5 tables: customer, address, city, country, appointment
     public static void deleteCustomer(String custId, String addressId, String cityId, String countryId) {
         PreparedStatement stmt = null;
         String sqlToEx = "DELETE FROM customer WHERE customerId=?";
@@ -579,7 +580,14 @@ public class DBConnection {
         PreparedStatement stmt4 = null;
         String sql4ToEx = "DELETE FROM country WHERE countryId=?";
         
+        PreparedStatement stmt5 = null;
+        String sql5ToEx = "DELETE FROM appointment WHERE customerId = ?";
+        
         try {
+            stmt5 = conn.prepareStatement(sql5ToEx);
+            stmt5.setString(1, custId);            
+            stmt5.executeUpdate();
+            
             stmt = conn.prepareStatement(sqlToEx);
             stmt.setString(1, custId);            
             stmt.executeUpdate();
@@ -599,12 +607,99 @@ public class DBConnection {
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
     
-    //getAppointments (generate Appointment model)
-    //getAppointmentTableData (get data from SQL to list of appointments)
-    //generatenewappointmentId
     //addAppointment
-    //attachCustomer called from within addAppointment and updatedAppointment
+    //attachCustomer called from within addAppointment and updatedAppointment??
     //updateAppointment
     //deleteAppointment
-    //searchAppointments (maybe make 1 by name, 1 by date of appt)
+    //searchAppointments (maybe make 1 by name, 1 by date of appt or maybe allow filter to week/month views)
+
+    //refactor and check
+    //this function gets the data from SQL to list of appointments
+    public static Iterable<Appointment> getAppointmentTableInfo() throws SQLException{
+        Statement sqlStmt = null;
+        ResultSet sqlRs = null;
+        
+        try {            
+            sqlStmt = conn.createStatement();
+            sqlRs = sqlStmt.executeQuery("SELECT * FROM appointment");
+            List<Appointment> appointmentTableInfo = new LinkedList<>();            
+            while(sqlRs.next()) {
+                Appointment appointmentToAdd = new Appointment();
+                appointmentToAdd.setAppointmentId(sqlRs.getString("appointmentId"));
+                appointmentToAdd.setCustomerId(sqlRs.getString("customerId"));
+                appointmentToAdd.setUserId(sqlRs.getString("userId"));
+                appointmentToAdd.setContact(sqlRs.getString("contact"));
+                appointmentToAdd.setDescription(sqlRs.getString("description"));
+                appointmentToAdd.setStartTime(sqlRs.getString("start"));
+                appointmentToAdd.setEndTime(sqlRs.getString("end"));
+                appointmentToAdd.setLocation(sqlRs.getString("location"));
+                appointmentToAdd.setTitle(sqlRs.getString("title"));
+                appointmentToAdd.setType(sqlRs.getString("type"));
+                appointmentToAdd.setUrl(sqlRs.getString("url"));
+                appointmentTableInfo.add(appointmentToAdd);
+            }            
+            return appointmentTableInfo;            
+        }        
+        catch(SQLException ex) {            
+            System.out.println("Exception " + ex.getMessage());            
+        }        
+        finally {            
+            if(sqlRs != null || sqlStmt != null) {                
+                try {                    
+                    sqlRs.close();
+                    sqlStmt.close();                    
+                }                 
+                catch(SQLException sqlEx) {}                
+                sqlRs = null;
+                sqlStmt = null;        
+            }            
+        }             
+        return null;   
+    }
+    
+    //refactor and check
+    //this function generates the Appointment object/model
+    public static Iterable<Customer> getAppointments() throws SQLException {                
+        try {            
+            Iterable<Customer> customers = getCustomerTableInfo();
+            Iterable<Address> addresses = getAddresses();
+            for(Customer customer : customers) {
+                customer.getAddId();
+                for(Address address : addresses) {
+                    if(customer.getAddId().equals(address.getAddressId())) {
+                        customer.setAddress(address);
+                    }
+                }
+            }
+            return customers;
+        }        
+        catch(SQLException ex) {            
+            System.out.println("Exception " + ex.getMessage());            
+        }            
+        return null;  
+    }
+    
+    public static int generateNewApptId() {                         
+        Statement stmt = null;
+        ResultSet rs = null;
+
+        try {            
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM appointment");
+            List<Integer> appointmentIdList = new LinkedList<>();          
+            while(rs.next()) {            
+                int apptIdToAdd = Integer.parseInt(rs.getString("appointmentId"));
+                appointmentIdList.add(apptIdToAdd);
+            }
+            int largestId = appointmentIdList.get(0);
+            for (int i = 0; i < appointmentIdList.size(); i++) {
+                if (appointmentIdList.get(i) > largestId) {
+                    largestId = appointmentIdList.get(i);
+                }
+            }
+            return (largestId + 1);
+        }
+        catch(SQLException sqEx) { System.out.println("Exception " + sqEx.getMessage()); }
+        return -1;
+    }
 }
