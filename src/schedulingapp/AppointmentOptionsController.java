@@ -28,10 +28,22 @@ public class AppointmentOptionsController implements Initializable {
      */
     
     @FXML
-    void handleAddAppointmentButton() {}
+    void handleAddAppointmentButton(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("SelectCustomer.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(IOException e) {
+            System.out.println("Error loading window");
+        } 
+    }
     
     @FXML
-    void handleEditAppointmentButton() {}
+    void handleEditAppointmentButton(ActionEvent event) {
+    
+    }
     
     @FXML
     void handleDeleteAppointmentButton(ActionEvent event) throws IOException {
@@ -40,9 +52,6 @@ public class AppointmentOptionsController implements Initializable {
         stage.setScene(new Scene(root));
         stage.show();
     }
-    
-    @FXML
-    void handleViewCalendarButton() {}
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {

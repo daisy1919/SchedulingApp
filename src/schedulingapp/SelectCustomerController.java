@@ -5,6 +5,7 @@
  */
 package schedulingapp;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -13,7 +14,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -26,8 +30,8 @@ import utils.DBConnection;
  *
  * @author daisy
  */
-public class DeleteCustomerController implements Initializable {
-
+public class SelectCustomerController implements Initializable {
+    
     @FXML javafx.scene.control.TextField searchCustomerText;
     @FXML javafx.scene.control.Button goBackButton;
     
@@ -42,43 +46,39 @@ public class DeleteCustomerController implements Initializable {
     
     @FXML
     private TableColumn<Customer, String> custAddCol;
-    
-    @FXML 
-    void handleSearchCustomerButton(ActionEvent event) throws SQLException {        
+
+    @FXML
+    public void handleSearchCustomerButton(ActionEvent event) throws SQLException {
         String nameToSearch = searchCustomerText.getText();        
         Iterable<Customer> fCustomers = DBConnection.searchByName(nameToSearch);
         ObservableList<Customer> foundCustomers = FXCollections.observableArrayList();
         fCustomers.forEach(foundCustomers::add);   
         customersFound.setItems(foundCustomers);
     }
-
+    
     @FXML
-    void handleDeleteButton(ActionEvent event) {
+    public void handleUseCustomerButton(ActionEvent event) throws IOException {
+        //need to pass selectedCustomer to next screen/set customerId for appt to this customer's ID
+        Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
         try {
-            //get selected customer from table view, then delete customer and associated info from db 
-            Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
-            String custId = selectedCustomer.getCustId();
-            String addressId = selectedCustomer.getAddId();
-            String cityId = selectedCustomer.getAddress().getCityId();
-            String countryId = selectedCustomer.getAddress().getCity().getCountryId();
-            DBConnection.deleteCustomer(custId, addressId, cityId, countryId);
-            //after customer has been deleted, this removes them from the tableview
-            Iterable<Customer> aCustomers = DBConnection.getCustomers();
-            ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
-            aCustomers.forEach(allCustomers::add); 
-            customersFound.setItems(allCustomers);
+            Parent root = FXMLLoader.load(getClass().getResource("AddAppointment.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
         }
-        catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
+        catch(IOException e) {
+            System.out.println("Error loading window");
+        }
     }
     
     @FXML
-    void handleGoBackButton(ActionEvent event) {
+    public void handleGoBackButton(ActionEvent event) {
         Stage stage = (Stage) goBackButton.getScene().getWindow();
         stage.close();
     }
     
     @Override
-    public void initialize(URL url, ResourceBundle rb){
+    public void initialize(URL url, ResourceBundle rb) {
         try {
             custNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
             custPhoneCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getAddress().getPhone()));
@@ -90,4 +90,5 @@ public class DeleteCustomerController implements Initializable {
         }
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
+    
 }

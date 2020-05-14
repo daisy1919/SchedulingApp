@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="365.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedulingapp.AddAppointmentController">
+   <children>
+      <Label layoutX="25.0" layoutY="15.0" text="Appointment times are between 8am and 5pm in 15 minute increments.">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="25.0" layoutY="35.0" text="First, select a date below. Then, choose an available time on that day.">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <DatePicker fx:id="desiredApptDate" layoutX="125.0" layoutY="70.0" />
+      <TableView fx:id="availableApptsTable" layoutX="25.0" layoutY="120.0" prefHeight="200.0" prefWidth="400.0">
+        <columns>
+          <TableColumn editable="false" maxWidth="195.0" minWidth="190.0" prefWidth="190.0" resizable="false" text="Date" />
+            <TableColumn editable="false" maxWidth="195.0" minWidth="190.0" prefWidth="190.0" resizable="false" text="Time" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

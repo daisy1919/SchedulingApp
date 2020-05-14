@@ -20,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import schedulingapp.Models.User;
+import schedulingapp.UserCredentials;
 import utils.DBConnection;
 
 /**
