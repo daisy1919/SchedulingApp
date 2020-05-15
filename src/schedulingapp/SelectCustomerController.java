@@ -46,7 +46,31 @@ public class SelectCustomerController implements Initializable {
     
     @FXML
     private TableColumn<Customer, String> custAddCol;
+    
+    @FXML
+    private TableView<Customer> availableAppts;
+    
+    @FXML
+    private TableColumn apptDate;
+    
+    @FXML
+    private TableColumn apptTime;
 
+    //this window allows the user to select a date and time
+    //for the table, populate start and end times for example 10:00-10:20    
+
+    //  --> available appointment times: filter in DBConnection function getAvailableAppointments
+    //      i.e. select * from appointment where start time > 8am and end time < 5:45pm
+    //      don't show those appts in the list
+    //      fill the rest of the list with 15 minute time slots
+    //      on selecting a time slot, press select this appointment time
+    //      when pressing the button, close window with table view (don't simply refresh 
+    //      because the customer may decide to not make the appt, so still want that slot to show as available)
+    //      business hours: 8am to 6pm ??time zone??
+    //      filter out appointments that already exist
+    //      show available appointment times in tableview
+    
+    
     @FXML
     public void handleSearchCustomerButton(ActionEvent event) throws SQLException {
         String nameToSearch = searchCustomerText.getText();        
@@ -61,13 +85,13 @@ public class SelectCustomerController implements Initializable {
         //need to pass selectedCustomer to next screen/set customerId for appt to this customer's ID
         Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("AddAppointment.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("AddAppointment2.fxml"));
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.show();
         }
         catch(IOException e) {
-            System.out.println("Error loading window");
+            System.out.println("Error " + e.getMessage());
         }
     }
     
