@@ -566,7 +566,7 @@ public class DBConnection {
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
 
-    //deletes all data related to the selected customer from 5 tables: customer, address, city, country, appointment
+    //deletes all data related to the selected appointment from 5 tables: appointment, customer, city, country, appointment
     public static void deleteCustomer(String custId, String addressId, String cityId, String countryId) {
         PreparedStatement stmt = null;
         String sqlToEx = "DELETE FROM customer WHERE customerId=?";
@@ -608,12 +608,10 @@ public class DBConnection {
     }
     
     //addAppointment
-    //attachCustomer called from within addAppointment and updatedAppointment??
     //updateAppointment
     //deleteAppointment
-    //searchAppointments (maybe make 1 by name, 1 by date of appt or maybe allow filter to week/month views)
+    //searchAppointments (make 1 by customer name, 1 by date of appt or maybe allow filter to week/month views)
 
-    //refactor and check
     //this function gets the data from SQL to list of appointments
     public static Iterable<Appointment> getAppointmentTableInfo() throws SQLException{
         Statement sqlStmt = null;
@@ -657,21 +655,26 @@ public class DBConnection {
         return null;   
     }
     
-    //refactor and check
-    //this function generates the Appointment object/model
-    public static Iterable<Customer> getAppointments() throws SQLException {                
+    //this function generates the Appointment object/model including attaching the customer and user 
+    public static Iterable<Appointment> getAppointments() throws SQLException {                
         try {            
-            Iterable<Customer> customers = getCustomerTableInfo();
-            Iterable<Address> addresses = getAddresses();
-            for(Customer customer : customers) {
-                customer.getAddId();
-                for(Address address : addresses) {
-                    if(customer.getAddId().equals(address.getAddressId())) {
-                        customer.setAddress(address);
+            Iterable<Appointment> appointments = getAppointmentTableInfo();
+            Iterable<Customer> customers = getCustomers();
+            Iterable<User> users = getUsers();
+            for(Appointment appointment : appointments) {
+                appointment.getCustomerId();
+                for(Customer customer : customers) {
+                    if(appointment.getCustomerId().equals(customer.getCustId())) {
+                        appointment.setCustomer(customer);
+                    }
+                }
+                for(User user : users) {
+                    if(appointment.getUserId().equals(user.getUserId())) {
+                        appointment.setUser(user);
                     }
                 }
             }
-            return customers;
+            return appointments;
         }        
         catch(SQLException ex) {            
             System.out.println("Exception " + ex.getMessage());            
@@ -701,5 +704,36 @@ public class DBConnection {
         }
         catch(SQLException sqEx) { System.out.println("Exception " + sqEx.getMessage()); }
         return -1;
+    }
+
+    public static void addAppointment(String customerId, String userId, String title, String description, String location, String contact, String type, String url,
+                                      String start, String end, String unameEntered) throws SQLException {
+        PreparedStatement stmt = null;
+        String sql = "INSERT INTO appointment "
+                + "(appointmentId, customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) "
+                + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String currDateTime = java.time.LocalDateTime.now().toString();
+        
+        try {
+            String newApptId = String.valueOf(generateNewApptId());
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, newApptId);
+            stmt.setString(2, customerId);
+            stmt.setString(3, userId);
+            stmt.setString(4, title);
+            stmt.setString(5, description);
+            stmt.setString(6, location);
+            stmt.setString(7, contact);
+            stmt.setString(8, type);
+            stmt.setString(9, url);
+            stmt.setString(10, start);
+            stmt.setString(11, end);
+            stmt.setString(12, currDateTime);
+            stmt.setString(13, unameEntered);
+            stmt.setString(14, currDateTime);
+            stmt.setString(15, unameEntered);
+            stmt.executeUpdate();
+        }
+        catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
 }

@@ -14,7 +14,9 @@ import java.sql.Timestamp;
 public class Appointment {
     private String appointmentId;
     private String customerId;
+    private Customer customer;
     private String userId;
+    private User user;
     private String title;
     private String description;
     private String location;
@@ -31,8 +33,12 @@ public class Appointment {
     public String getAppointmentId() { return appointmentId; }    
     public void setCustomerId(String customerId) { this.customerId = customerId; }
     public String getCustomerId() { return customerId; }
+    public void setCustomer(Customer customer) { this.customer = customer; }
+    public Customer getCustomer() { return customer; }
     public void setUserId(String userId) { this.userId = userId; }
-    public String getUserId() { return userId; }    
+    public String getUserId() { return userId; }
+    public void setUser(User user) { this.user = user; }
+    public User getUser() { return user; }
     public void setTitle(String title) { this.title = title; };
     public String getTitle() { return title; }    
     public void setDescription(String description) { this.description = description; }

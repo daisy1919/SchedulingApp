@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="365.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedulingapp.AddAppointmentController">
+<AnchorPane id="AnchorPane" prefHeight="365.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedulingapp.AddAppointmentController">
    <children>
-      <Label layoutX="25.0" layoutY="15.0" text="Appointment times are between 8am and 5pm in 15 minute increments.">
+      <Label layoutX="25.0" layoutY="15.0" text="Appointment times are between 8am and 5pm in 20 minute increments.">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
@@ -21,10 +21,10 @@
          </font>
       </Label>
       <DatePicker fx:id="desiredApptDate" layoutX="125.0" layoutY="65.0" />
-      <TableView fx:id="availableApptsTable" layoutX="25.0" layoutY="110.0" prefHeight="200.0" prefWidth="400.0">
+      <TableView fx:id="availableAppts" layoutX="25.0" layoutY="110.0" prefHeight="200.0" prefWidth="400.0">
         <columns>
-          <TableColumn editable="false" maxWidth="190.0" minWidth="190.0" prefWidth="190.0" resizable="false" text="Date" />
-            <TableColumn editable="false" maxWidth="195.0" minWidth="192.0" prefWidth="192.0" resizable="false" text="Time" />
+          <TableColumn fx:id="apptDate" editable="false" maxWidth="190.0" minWidth="190.0" prefWidth="190.0" resizable="false" text="Date" />
+          <TableColumn fx:id="apptTime" editable="false" maxWidth="195.0" minWidth="192.0" prefWidth="192.0" resizable="false" text="Time" />
         </columns>
       </TableView>
       <Button fx:id="goBackButton" layoutX="65.0" layoutY="325.0" mnemonicParsing="false" onAction="#handleGoBackButton" text="Go Back" />
