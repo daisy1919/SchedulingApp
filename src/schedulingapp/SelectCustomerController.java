@@ -22,6 +22,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import schedulingapp.Models.Appointment;
 import schedulingapp.Models.Customer;
 import utils.DBConnection;
 
@@ -34,6 +35,7 @@ public class SelectCustomerController implements Initializable {
     
     @FXML javafx.scene.control.TextField searchCustomerText;
     @FXML javafx.scene.control.Button goBackButton;
+    @FXML javafx.scene.control.Label errorLabel;
     
     @FXML
     private TableView<Customer> customersFound;
@@ -48,13 +50,13 @@ public class SelectCustomerController implements Initializable {
     private TableColumn<Customer, String> custAddCol;
     
     @FXML
-    private TableView<Customer> availableAppts;
+    private TableView<Appointment> availableAppts;
     
     @FXML
-    private TableColumn apptDate;
+    private TableColumn<Appointment, String> apptDate;
     
     @FXML
-    private TableColumn apptTime;
+    private TableColumn<Appointment, String> apptTime;
 
     //this window allows the user to select a date and time
     //for the table, populate start and end times for example 10:00-10:20    
@@ -84,11 +86,16 @@ public class SelectCustomerController implements Initializable {
     public void handleUseCustomerButton(ActionEvent event) throws IOException {
         //need to pass selectedCustomer to next screen/set customerId for appt to this customer's ID
         Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
+        Appointment selectedDateTime = availableAppts.getSelectionModel().getSelectedItem();
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("AddAppointment2.fxml"));
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.show();
+            /*if (!(selectedCustomer == null) && !(selectedDateTime == null)) {*/
+                Parent root = FXMLLoader.load(getClass().getResource("AddAppointment2.fxml"));
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.show();
+                DBConnection.getAvailableApptTimes("");
+            /*}
+            else { errorLabel.setText("You must choose a customer and an appointment time to continue."); }*/
         }
         catch(IOException e) {
             System.out.println("Error " + e.getMessage());
@@ -111,6 +118,12 @@ public class SelectCustomerController implements Initializable {
             ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
             aCustomers.forEach(allCustomers::add); 
             customersFound.setItems(allCustomers);
+            
+            ObservableList<String> availableTimes = FXCollections.observableArrayList();
+            //make function in dbconnection to get all current appointments
+            //make list containing 20 min appt times from 8 to 5 and if that observablelist .contains any of the times in the currappts list, remove it from the string
+            //then populate the table with the final result
+            //for now, just populate with all times
         }
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }

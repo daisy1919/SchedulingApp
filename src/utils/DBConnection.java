@@ -14,8 +14,10 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.collections.ObservableList;
 import schedulingapp.Models.Customer;
 import schedulingapp.Models.User;
 import schedulingapp.Models.Address;
@@ -735,5 +737,33 @@ public class DBConnection {
             stmt.executeUpdate();
         }
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
+    }
+    
+    //-->remove the getAppointments from the availableAppts if availableAppts.contains(getAppointments based on string start time)
+    public static Iterable<String> getAvailableApptTimes(String desiredDate) {
+        ArrayList<String> availableAppts = new ArrayList<>();
+        final int startOfDay = 8;
+        final int endOfDay = 17;
+        final int numberOfAppts = 3 * (endOfDay - startOfDay);
+        int currHour = startOfDay;
+        int currMin = 0;
+        for (int i = 0; i < numberOfAppts; i++) {
+            String timeT;
+            if (currMin == 0) {
+                timeT = currHour + ":" + currMin + "0";
+            }
+            else {
+                timeT = currHour + ":" + currMin;
+            }
+            currMin = currMin + 20;
+            if (currMin%60 == 0 && currMin != 0) {
+                currMin = 0;
+                currHour = currHour + 1;
+            }
+            availableAppts.add(timeT);
+        }
+        //the above function generates all possible appt times for a given day from 8-5
+        //now, need to remove any current appt times that the db contains that overlap/contain the same start time as this list
+        return availableAppts;
     }
 }
