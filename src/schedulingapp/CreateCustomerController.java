@@ -78,7 +78,9 @@ public class CreateCustomerController implements Initializable {
                 Parent root = FXMLLoader.load(getClass().getResource("ContinueDialogue.fxml"));
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
-                stage.show();            
+                stage.show();
+                Stage stage2 = (Stage) addFirstNameText.getScene().getWindow();
+                stage2.close();   
             }            
         }
         catch (IOException ioEx) { System.out.println("Error " + ioEx.getMessage()); }

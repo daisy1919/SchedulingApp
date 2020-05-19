@@ -50,8 +50,7 @@ public class Appointment {
     public void setType(String type) { this.type = type; }
     public String getType() { return type; }    
     public void setUrl(String url) { this.url = url; }
-    public String getUrl() { return url; }    
-    //start and end times need to be converted to the proper format in the DBConnection functions; see customer functions for reference
+    public String getUrl() { return url; }
     public void setStartTime(String startTime) { this.startTime = startTime; }
     public String getStartTime() { return startTime; }    
     public void setEndTime(String endTime) { this.endTime = endTime; }

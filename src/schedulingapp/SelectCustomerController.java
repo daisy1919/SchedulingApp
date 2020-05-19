@@ -22,6 +22,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import java.time.LocalDate;
 import schedulingapp.Models.Appointment;
 import schedulingapp.Models.Customer;
 import utils.DBConnection;
@@ -36,6 +37,7 @@ public class SelectCustomerController implements Initializable {
     @FXML javafx.scene.control.TextField searchCustomerText;
     @FXML javafx.scene.control.Button goBackButton;
     @FXML javafx.scene.control.Label errorLabel;
+    @FXML javafx.scene.control.DatePicker desiredApptDate;
     
     @FXML
     private TableView<Customer> customersFound;
@@ -53,24 +55,18 @@ public class SelectCustomerController implements Initializable {
     private TableView<Appointment> availableAppts;
     
     @FXML
-    private TableColumn<Appointment, String> apptDate;
+    private TableColumn<Appointment, String> startTimeCol;
     
     @FXML
-    private TableColumn<Appointment, String> apptTime;
+    private TableColumn<Appointment, String> endTimeCol;
 
     //this window allows the user to select a date and time
     //for the table, populate start and end times for example 10:00-10:20    
 
     //  --> available appointment times: filter in DBConnection function getAvailableAppointments
-    //      i.e. select * from appointment where start time > 8am and end time < 5:45pm
-    //      don't show those appts in the list
-    //      fill the rest of the list with 15 minute time slots
-    //      on selecting a time slot, press select this appointment time
     //      when pressing the button, close window with table view (don't simply refresh 
     //      because the customer may decide to not make the appt, so still want that slot to show as available)
     //      business hours: 8am to 6pm ??time zone??
-    //      filter out appointments that already exist
-    //      show available appointment times in tableview
     
     
     @FXML
@@ -83,19 +79,31 @@ public class SelectCustomerController implements Initializable {
     }
     
     @FXML
+    public void handleDatePicker(ActionEvent event) {       
+        LocalDate apptDate = desiredApptDate.getValue();
+        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        //custPhoneCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getAddress().getPhone()));
+        Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);//LocalDate MAY NOT WORK FOR TIMEZONES, CHECK PROPERTIES AND USE APPROPRIATE CONTAINER FOR DATE
+        ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
+        aTimes.forEach(availableTimes::add);
+        availableAppts.setItems(availableTimes);
+    }
+    
+    @FXML
     public void handleUseCustomerButton(ActionEvent event) throws IOException {
-        //need to pass selectedCustomer to next screen/set customerId for appt to this customer's ID
+        //-->need to pass selectedCustomer to next screen/set customerId for appt to this customer's ID
         Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
         Appointment selectedDateTime = availableAppts.getSelectionModel().getSelectedItem();
         try {
-            /*if (!(selectedCustomer == null) && !(selectedDateTime == null)) {*/
+            if (!(selectedCustomer == null) && !(selectedDateTime == null)) {
                 Parent root = FXMLLoader.load(getClass().getResource("AddAppointment2.fxml"));
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.show();
-                DBConnection.getAvailableApptTimes("");
-            /*}
-            else { errorLabel.setText("You must choose a customer and an appointment time to continue."); }*/
+                errorLabel.setText("");
+            }
+            else { errorLabel.setText("You must choose a customer and an appointment time to continue."); }
         }
         catch(IOException e) {
             System.out.println("Error " + e.getMessage());
@@ -116,14 +124,8 @@ public class SelectCustomerController implements Initializable {
             custAddCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getAddress().getAddress1()));
             Iterable<Customer> aCustomers = DBConnection.getCustomers();
             ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
-            aCustomers.forEach(allCustomers::add); 
+            aCustomers.forEach(allCustomers::add);
             customersFound.setItems(allCustomers);
-            
-            ObservableList<String> availableTimes = FXCollections.observableArrayList();
-            //make function in dbconnection to get all current appointments
-            //make list containing 20 min appt times from 8 to 5 and if that observablelist .contains any of the times in the currappts list, remove it from the string
-            //then populate the table with the final result
-            //for now, just populate with all times
         }
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }

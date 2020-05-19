@@ -31,9 +31,13 @@ public class ContinueDialogueController implements Initializable {
     @FXML javafx.scene.control.Button goBackButton;
     
     @FXML
-    void handleAddAnotherButton(ActionEvent event) {
+    void handleAddAnotherButton(ActionEvent event) throws IOException {
         Stage stage = (Stage) addAnotherButton.getScene().getWindow();
-        stage.close();            
+        stage.close();
+        Parent root = FXMLLoader.load(getClass().getResource("CreateCustomer.fxml"));
+        Stage stage2 = new Stage();
+        stage2.setScene(new Scene(root));
+        stage2.show();
     }
     
     @FXML

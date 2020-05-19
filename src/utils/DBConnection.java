@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -708,6 +709,7 @@ public class DBConnection {
         return -1;
     }
 
+    //--> NEED TO APPEND DATE TO START/END in correct string format for date/time in database; look at other add functions
     public static void addAppointment(String customerId, String userId, String title, String description, String location, String contact, String type, String url,
                                       String start, String end, String unameEntered) throws SQLException {
         PreparedStatement stmt = null;
@@ -740,30 +742,56 @@ public class DBConnection {
     }
     
     //-->remove the getAppointments from the availableAppts if availableAppts.contains(getAppointments based on string start time)
-    public static Iterable<String> getAvailableApptTimes(String desiredDate) {
-        ArrayList<String> availableAppts = new ArrayList<>();
+    //  
+    //  yyyy-mm-dd HH:mm:ss
+    //
+    //
+    public static Iterable<Appointment> getAvailableApptTimes(LocalDate desiredDate) {
+        ArrayList<Appointment> availableAppts = new ArrayList<>();
         final int startOfDay = 8;
         final int endOfDay = 17;
         final int numberOfAppts = 3 * (endOfDay - startOfDay);
         int currHour = startOfDay;
         int currMin = 0;
+        String dateToAppend = desiredDate.toString();
+        
         for (int i = 0; i < numberOfAppts; i++) {
+            Appointment appointment = new Appointment();
             String timeT;
-            if (currMin == 0) {
-                timeT = currHour + ":" + currMin + "0";
+            if(currHour < 10) {
+                if (currMin == 0) {
+                    timeT = dateToAppend + " 0" + currHour + ":" + currMin + "0:00";
+                }
+                else {
+                    timeT = dateToAppend + " 0" + currHour + ":" + currMin + ":00";
+                }
+                currMin = currMin + 20;
+                if (currMin%60 == 0 && currMin != 0) {
+                    currMin = 0;
+                    currHour = currHour + 1;
+                }
             }
             else {
-                timeT = currHour + ":" + currMin;
+                if (currMin == 0) {
+                    timeT = dateToAppend + " " + currHour + ":" + currMin + "0:00";
+                }
+                else {
+                    timeT = dateToAppend + " " + currHour + ":" + currMin + ":00";
+                }
+                currMin = currMin + 20;
+                if (currMin%60 == 0 && currMin != 0) {
+                    currMin = 0;
+                    currHour = currHour + 1;
+                }
             }
-            currMin = currMin + 20;
-            if (currMin%60 == 0 && currMin != 0) {
-                currMin = 0;
-                currHour = currHour + 1;
+            appointment.setStartTime(timeT);
+            
+            if (!availableAppts.isEmpty()) {
+                availableAppts.get(availableAppts.size() - 1).setEndTime(timeT);
             }
-            availableAppts.add(timeT);
+            availableAppts.add(appointment);
         }
-        //the above function generates all possible appt times for a given day from 8-5
-        //now, need to remove any current appt times that the db contains that overlap/contain the same start time as this list
+        availableAppts.get(numberOfAppts - 1).setEndTime(dateToAppend + " " + endOfDay + ":00:00");
         return availableAppts;
     }
 }
