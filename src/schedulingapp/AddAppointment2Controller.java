@@ -19,7 +19,7 @@ import javafx.fxml.Initializable;
 public class AddAppointment2Controller implements Initializable {
 
     //this is where the appt will get added to the db, using selected customer and date/time from previous window
-    //type is NOT optional, url etc. can be **check specifics in rubric/reports
+    
     
     @FXML
     public void handleAddButton(ActionEvent event) {}

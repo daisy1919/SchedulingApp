@@ -95,17 +95,17 @@ public class SelectCustomerController implements Initializable {
         //-->need to pass selectedCustomer to next screen/set customerId for appt to this customer's ID
         Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
         Appointment selectedDateTime = availableAppts.getSelectionModel().getSelectedItem();
+        
+        //
+        ////type is NOT optional, url etc. can be **check specifics in rubric/reports        
+        //
         try {
             if (!(selectedCustomer == null) && !(selectedDateTime == null)) {
-                Parent root = FXMLLoader.load(getClass().getResource("AddAppointment2.fxml"));
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.show();
                 errorLabel.setText("");
             }
             else { errorLabel.setText("You must choose a customer and an appointment time to continue."); }
         }
-        catch(IOException e) {
+        catch(Exception e) {
             System.out.println("Error " + e.getMessage());
         }
     }
