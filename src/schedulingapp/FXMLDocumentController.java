@@ -34,15 +34,12 @@ public class FXMLDocumentController implements Initializable {
     @FXML javafx.scene.control.Label errorMessages;
     
 
-private Boolean isAuthenticated(User userToAuth) {
-        
+private Boolean isAuthenticated(User userToAuth) {        
         String unameText = this.usernameText.getText();
         String pwordText = this.passwordText.getText();
-        Boolean isAuth = false;
-        
-        try {            
+        Boolean isAuth = false;        
+        try {
             LinkedList<User> usersPossible = (LinkedList<User>) DBConnection.getUsers();
-
             for(int i = 0; i < usersPossible.size(); i++) {  
                 User currUser = usersPossible.get(i);                
                 if (currUser.getUserName().equals(unameText) && currUser.getPassword().equals(pwordText)) {                    
@@ -51,11 +48,9 @@ private Boolean isAuthenticated(User userToAuth) {
                 else { isAuth = false; }               
             }    
         }       
-        catch (SQLException sqlE) { System.out.println("Error"); }        
-        
-        return isAuth;     
-        
-    }    
+        catch (SQLException sqlE) { System.out.println("Error " + sqlE.getMessage()); }                
+        return isAuth;        
+    }
 
     @FXML
     void handleLoginButton (ActionEvent event) throws SQLException, IOException {        

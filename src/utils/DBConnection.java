@@ -710,7 +710,7 @@ public class DBConnection {
     }
 
     //--> NEED TO APPEND DATE TO START/END in correct string format for date/time in database; look at other add functions
-    public static void addAppointment(String customerId, String userId, String title, String description, String location, String contact, String type, String url,
+    public static void addAppointment(String customerId, int userId, String title, String description, String location, String contact, String type, String url,
                                       String start, String end, String unameEntered) throws SQLException {
         PreparedStatement stmt = null;
         String sql = "INSERT INTO appointment "
@@ -723,7 +723,7 @@ public class DBConnection {
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, newApptId);
             stmt.setString(2, customerId);
-            stmt.setString(3, userId);
+            stmt.setString(3, String.valueOf(userId));
             stmt.setString(4, title);
             stmt.setString(5, description);
             stmt.setString(6, location);
@@ -792,20 +792,16 @@ public class DBConnection {
             availableAppts.add(appointment);
         }
         availableAppts.get(numberOfAppts - 1).setEndTime(dateToAppend + " " + endOfDay + ":00:00");
-        //for loop that goes through all of the getApptsByDate and .remove if those appointment contain the start time
+        //
+        //
         //ALSO STILL NEED TO FILTER APPTS BY LOGGED IN USER
+        //filter in getApptsByDate, take in desiredDate and userId
+        //
+        //
         Iterable<Appointment> apptsToRemove = getApptsByDate(desiredDate.toString());
         for(Appointment appointment : apptsToRemove)
             availableAppts.removeIf(e -> (e.getStartTime().substring(0, significantDigits)
                     .contains(appointment.getStartTime().substring(0, significantDigits))));
-        
-        /*for(Appointment appt : availableAppts) {
-            for (Appointment apptToRemove : apptsToRemove) {
-                if(appt.getStartTime().contains(apptToRemove.getStartTime())) {
-                    availableAppts.remove(appt);
-                }
-            }
-        }*/
         return availableAppts;
     }
     

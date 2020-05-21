@@ -23,8 +23,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import schedulingapp.Models.Appointment;
 import schedulingapp.Models.Customer;
+import schedulingapp.Models.User;
 import utils.DBConnection;
 
 /**
@@ -38,6 +40,12 @@ public class SelectCustomerController implements Initializable {
     @FXML javafx.scene.control.Button goBackButton;
     @FXML javafx.scene.control.Label errorLabel;
     @FXML javafx.scene.control.DatePicker desiredApptDate;
+    @FXML javafx.scene.control.TextField titleText;
+    @FXML javafx.scene.control.TextField descriptionText;
+    @FXML javafx.scene.control.TextField locationText;
+    @FXML javafx.scene.control.TextField contactText;
+    @FXML javafx.scene.control.TextField typeText;
+    @FXML javafx.scene.control.TextField urlText;
     
     @FXML
     private TableView<Customer> customersFound;
@@ -83,27 +91,43 @@ public class SelectCustomerController implements Initializable {
         LocalDate apptDate = desiredApptDate.getValue();
         startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
-        //custPhoneCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getAddress().getPhone()));
-        Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);//LocalDate MAY NOT WORK FOR TIMEZONES, CHECK PROPERTIES AND USE APPROPRIATE CONTAINER FOR DATE
+        Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
         ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
         aTimes.forEach(availableTimes::add);
         availableAppts.setItems(availableTimes);
     }
     
     @FXML
-    public void handleUseCustomerButton(ActionEvent event) throws IOException {
-        //-->need to pass selectedCustomer to next screen/set customerId for appt to this customer's ID
+    public void handleUseCustomerButton(ActionEvent event) throws IOException, SQLException {
+        //
+        //--> still need to filter available appt times by username entered userId conflict
+        //
+        String unameE = UserCredentials.getUsername();
+        LinkedList<User> allUsers = (LinkedList<User>) DBConnection.getUsers();
+        User userToAuth = null;        
+        for(int i = 0; i < allUsers.size(); i++) {            
+            if (unameE.equals(allUsers.get(i).getUserName())) {                
+                userToAuth = allUsers.get(i);                
+            }            
+        }
+        int uId = userToAuth.getUserId();
         Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
         Appointment selectedDateTime = availableAppts.getSelectionModel().getSelectedItem();
-        
-        //
-        ////type is NOT optional, url etc. can be **check specifics in rubric/reports        
-        //
+        String startTime = selectedDateTime.getStartTime();
+        String endTime = selectedDateTime.getEndTime();
+        String custId = selectedCustomer.getCustId();
+        String apptTitle = titleText.getText();
+        String apptDescription = descriptionText.getText();
+        String apptLocation = locationText.getText();
+        String apptContact = contactText.getText();
+        String apptType = typeText.getText();
+        String apptUrl = urlText.getText();
         try {
-            if (!(selectedCustomer == null) && !(selectedDateTime == null)) {
+            if (!(selectedCustomer == null) && !(selectedDateTime == null) && !(apptType.isEmpty()) && !(apptDescription.isEmpty())) {
+                DBConnection.addAppointment(custId, uId, apptTitle, apptDescription, apptLocation, apptContact, apptType, apptUrl, startTime, endTime, unameE);
                 errorLabel.setText("");
             }
-            else { errorLabel.setText("You must choose a customer and an appointment time to continue."); }
+            else { errorLabel.setText("You must choose a customer, appointment time, type, and description to continue."); }
         }
         catch(Exception e) {
             System.out.println("Error " + e.getMessage());
