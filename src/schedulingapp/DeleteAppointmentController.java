@@ -80,5 +80,5 @@ public class DeleteAppointmentController implements Initializable {
             appointmentsFound.setItems(allAppointments);
         } 
         catch (SQLException ex) { System.out.println("Error " + ex.getMessage()); }
-    }   
+    }
 }

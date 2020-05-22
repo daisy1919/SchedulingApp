@@ -32,8 +32,7 @@ import utils.DBConnection;
  *
  * @author daisy
  */
-public class SelectCustomerController implements Initializable {
-    
+public class SelectCustomerController implements Initializable {    
     @FXML javafx.scene.control.TextField searchCustomerText;
     @FXML javafx.scene.control.Button useCustomerButton;
     @FXML javafx.scene.control.Button goBackButton;
@@ -81,7 +80,6 @@ public class SelectCustomerController implements Initializable {
         LocalDate apptDate = desiredApptDate.getValue();
         startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
-        int uId = UserCredentials.getCurrentUserId();
         Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
         ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
         aTimes.forEach(availableTimes::add);
@@ -140,5 +138,4 @@ public class SelectCustomerController implements Initializable {
         }
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
-    
 }
