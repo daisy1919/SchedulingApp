@@ -28,29 +28,36 @@ public class AppointmentOptionsController implements Initializable {
      */
     
     @FXML
-    void handleAddAppointmentButton(ActionEvent event) {
+    void handleAddAppointmentButton(ActionEvent event) throws IOException {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("SelectCustomer.fxml"));
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.show();
         }
-        catch(IOException e) {
-            System.out.println("Error loading window");
-        } 
+        catch(IOException e) { System.out.println("Error " + e.getMessage()); }
     }
     
     @FXML
-    void handleEditAppointmentButton(ActionEvent event) {
-    
+    void handleEditAppointmentButton(ActionEvent event) throws IOException {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("EditAppointment.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(IOException e) { System.out.println("Error " + e.getMessage()); }
     }
     
     @FXML
     void handleDeleteAppointmentButton(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("DeleteAppointment.fxml"));
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.show();
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("DeleteAppointment.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();    
+        }
+        catch (IOException e) { System.out.println("Error " + e.getMessage()); }
     }
     
     @Override

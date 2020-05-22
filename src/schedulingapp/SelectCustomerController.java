@@ -23,10 +23,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import java.time.LocalDate;
-import java.util.LinkedList;
 import schedulingapp.Models.Appointment;
 import schedulingapp.Models.Customer;
-import schedulingapp.Models.User;
 import utils.DBConnection;
 
 /**
@@ -68,9 +66,6 @@ public class SelectCustomerController implements Initializable {
     
     @FXML
     private TableColumn<Appointment, String> endTimeCol;
-    
-    //    business hours: ??time zone??
-    
     
     @FXML
     public void handleSearchCustomerButton(ActionEvent event) throws SQLException {

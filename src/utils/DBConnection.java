@@ -806,8 +806,19 @@ public class DBConnection {
         }
         catch(SQLException sqEx) {  System.out.println("Error " + sqEx.getMessage()); }
         return null;
-    }    
+    }
+    
+    public static void deleteAppointment(String appointmentId) throws SQLException {
+        PreparedStatement stmt = null;
+        String sqlStr = "DELETE FROM appointment WHERE appointmentId=?";        
+        try {
+            stmt = conn.prepareStatement(sqlStr);
+            stmt.setString(1, appointmentId);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) { System.out.println("Error " + e.getMessage()); }
+    }
+    
     //updateAppointment
-    //deleteAppointment
     //searchAppointments (make 1 by appointment name, 1 by date of appt or maybe allow filter to week/month views)
 }

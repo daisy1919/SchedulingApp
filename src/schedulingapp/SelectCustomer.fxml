@@ -49,8 +49,8 @@
       <TextField fx:id="typeText" layoutX="557.0" layoutY="392.0" />
       <Label layoutX="442.0" layoutY="425.0" text="URL: " />
       <TextField fx:id="urlText" layoutX="557.0" layoutY="422.0" />
-   <Button fx:id="useCustomerButton" layoutX="530.0" layoutY="470.0" mnemonicParsing="false" onAction="#handleUseCustomerButton" text="Make appointment for this customer" />
-   <Button fx:id="goBackButton" layoutX="391.0" layoutY="470.0" mnemonicParsing="false" onAction="#handleGoBackButton" text="Go Back" />
+   <Button fx:id="useCustomerButton" layoutX="530.0" layoutY="470.0" mnemonicParsing="false" onAction="#handleUseCustomerButton" text="Schedule appointment for this customer" />
+   <Button fx:id="goBackButton" layoutX="380.0" layoutY="470.0" mnemonicParsing="false" onAction="#handleGoBackButton" text="Go Back" />
       <Label fx:id="errorLabel" layoutX="35.0" layoutY="494.0" prefHeight="17.0" prefWidth="800.0" textAlignment="CENTER" textFill="RED" />
    </children>
 </AnchorPane>
