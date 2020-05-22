@@ -69,7 +69,7 @@ public class SelectCustomerController implements Initializable {
     @FXML
     private TableColumn<Appointment, String> endTimeCol;
     
-    //      business hours: ??time zone??
+    //    business hours: ??time zone??
     
     
     @FXML
@@ -114,7 +114,10 @@ public class SelectCustomerController implements Initializable {
                 errorLabel.setText("");
                 Stage stage = (Stage) useCustomerButton.getScene().getWindow();
                 stage.close();
-                //open a dialogue box, then from that dialogue box open this window again
+                Parent root = FXMLLoader.load(getClass().getResource("ApptContinueDialogue.fxml"));
+                Stage stage2 = new Stage();
+                stage2.setScene(new Scene(root));
+                stage2.show();
             }
             else { errorLabel.setText("You must choose a customer, appointment time, type, and description to continue."); }
         }
