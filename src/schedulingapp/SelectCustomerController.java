@@ -37,6 +37,7 @@ import utils.DBConnection;
 public class SelectCustomerController implements Initializable {
     
     @FXML javafx.scene.control.TextField searchCustomerText;
+    @FXML javafx.scene.control.Button useCustomerButton;
     @FXML javafx.scene.control.Button goBackButton;
     @FXML javafx.scene.control.Label errorLabel;
     @FXML javafx.scene.control.DatePicker desiredApptDate;
@@ -67,14 +68,8 @@ public class SelectCustomerController implements Initializable {
     
     @FXML
     private TableColumn<Appointment, String> endTimeCol;
-
-    //this window allows the user to select a date and time
-    //for the table, populate start and end times for example 10:00-10:20    
-
-    //  --> available appointment times: filter in DBConnection function getAvailableAppointments
-    //      when pressing the button, close window with table view (don't simply refresh 
-    //      because the customer may decide to not make the appt, so still want that slot to show as available)
-    //      business hours: 8am to 6pm ??time zone??
+    
+    //      business hours: ??time zone??
     
     
     @FXML
@@ -87,10 +82,11 @@ public class SelectCustomerController implements Initializable {
     }
     
     @FXML
-    public void handleDatePicker(ActionEvent event) {       
+    public void handleDatePicker(ActionEvent event) throws SQLException {       
         LocalDate apptDate = desiredApptDate.getValue();
         startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        int uId = UserCredentials.getCurrentUserId();
         Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
         ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
         aTimes.forEach(availableTimes::add);
@@ -99,18 +95,8 @@ public class SelectCustomerController implements Initializable {
     
     @FXML
     public void handleUseCustomerButton(ActionEvent event) throws IOException, SQLException {
-        //
-        //--> still need to filter available appt times by username entered userId conflict
-        //
         String unameE = UserCredentials.getUsername();
-        LinkedList<User> allUsers = (LinkedList<User>) DBConnection.getUsers();
-        User userToAuth = null;        
-        for(int i = 0; i < allUsers.size(); i++) {            
-            if (unameE.equals(allUsers.get(i).getUserName())) {                
-                userToAuth = allUsers.get(i);                
-            }            
-        }
-        int uId = userToAuth.getUserId();
+        int uId = UserCredentials.getCurrentUserId();
         Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
         Appointment selectedDateTime = availableAppts.getSelectionModel().getSelectedItem();
         String startTime = selectedDateTime.getStartTime();
@@ -126,6 +112,9 @@ public class SelectCustomerController implements Initializable {
             if (!(selectedCustomer == null) && !(selectedDateTime == null) && !(apptType.isEmpty()) && !(apptDescription.isEmpty())) {
                 DBConnection.addAppointment(custId, uId, apptTitle, apptDescription, apptLocation, apptContact, apptType, apptUrl, startTime, endTime, unameE);
                 errorLabel.setText("");
+                Stage stage = (Stage) useCustomerButton.getScene().getWindow();
+                stage.close();
+                //open a dialogue box, then from that dialogue box open this window again
             }
             else { errorLabel.setText("You must choose a customer, appointment time, type, and description to continue."); }
         }

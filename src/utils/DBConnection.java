@@ -25,6 +25,7 @@ import schedulingapp.Models.Address;
 import schedulingapp.Models.Appointment;
 import schedulingapp.Models.City;
 import schedulingapp.Models.Country;
+import schedulingapp.UserCredentials;
 
 /**
  *
@@ -609,13 +610,8 @@ public class DBConnection {
         }
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
-    
-    //addAppointment
-    //updateAppointment
-    //deleteAppointment
-    //searchAppointments (make 1 by appointment name, 1 by date of appt or maybe allow filter to week/month views)
 
-    //this function gets the data from SQL to list of appointments
+    //The following function gets the data from SQL and adds it to a list of appointments
     public static Iterable<Appointment> getAppointmentTableInfo() throws SQLException{
         Statement sqlStmt = null;
         ResultSet sqlRs = null;
@@ -658,7 +654,7 @@ public class DBConnection {
         return null;   
     }
     
-    //this function generates the Appointment object/model including attaching the appointment and user 
+    //The following function generates the Appointment object/model including attaching the customer and user 
     public static Iterable<Appointment> getAppointments() throws SQLException {                
         try {            
             Iterable<Appointment> appointments = getAppointmentTableInfo();
@@ -709,7 +705,7 @@ public class DBConnection {
         return -1;
     }
 
-    //--> NEED TO APPEND DATE TO START/END in correct string format for date/time in database; look at other add functions
+    //The following function adds a new appointment to the database
     public static void addAppointment(String customerId, int userId, String title, String description, String location, String contact, String type, String url,
                                       String start, String end, String unameEntered) throws SQLException {
         PreparedStatement stmt = null;
@@ -741,12 +737,8 @@ public class DBConnection {
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
     
-    //-->
-    //  
-    //  remove the getAppointments from the availableAppts if availableAppts.contains(getAppointments based on string start time)
-    //
-    //
-    public static Iterable<Appointment> getAvailableApptTimes(LocalDate desiredDate) {
+    //The following function retrieves available appointment times by date for the user currently logged in
+    public static Iterable<Appointment> getAvailableApptTimes(LocalDate desiredDate) throws SQLException {
         final int significantDigits = 16;
         ArrayList<Appointment> availableAppts = new ArrayList<>();
         final int startOfDay = 8;
@@ -792,25 +784,21 @@ public class DBConnection {
             availableAppts.add(appointment);
         }
         availableAppts.get(numberOfAppts - 1).setEndTime(dateToAppend + " " + endOfDay + ":00:00");
-        //
-        //
-        //ALSO STILL NEED TO FILTER APPTS BY LOGGED IN USER
-        //filter in getApptsByDate, take in desiredDate and userId
-        //
-        //
-        Iterable<Appointment> apptsToRemove = getApptsByDate(desiredDate.toString());
+        int uId = UserCredentials.getCurrentUserId();
+        Iterable<Appointment> apptsToRemove = getApptsByDate(desiredDate.toString(), uId);
         for(Appointment appointment : apptsToRemove)
             availableAppts.removeIf(e -> (e.getStartTime().substring(0, significantDigits)
                     .contains(appointment.getStartTime().substring(0, significantDigits))));
         return availableAppts;
     }
     
-    public static Iterable<Appointment> getApptsByDate(String desiredDate) {
+    //The following function retrieves appointments by date for a specific userId
+    public static Iterable<Appointment> getApptsByDate(String desiredDate, int userId) {
         try {
             Iterable<Appointment> appointments = getAppointments();
             List<Appointment> foundAppointments = new ArrayList<>();
             for(Appointment appointment : appointments) {
-                if(appointment.getStartTime().contains(desiredDate)) {
+                if(appointment.getStartTime().contains(desiredDate) && appointment.getUserId().equals(String.valueOf(userId))) {
                     foundAppointments.add(appointment);
                 }
             }
@@ -818,5 +806,8 @@ public class DBConnection {
         }
         catch(SQLException sqEx) {  System.out.println("Error " + sqEx.getMessage()); }
         return null;
-    }
+    }    
+    //updateAppointment
+    //deleteAppointment
+    //searchAppointments (make 1 by appointment name, 1 by date of appt or maybe allow filter to week/month views)
 }
