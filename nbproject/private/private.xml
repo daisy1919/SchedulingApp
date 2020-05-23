@@ -5,7 +5,7 @@
         <group>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/utils/DBConnection.java</file>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/SelectCustomerController.java</file>
-            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/SelectCustomer.fxml</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/DeleteAppointmentController.java</file>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/EditAppointment.fxml</file>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/AppointmentOptionsController.java</file>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/UserCredentials.java</file>

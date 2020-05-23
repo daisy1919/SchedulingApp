@@ -35,6 +35,7 @@ import utils.DBConnection;
 public class EditAppointmentController implements Initializable {
     @FXML javafx.scene.control.Button goBackButton;
     @FXML javafx.scene.control.DatePicker desiredApptDate;
+    @FXML javafx.scene.control.TextField searchCustomerText;
     
     @FXML
     private TableView<Appointment> appointmentsFound;
@@ -55,8 +56,14 @@ public class EditAppointmentController implements Initializable {
     private TableColumn<Appointment, String> endTimeCol;
     
     @FXML
-    public void handleSearchCustomerButton(ActionEvent event) {
-        
+    public void handleSearchCustomerButton(ActionEvent event) throws SQLException {
+        String nameToSearch = searchCustomerText.getText();
+        //use nameToSearch in getAppts function .getcustomer.getname.contains to lowercase nameToSearch
+        Iterable<Appointment> fAppointments = DBConnection.getAppointments();
+        ObservableList<Appointment> foundAppointments = FXCollections.observableArrayList();
+        fAppointments.forEach(foundAppointments::add);
+        foundAppointments.removeIf(e -> !(e.getCustomer().getCustomerName().toLowerCase().contains(nameToSearch.toLowerCase())));
+        appointmentsFound.setItems(foundAppointments);
     }
     
     @FXML

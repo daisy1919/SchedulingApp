@@ -737,27 +737,19 @@ public class DBConnection {
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
     
-    //The following function retrieves available appointment times by date for the user currently logged in
-    public static Iterable<Appointment> getAvailableApptTimes(LocalDate desiredDate) throws SQLException {
-        final int significantDigits = 16;
-        ArrayList<Appointment> availableAppts = new ArrayList<>();
-        final int startOfDay = 8;
-        final int endOfDay = 17;
+    //The following function generates all possible appointment times (3 appointments per hour for each hour of the business day)
+    public static Iterable<Appointment> generateAllApptTimes(final int startOfDay, final int endOfDay, LocalDate desiredDate) {
+        ArrayList<Appointment> allPossibleAppts = new ArrayList<>();
         final int numberOfAppts = 3 * (endOfDay - startOfDay);
         int currHour = startOfDay;
         int currMin = 0;
         String dateToAppend = desiredDate.toString();
-        
         for (int i = 0; i < numberOfAppts; i++) {
             Appointment appointment = new Appointment();
             String timeT;
             if(currHour < 10) {
-                if (currMin == 0) {
-                    timeT = dateToAppend + " 0" + currHour + ":" + currMin + "0:00";
-                }
-                else {
-                    timeT = dateToAppend + " 0" + currHour + ":" + currMin + ":00";
-                }
+                if (currMin == 0) { timeT = dateToAppend + " 0" + currHour + ":" + currMin + "0:00"; }
+                else { timeT = dateToAppend + " 0" + currHour + ":" + currMin + ":00"; }
                 currMin = currMin + 20;
                 if (currMin%60 == 0 && currMin != 0) {
                     currMin = 0;
@@ -765,12 +757,8 @@ public class DBConnection {
                 }
             }
             else {
-                if (currMin == 0) {
-                    timeT = dateToAppend + " " + currHour + ":" + currMin + "0:00";
-                }
-                else {
-                    timeT = dateToAppend + " " + currHour + ":" + currMin + ":00";
-                }
+                if (currMin == 0) { timeT = dateToAppend + " " + currHour + ":" + currMin + "0:00"; }
+                else { timeT = dateToAppend + " " + currHour + ":" + currMin + ":00"; }
                 currMin = currMin + 20;
                 if (currMin%60 == 0 && currMin != 0) {
                     currMin = 0;
@@ -778,12 +766,17 @@ public class DBConnection {
                 }
             }
             appointment.setStartTime(timeT);            
-            if (!availableAppts.isEmpty()) {
-                availableAppts.get(availableAppts.size() - 1).setEndTime(timeT);
-            }
-            availableAppts.add(appointment);
+            if (!allPossibleAppts.isEmpty()) { allPossibleAppts.get(allPossibleAppts.size() - 1).setEndTime(timeT); }  
+            allPossibleAppts.add(appointment);
         }
-        availableAppts.get(numberOfAppts - 1).setEndTime(dateToAppend + " " + endOfDay + ":00:00");
+        allPossibleAppts.get(numberOfAppts - 1).setEndTime(dateToAppend + " " + endOfDay + ":00:00");
+        return allPossibleAppts;
+    }
+    
+    //The following function retrieves available appointment times by date for the user currently logged in
+    public static Iterable<Appointment> getAvailableApptTimes(LocalDate desiredDate) throws SQLException {
+        final int significantDigits = 16;        
+        ArrayList<Appointment> availableAppts = (ArrayList<Appointment>) generateAllApptTimes(8,17,desiredDate);        
         int uId = UserCredentials.getCurrentUserId();
         Iterable<Appointment> apptsToRemove = getApptsByDate(desiredDate.toString(), uId);
         for(Appointment appointment : apptsToRemove)

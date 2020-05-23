@@ -45,7 +45,9 @@ public class DeleteAppointmentController implements Initializable {
     private TableColumn<Appointment, String> apptDateCol;
     
     @FXML
-    public void handleSearchByCustomerButton(ActionEvent event) {}
+    public void handleSearchByCustomerButton(ActionEvent event) {
+    
+    }
     
     @FXML
     public void handleGoBackButton(ActionEvent event) {
