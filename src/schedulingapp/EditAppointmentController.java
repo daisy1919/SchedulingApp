@@ -111,9 +111,18 @@ public class EditAppointmentController implements Initializable {
             String lastUpdate = java.time.LocalDateTime.now().toString();
             String lastUpdateBy = UserCredentials.getUsername();
             DBConnection.updateAppointment(appointmentId, title, description, location, contact, apptType, apptUrl, startTime, endTime, lastUpdate, lastUpdateBy);
-            
-            //refresh table views
-            
+            searchCustomerText.clear();
+            Iterable<Appointment> fAppointments = DBConnection.getAppointments();
+            ObservableList<Appointment> foundAppointments = FXCollections.observableArrayList();
+            fAppointments.forEach(foundAppointments::add);
+            appointmentsFound.setItems(foundAppointments);
+            LocalDate apptDate = desiredApptDate.getValue();
+            startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+            endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+            Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
+            ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
+            aTimes.forEach(availableTimes::add);
+            availableAppts.setItems(availableTimes);
         }
         catch(SQLException e) { System.out.println("Error " + e.getMessage()); }
     }
