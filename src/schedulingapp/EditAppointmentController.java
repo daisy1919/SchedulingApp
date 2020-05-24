@@ -36,6 +36,12 @@ public class EditAppointmentController implements Initializable {
     @FXML javafx.scene.control.Button goBackButton;
     @FXML javafx.scene.control.DatePicker desiredApptDate;
     @FXML javafx.scene.control.TextField searchCustomerText;
+    @FXML javafx.scene.control.TextField titleText;
+    @FXML javafx.scene.control.TextField descriptionText;
+    @FXML javafx.scene.control.TextField locationText;
+    @FXML javafx.scene.control.TextField contactText;
+    @FXML javafx.scene.control.TextField typeText;
+    @FXML javafx.scene.control.TextField urlText;
     
     @FXML
     private TableView<Appointment> appointmentsFound;
@@ -58,12 +64,22 @@ public class EditAppointmentController implements Initializable {
     @FXML
     public void handleSearchCustomerButton(ActionEvent event) throws SQLException {
         String nameToSearch = searchCustomerText.getText();
-        //use nameToSearch in getAppts function .getcustomer.getname.contains to lowercase nameToSearch
         Iterable<Appointment> fAppointments = DBConnection.getAppointments();
         ObservableList<Appointment> foundAppointments = FXCollections.observableArrayList();
         fAppointments.forEach(foundAppointments::add);
         foundAppointments.removeIf(e -> !(e.getCustomer().getCustomerName().toLowerCase().contains(nameToSearch.toLowerCase())));
         appointmentsFound.setItems(foundAppointments);
+    }
+    
+    @FXML
+    public void handleApptSelected() {
+        Appointment selectedAppointment = appointmentsFound.getSelectionModel().getSelectedItem();
+        titleText.setText(selectedAppointment.getTitle());
+        descriptionText.setText(selectedAppointment.getDescription());
+        locationText.setText(selectedAppointment.getLocation());
+        contactText.setText(selectedAppointment.getContact());
+        typeText.setText(selectedAppointment.getType());
+        urlText.setText(selectedAppointment.getUrl());
     }
     
     @FXML
@@ -81,8 +97,25 @@ public class EditAppointmentController implements Initializable {
     }
     
     @FXML
-    public void handleUseCustomerButton(ActionEvent event) {
-        
+    public void handleUpdateButton(ActionEvent event) throws SQLException {
+        try {
+            String appointmentId = appointmentsFound.getSelectionModel().getSelectedItem().getAppointmentId();
+            String title = titleText.getText();
+            String description = descriptionText.getText();
+            String location = locationText.getText();
+            String contact = contactText.getText();
+            String apptType = typeText.getText();
+            String apptUrl = urlText.getText();
+            String startTime = availableAppts.getSelectionModel().getSelectedItem().getStartTime();
+            String endTime = availableAppts.getSelectionModel().getSelectedItem().getEndTime();
+            String lastUpdate = java.time.LocalDateTime.now().toString();
+            String lastUpdateBy = UserCredentials.getUsername();
+            DBConnection.updateAppointment(appointmentId, title, description, location, contact, apptType, apptUrl, startTime, endTime, lastUpdate, lastUpdateBy);
+            
+            //refresh table views
+            
+        }
+        catch(SQLException e) { System.out.println("Error " + e.getMessage()); }
     }
     
     @FXML

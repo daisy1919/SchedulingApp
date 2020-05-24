@@ -812,6 +812,27 @@ public class DBConnection {
         catch (SQLException e) { System.out.println("Error " + e.getMessage()); }
     }
     
-    //updateAppointment
-    //searchAppointments (make 1 by appointment name, 1 by date of appt or maybe allow filter to week/month views)
+    public static void updateAppointment(String appointmentId, String title, String description, String location, String contact, String apptType, 
+                                         String apptUrl, String startTime, String endTime, String lastUpdate, String lastUpdateBy) throws SQLException {
+        PreparedStatement stmt = null;
+        String sql = "UPDATE appointment SET title=?, description=?, location=?, contact=?, type=?, "
+                + "url=?, start=?, end=?, lastUpdate=?, lastUpdateBy=? WHERE appointmentId=?";
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, title);
+            stmt.setString(2, description);
+            stmt.setString(3, location);
+            stmt.setString(4, contact);
+            stmt.setString(5, apptType);
+            stmt.setString(6, apptUrl);
+            stmt.setString(7, startTime);
+            stmt.setString(8, endTime);
+            stmt.setString(9, lastUpdate);
+            stmt.setString(10, lastUpdateBy);
+            stmt.setString(11, String.valueOf(appointmentId));
+            stmt.executeUpdate();
+        }
+        catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
+    }
+    //filter to week/month views)
 }

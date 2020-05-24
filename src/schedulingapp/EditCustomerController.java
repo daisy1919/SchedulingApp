@@ -53,23 +53,6 @@ public class EditCustomerController implements Initializable {
     @FXML
     private TableColumn<Customer, String> custAddCol;
     
-    /*public TableView<Customer> getTableView(){
-        return customersFound;
-    }
-    
-    public void setTableView(TableColumn<Customer, String> custNameCol, TableColumn<Customer, String> custPhoneCol, TableColumn<Customer, String> custAddCol, ObservableList<Customer> allCustomers) throws SQLException {
-        try {
-            custNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-            custPhoneCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getAddress().getPhone()));
-            custAddCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getAddress().getAddress1()));
-            Iterable<Customer> aCustomers = DBConnection.getCustomers();
-            allCustomers = FXCollections.observableArrayList();
-            aCustomers.forEach(allCustomers::add); 
-            customersFound.setItems(allCustomers);
-        }
-        catch (SQLException ex) { System.out.println("Error " + ex.getMessage()); }
-    }*/
-    
     @FXML 
     void handleSearchCustomerButton(ActionEvent event) throws SQLException {        
         String nameToSearch = searchCustomerText.getText();        
