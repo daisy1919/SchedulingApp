@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import javafx.collections.ObservableList;
+import java.util.Locale;
 import schedulingapp.Models.Customer;
 import schedulingapp.Models.User;
 import schedulingapp.Models.Address;
@@ -67,7 +67,7 @@ public class DBConnection {
         }        
     }    
     //end of db connection functions//
-    /*****/
+    /*****/    
     public static Iterable<User> getUsers() throws SQLException {                
         Statement sqlStmt = null;
         ResultSet sqlRs = null;
