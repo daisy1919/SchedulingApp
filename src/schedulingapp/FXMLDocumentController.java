@@ -6,12 +6,15 @@
 package schedulingapp;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Properties;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -79,18 +82,11 @@ private Boolean isAuthenticated(User userToAuth) {
                 errorMessages.setText("");
             }
             else {
-                
-                
-                ResourceBundle rb = ResourceBundle.getBundle("C:\\Users\\daisy\\Documents\\NetBeansProjects\\SchedulingApp\\src\\utils\\Nat_de.properties", Locale.getDefault());
-                
-                    
-                    // --> get rid of the following line
-                    //Locale.setDefault(new Locale("de"));
-                    
-                if (Locale.getDefault().getLanguage().equals("de")) /*rb.getLocale().getDisplayLanguage().equals("de")*/ {
+                ResourceBundle rb = ResourceBundle.getBundle("schedulingapp/Nat", Locale.getDefault());
+                if (rb.getLocale().getLanguage().equals("de")) {
                     errorMessages.setText(rb.getString("Credentials") + " " + rb.getString("are") + " " + rb.getString("incorrect"));
                 }
-                //else { errorMessages.setText("Credentials are incorrect"); }
+                else { errorMessages.setText("Credentials are incorrect"); }
             }
 
             

@@ -4,12 +4,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/utils/DBConnection.java</file>
-            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/SelectCustomerController.java</file>
-            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/DeleteAppointmentController.java</file>
-            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/EditAppointment.fxml</file>
-            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/AppointmentOptionsController.java</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/utils/SystemInformation.java</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/FXMLDocumentController.java</file>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/UserCredentials.java</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/Nat_de.properties</file>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/EditAppointmentController.java</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/OnLoginController.java</file>
         </group>
     </open-files>
 </project-private>
