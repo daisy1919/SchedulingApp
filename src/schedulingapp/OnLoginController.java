@@ -37,9 +37,7 @@ public class OnLoginController implements Initializable {
             stage.setScene(new Scene(root));
             stage.show();
         }
-        catch(IOException e) {
-            System.out.println("Error loading window");
-        }        
+        catch(IOException e) { System.out.println("Error " + e.getMessage()); }     
     }
     
     @FXML
@@ -50,26 +48,25 @@ public class OnLoginController implements Initializable {
             stage.setScene(new Scene(root));
             stage.show();
         }
-        catch(IOException e) {
-            System.out.println("Error loading window");
-        }
+        catch(IOException e) { System.out.println("Error " + e.getMessage()); }
     }
     
     @FXML
     void handleCalendarButton(ActionEvent event) {
-        
-        
-        
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("CalendarOptions.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(IOException e) { System.out.println("Error " + e.getMessage()); }        
     }
     
     @FXML
     void handleReportsButton(ActionEvent event) {
         
-        
-        
     }
-    
-    
+        
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

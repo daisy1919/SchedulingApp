@@ -812,6 +812,7 @@ public class DBConnection {
         catch (SQLException e) { System.out.println("Error " + e.getMessage()); }
     }
     
+    //The following method updates appointments
     public static void updateAppointment(String appointmentId, String title, String description, String location, String contact, String apptType, 
                                          String apptUrl, String startTime, String endTime, String lastUpdate, String lastUpdateBy) throws SQLException {
         PreparedStatement stmt = null;
@@ -834,5 +835,23 @@ public class DBConnection {
         }
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
-    //filter to week/month views)
+     
+    
+    /*
+    public static Iterable<Appointment> getApptsByWeek(LocalDate startOfWeek, LocalDate endOfWeek) {
+        try {
+            PreparedStatement stmt = null;
+            String sqlToEx = "SELECT * FROM appointment WHERE start BETWEEN value1 AND value2; ";
+            return foundAppointments;
+        }
+        catch(SQLException sqEx) {  System.out.println("Error " + sqEx.getMessage()); }
+        return null;
+        
+    }
+    
+    public static Iterable<Appointment> getApptsByMonth(LocalDate startOfMonth, LocalDate endOfMonth) {
+    
+    }
+    */
+    
 }

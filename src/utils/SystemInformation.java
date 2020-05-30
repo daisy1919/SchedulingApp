@@ -6,7 +6,6 @@
 package utils;
 
 import java.time.ZonedDateTime;
-import java.util.Locale;
 
 /**
  *
@@ -14,33 +13,8 @@ import java.util.Locale;
  */
 public class SystemInformation {
     //
-    //Return type may need to be changed
+    //This file does nothing. Delete.
     //
-    
-    /*
-    public static Locale getLocation() {
-        Locale defaultLocale = Locale.getDefault();
-        
-        
-        Locale.setDefault(new Locale("es"));
-            
-        String displayLanguage = defaultLocale.getDisplayLanguage();
-        String displayCountry = defaultLocale.getDisplayCountry();
-        
-        System.out.println("" + defaultLocale);
-        System.out.println("" + displayLanguage);
-        System.out.println("" + displayCountry);
-        
-        //ZonedDateTime startTimee = availableAppts.getSelectionModel().getSelectedItem().getStartTime();
-        
-        ZonedDateTime newT;
-        
-        return defaultLocale;
-        
- 
-        //en_US
-        //English
-        //United States
-          
-    }*/
+    //ZonedDateTime startTimee = availableAppts.getSelectionModel().getSelectedItem().getStartTime();
+    //ZonedDateTime newT;
 }
