@@ -10,9 +10,17 @@ import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import schedulingapp.Models.Appointment;
+import utils.DBConnection;
 
 /**
  * FXML Controller class
@@ -23,21 +31,32 @@ public class WeekAppointmentsController implements Initializable {
     @FXML javafx.scene.control.DatePicker datePicker;
     
     @FXML
+    private TableView<Appointment> appointmentsFound;
+    
+    @FXML
+    private TableColumn<Appointment, String> custNameCol;
+    
+    @FXML
+    private TableColumn<Appointment, String> apptDateCol;
+    
+    @FXML
     public void handleDatePicker(ActionEvent event) {
         LocalDate selectedDate = datePicker.getValue();
         Locale userLocale = Locale.getDefault();
-        int weekNumber = selectedDate.get(WeekFields.of(userLocale).weekOfWeekBasedYear());
-        
         System.out.println(selectedDate.getDayOfWeek());
-        //1 is Monday, 7 is Sunday
-        //add 1 to day of week to get 1 to be sunday?
         int dayNumber = selectedDate.getDayOfWeek().getValue();
         System.out.println(dayNumber);
         
-        //weekNumber works
-        //now need to get all appointments in that week number
-        //maybe get first day of that week and get all appts in that day to plus 6 days (dates)
+        //change selectedDate to Sunday of the week, so get its index and then set selectedDate to selectedDate.plusDays(-2);
         
+        DBConnection.getApptsByWeek(selectedDate);
+        //Populate tableview with that week's appointments
+        custNameCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getCustomer().getCustomerName()));
+        apptDateCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        Iterable<Appointment> wAppointments = DBConnection.getApptsByWeek(selectedDate);
+        ObservableList<Appointment> weekAppointments = FXCollections.observableArrayList();
+        wAppointments.forEach(weekAppointments::add);
+        appointmentsFound.setItems(weekAppointments);
     }
     
     @Override

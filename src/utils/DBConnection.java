@@ -12,8 +12,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -835,23 +837,32 @@ public class DBConnection {
         }
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
-     
     
-    /*
-    public static Iterable<Appointment> getApptsByWeek(LocalDate startOfWeek, LocalDate endOfWeek) {
-        try {
-            PreparedStatement stmt = null;
-            String sqlToEx = "SELECT * FROM appointment WHERE start BETWEEN value1 AND value2; ";
-            return foundAppointments;
+    public static Iterable<Appointment> getApptsByWeek(LocalDate startOfWeek) {
+        LocalDate endOfWeek = startOfWeek.plusDays(7);        
+        LocalTime zeroTime;
+        zeroTime = LocalTime.parse("00:00:00");        
+        LocalDateTime startOfWeekTime = LocalDateTime.of(startOfWeek, zeroTime);
+        LocalDateTime endOfWeekTime = LocalDateTime.of(endOfWeek, zeroTime);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");        
+        try {            
+            Iterable<Appointment> allAppts = getAppointments();
+            List<Appointment> weekAppts = new ArrayList<>();
+            for(Appointment appt : allAppts) {
+                int i = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(startOfWeekTime);
+                int j = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(endOfWeekTime);
+                if(i >= 0 && j <= 0) {
+                    weekAppts.add(appt);
+                }
+            }
+            return weekAppts;
         }
         catch(SQLException sqEx) {  System.out.println("Error " + sqEx.getMessage()); }
-        return null;
-        
+        return null;        
     }
     
-    public static Iterable<Appointment> getApptsByMonth(LocalDate startOfMonth, LocalDate endOfMonth) {
+    /*public static Iterable<Appointment> getApptsByMonth(LocalDate startOfMonth, LocalDate endOfMonth) {
     
-    }
-    */
+    }*/
     
 }
