@@ -5,9 +5,9 @@
         <group>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/utils/DBConnection.java</file>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/WeekAppointmentsController.java</file>
-            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/WeekAppointments.fxml</file>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/AppointmentOptionsController.java</file>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/CalendarOptionsController.java</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/EditAppointmentController.java</file>
         </group>
     </open-files>
 </project-private>
