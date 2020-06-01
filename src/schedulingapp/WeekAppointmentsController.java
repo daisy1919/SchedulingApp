@@ -39,16 +39,33 @@ public class WeekAppointmentsController implements Initializable {
     @FXML
     private TableColumn<Appointment, String> apptDateCol;
     
+    //This method will show the appointments for the week beginning on Sunday
     @FXML
     public void handleDatePicker(ActionEvent event) {
         LocalDate selectedDate = datePicker.getValue();
-        Locale userLocale = Locale.getDefault();
-        System.out.println(selectedDate.getDayOfWeek());
         int dayNumber = selectedDate.getDayOfWeek().getValue();
-        System.out.println(dayNumber);
-        
-        //change selectedDate to Sunday of the week, so get its index and then set selectedDate to selectedDate.plusDays(-2);
-        
+        switch (dayNumber) {
+            case 1:
+                selectedDate = selectedDate.plusDays(-1);
+                break;
+            case 2:
+                selectedDate = selectedDate.plusDays(-2);
+                break;
+            case 3:
+                selectedDate = selectedDate.plusDays(-3);
+                break;
+            case 4:
+                selectedDate = selectedDate.plusDays(-4);
+                break;
+            case 5:
+                selectedDate = selectedDate.plusDays(-5);
+                break;
+            case 6:
+                selectedDate = selectedDate.plusDays(-6);
+                break;
+            default:
+                break;
+        }
         DBConnection.getApptsByWeek(selectedDate);
         //Populate tableview with that week's appointments
         custNameCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getCustomer().getCustomerName()));
