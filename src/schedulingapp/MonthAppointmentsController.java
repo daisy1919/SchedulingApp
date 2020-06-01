@@ -25,7 +25,7 @@ import utils.DBConnection;
  *
  * @author daisy
  */
-public class WeekAppointmentsController implements Initializable {
+public class MonthAppointmentsController implements Initializable {
     @FXML javafx.scene.control.DatePicker datePicker;
     
     @FXML
@@ -41,37 +41,38 @@ public class WeekAppointmentsController implements Initializable {
     @FXML
     public void handleDatePicker(ActionEvent event) {
         LocalDate selectedDate = datePicker.getValue();
-        int dayNumber = selectedDate.getDayOfWeek().getValue();
-        switch (dayNumber) {
-            case 1:
-                selectedDate = selectedDate.plusDays(-1);
-                break;
-            case 2:
-                selectedDate = selectedDate.plusDays(-2);
-                break;
-            case 3:
-                selectedDate = selectedDate.plusDays(-3);
-                break;
-            case 4:
-                selectedDate = selectedDate.plusDays(-4);
-                break;
-            case 5:
-                selectedDate = selectedDate.plusDays(-5);
-                break;
-            case 6:
-                selectedDate = selectedDate.plusDays(-6);
-                break;
-            default:
-                break;
+        int monthNumber = selectedDate.getMonth().getValue();
+        int yearNumber = selectedDate.getYear();
+        String dateToParse;
+        if (monthNumber < 10) {
+            dateToParse = String.valueOf(yearNumber) + "-0" + String.valueOf(monthNumber) + "-01";
         }
-        DBConnection.getApptsByWeek(selectedDate);
+        else {
+            dateToParse = String.valueOf(yearNumber) + "-" + String.valueOf(monthNumber) + "-01";
+        }        
+        LocalDate firstOfMonth = LocalDate.parse(dateToParse);
+        LocalDate endOfMonth = LocalDate.of(2020, 01, 01);
+        if (monthNumber == 1 || monthNumber == 3 || monthNumber == 5 || monthNumber == 7 || monthNumber == 8 || monthNumber == 10 || monthNumber == 12) {
+            endOfMonth = firstOfMonth.plusDays(30);
+        }
+        else if (monthNumber == 4 || monthNumber == 6 || monthNumber == 9 || monthNumber == 11) {
+            endOfMonth = firstOfMonth.plusDays(29);
+        }
+        else if (monthNumber == 2) {
+            if (yearNumber % 4 == 0) {
+                endOfMonth = firstOfMonth.plusDays(28);
+            }
+            else {
+                endOfMonth = firstOfMonth.plusDays(27);
+            }
+        }
         //Populate tableview with that week's appointments
         custNameCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getCustomer().getCustomerName()));
         apptDateCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-        Iterable<Appointment> wAppointments = DBConnection.getApptsByWeek(selectedDate);
-        ObservableList<Appointment> weekAppointments = FXCollections.observableArrayList();
-        wAppointments.forEach(weekAppointments::add);
-        appointmentsFound.setItems(weekAppointments);
+        Iterable<Appointment> mAppointments = DBConnection.getApptsByMonth(firstOfMonth, endOfMonth);
+        ObservableList<Appointment> monthAppointments = FXCollections.observableArrayList();
+        mAppointments.forEach(monthAppointments::add);
+        appointmentsFound.setItems(monthAppointments);
     }
     
     @Override

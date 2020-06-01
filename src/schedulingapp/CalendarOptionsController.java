@@ -35,8 +35,14 @@ public class CalendarOptionsController implements Initializable {
     }
     
     @FXML
-    public void handleMonthButton(ActionEvent event) {
-    
+    public void handleMonthButton(ActionEvent event) throws IOException {
+        try {
+                Parent root = FXMLLoader.load(getClass().getResource("MonthAppointments.fxml"));
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.show();
+            }
+        catch(IOException e) { System.out.println("Error " + e.getMessage()); }
     }
     
     @Override

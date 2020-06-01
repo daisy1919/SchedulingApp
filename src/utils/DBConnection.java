@@ -858,11 +858,29 @@ public class DBConnection {
             return weekAppts;
         }
         catch(SQLException sqEx) {  System.out.println("Error " + sqEx.getMessage()); }
-        return null;        
+        return null;    
     }
     
-    /*public static Iterable<Appointment> getApptsByMonth(LocalDate startOfMonth, LocalDate endOfMonth) {
-    
-    }*/
+    public static Iterable<Appointment> getApptsByMonth(LocalDate startOfMonth, LocalDate endOfMonth) {
+        LocalTime zeroTime;
+        zeroTime = LocalTime.parse("00:00:00");        
+        LocalDateTime startOfMonthTime = LocalDateTime.of(startOfMonth, zeroTime);
+        LocalDateTime endOfMonthTime = LocalDateTime.of(endOfMonth, zeroTime);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");        
+        try {            
+            Iterable<Appointment> allAppts = getAppointments();
+            List<Appointment> monthAppts = new ArrayList<>();
+            for(Appointment appt : allAppts) {
+                int i = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(startOfMonthTime);
+                int j = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(endOfMonthTime);
+                if(i >= 0 && j <= 0) {
+                    monthAppts.add(appt);
+                }
+            }
+            return monthAppts;
+        }
+        catch(SQLException sqEx) {  System.out.println("Error " + sqEx.getMessage()); }
+        return null; 
+    }
     
 }
