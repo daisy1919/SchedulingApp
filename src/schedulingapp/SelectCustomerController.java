@@ -92,15 +92,26 @@ public class SelectCustomerController implements Initializable {
         int uId = UserCredentials.getCurrentUserId();
         Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
         Appointment selectedDateTime = availableAppts.getSelectionModel().getSelectedItem();
-        String startTime = selectedDateTime.getStartTime();
-        String endTime = selectedDateTime.getEndTime();
-        String custId = selectedCustomer.getCustId();
-        String apptTitle = titleText.getText();
-        String apptDescription = descriptionText.getText();
-        String apptLocation = locationText.getText();
-        String apptContact = contactText.getText();
-        String apptType = typeText.getText();
-        String apptUrl = urlText.getText();
+        String startTime = new String();
+        String endTime = new String();
+        String custId = new String();
+        String apptTitle = new String();
+        String apptDescription = new String();
+        String apptLocation = new String();
+        String apptContact = new String();
+        String apptType = new String();
+        String apptUrl = new String();
+        if (!(selectedCustomer == null) && !(selectedDateTime == null)) {
+            startTime = selectedDateTime.getStartTime();
+            endTime = selectedDateTime.getEndTime();
+            custId = selectedCustomer.getCustId();
+            apptTitle = titleText.getText();
+            apptDescription = descriptionText.getText();
+            apptLocation = locationText.getText();
+            apptContact = contactText.getText();
+            apptType = typeText.getText();
+            apptUrl = urlText.getText();
+        }
         try {
             if (!(selectedCustomer == null) && !(selectedDateTime == null) && !(apptType.isEmpty()) && !(apptDescription.isEmpty())) {
                 DBConnection.addAppointment(custId, uId, apptTitle, apptDescription, apptLocation, apptContact, apptType, apptUrl, startTime, endTime, unameE);
