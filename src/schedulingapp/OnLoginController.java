@@ -64,7 +64,13 @@ public class OnLoginController implements Initializable {
     
     @FXML
     void handleReportsButton(ActionEvent event) {
-        
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("ReportOptions.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(IOException e) { System.out.println("Error " + e.getMessage()); }
     }
         
     @Override

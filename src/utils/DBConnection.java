@@ -670,7 +670,7 @@ public class DBConnection {
                     }
                 }
                 for(User user : users) {
-                    if(appointment.getUserId().equals(user.getUserId())) {
+                    if(Integer.parseInt(appointment.getUserId()) == user.getUserId()) {
                         appointment.setUser(user);
                     }
                 }
@@ -882,5 +882,40 @@ public class DBConnection {
         catch(SQLException sqEx) {  System.out.println("Error " + sqEx.getMessage()); }
         return null; 
     }
+    
+    public static Iterable<Appointment> getConsultantSchedule(LocalDate d1, LocalDate d2, String uId) {
+        Iterable<Appointment> monthAppts = getApptsByMonth(d1, d2);
+        List<Appointment> monthApptsUser = new ArrayList<>();
+        for(Appointment appointment : monthAppts) {
+            if(appointment.getUserId().equals(uId)) {
+                monthApptsUser.add(appointment);
+            }
+        }
+        return monthApptsUser;
+    }
+    
+    public static Iterable<String> apptTypesList() throws SQLException {
+        try {
+            Iterable<Appointment> allAppts = getAppointments();
+            List<String> allTypes = new ArrayList<>();
+            List<String> uniqueTypes = new ArrayList<>();
+            for (Appointment appointment : allAppts) {
+                String type = appointment.getType();
+                allTypes.add(type);
+            }
+            for (String type : allTypes) {
+                if (!allTypes.contains(type)) {
+                    uniqueTypes.add(type);
+                }
+            }
+        return uniqueTypes;
+        }
+        catch (SQLException e) { System.out.println("Error " + e.getMessage()); }
+        return null;
+    }
+    
+    /*public static Iterable<Appointment> getApptType() {
+    
+    }*/
     
 }
