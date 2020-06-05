@@ -24,19 +24,11 @@ import utils.DBConnection;
  *
  * @author daisy
  */
-public class TypesReportController implements Initializable {
+public class MonthlyApptNumberController implements Initializable {
+
     @FXML javafx.scene.control.DatePicker datePicker;
+    @FXML javafx.scene.control.Label numberApptsLabel;
     
-    @FXML
-    private TableView<AppointmentType> typesFound;
-    
-    @FXML
-    private TableColumn<AppointmentType, String> typeCol;
-    
-    @FXML
-    private TableColumn<AppointmentType, String> typeOccurrenceCol;
-    
-    //This method will show the appointment types and frequencies for the month selected by the user
     @FXML
     public void handleDatePicker(ActionEvent event) {
         LocalDate selectedDate = datePicker.getValue();
@@ -65,13 +57,8 @@ public class TypesReportController implements Initializable {
                 endOfMonth = firstOfMonth.plusDays(27);
             }
         }
-        //Populate tableview with the month's appointments' frequencies
-        typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
-        typeOccurrenceCol.setCellValueFactory(new PropertyValueFactory<>("typeOccurrence"));
-        Iterable<AppointmentType> mTypes = DBConnection.getApptsByType(firstOfMonth, endOfMonth);
-        ObservableList<AppointmentType> monthTypes = FXCollections.observableArrayList();
-        mTypes.forEach(monthTypes::add);
-        typesFound.setItems(monthTypes);
+        int numberOfAppts = DBConnection.numberOfMonthAppts(firstOfMonth, endOfMonth);
+        numberApptsLabel.setText(String.valueOf(numberOfAppts));
     }
     
     @Override

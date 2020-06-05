@@ -22,11 +22,7 @@ import javafx.stage.Stage;
  * @author daisy
  */
 public class ReportOptionsController implements Initializable {
-
-    /*
-        • number of appointment types by month
-        • one additional report of your choice
-    */
+    
     @FXML
     public void handleApptTypeButton(ActionEvent event) {
         try {
@@ -50,13 +46,19 @@ public class ReportOptionsController implements Initializable {
     }
     
     @FXML
-    public void handleAdditionalReportButton(ActionEvent event) {
-    
+    public void handleNumberApptsButton(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("MonthlyApptNumber.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+        catch(IOException e) { System.out.println("Error " + e.getMessage()); }   
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
     
 }

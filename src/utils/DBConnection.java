@@ -25,6 +25,7 @@ import schedulingapp.Models.Customer;
 import schedulingapp.Models.User;
 import schedulingapp.Models.Address;
 import schedulingapp.Models.Appointment;
+import schedulingapp.Models.AppointmentType;
 import schedulingapp.Models.City;
 import schedulingapp.Models.Country;
 import schedulingapp.UserCredentials;
@@ -894,28 +895,46 @@ public class DBConnection {
         return monthApptsUser;
     }
     
-    public static Iterable<String> apptTypesList() throws SQLException {
-        try {
-            Iterable<Appointment> allAppts = getAppointments();
-            List<String> allTypes = new ArrayList<>();
-            List<String> uniqueTypes = new ArrayList<>();
-            for (Appointment appointment : allAppts) {
-                String type = appointment.getType();
-                allTypes.add(type);
-            }
-            for (String type : allTypes) {
-                if (!allTypes.contains(type)) {
-                    uniqueTypes.add(type);
-                }
-            }
-        return uniqueTypes;
+    public static Iterable<String> apptTypesMonthlyList(LocalDate startOfMonth, LocalDate endOfMonth) {
+        Iterable<Appointment> allAppts = getApptsByMonth(startOfMonth, endOfMonth);
+        List<String> allTypes = new ArrayList<>();
+        List<String> uniqueTypes = new ArrayList<>();
+        for (Appointment appointment : allAppts) {
+            String type = appointment.getType();
+            allTypes.add(type);
         }
-        catch (SQLException e) { System.out.println("Error " + e.getMessage()); }
-        return null;
+        for (String type : allTypes) {
+            if (!uniqueTypes.contains(type)) {
+                uniqueTypes.add(type);
+            }
+        }
+        return uniqueTypes;
     }
     
-    /*public static Iterable<Appointment> getApptType() {
+    public static Iterable<AppointmentType> getApptsByType(LocalDate startOfMonth, LocalDate endOfMonth) {
+        Iterable<String> uniqueTypes = apptTypesMonthlyList(startOfMonth, endOfMonth);
+        Iterable<Appointment> monthlyAppts = getApptsByMonth(startOfMonth, endOfMonth);
+        List<AppointmentType> types = new ArrayList<>();
+        for (String uType : uniqueTypes) {
+            AppointmentType type = new AppointmentType();
+            type.setType(uType);
+            types.add(type);
+        }
+        for (AppointmentType type : types) {
+            int count = 0;
+            for (Appointment appt : monthlyAppts) {
+                if (appt.getType().equals(type.getType())) {
+                    count = count + 1;
+                }
+            }
+            type.setTypeOccurrence(count);
+        }
+        return types;
+    }
     
-    }*/
+    public static int numberOfMonthAppts(LocalDate startOfMonth, LocalDate endOfMonth) {
+        ArrayList<Appointment> monthAppts = (ArrayList)getApptsByMonth(startOfMonth, endOfMonth);
+        return monthAppts.size();
+    }
     
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="140.0" prefWidth="380.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="schedulingapp.MonthlyApptNumberController">
+    <Label layoutX="63.0" layoutY="19.0" text="Choose a day in the month to view how many">
+      <font>
+         <Font name="System Bold" size="12.0" />
+      </font>
+    </Label>
+   <DatePicker fx:id="datePicker" layoutX="103.0" layoutY="65.0" onAction="#handleDatePicker" />
+   <Label layoutX="98.0" layoutY="36.0" text="appointments are in that month.">
+      <font>
+         <Font name="System Bold" size="12.0" />
+      </font>
+   </Label>
+   <Label layoutX="35.0" layoutY="105.0" text="Number of appointments in the selected month:">
+      <font>
+         <Font name="System Bold" size="12.0" />
+      </font>
+   </Label>
+   <Label fx:id="numberApptsLabel" layoutX="315.0" layoutY="105.0">
+      <font>
+         <Font name="System Bold" size="12.0" />
+      </font>
+   </Label>
+</AnchorPane>

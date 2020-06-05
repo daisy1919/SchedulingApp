@@ -37,7 +37,7 @@ public class MonthAppointmentsController implements Initializable {
     @FXML
     private TableColumn<Appointment, String> apptDateCol;
     
-    //This method will show the appointments for the week beginning on Sunday
+    //This method will show the appointments for the month selected by the user
     @FXML
     public void handleDatePicker(ActionEvent event) {
         LocalDate selectedDate = datePicker.getValue();
