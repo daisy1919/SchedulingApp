@@ -937,4 +937,39 @@ public class DBConnection {
         return monthAppts.size();
     }
     
+    public static Iterable<Appointment> getDayAppointments(LocalDate todayDate) {
+        LocalTime zeroTime;
+        LocalTime endTime;
+        zeroTime = LocalTime.parse("00:00:00");
+        endTime = LocalTime.parse("23:59:59");
+        LocalDateTime dayTime = LocalDateTime.of(todayDate, zeroTime);
+        LocalDateTime endDayTime = LocalDateTime.of(todayDate, endTime);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");        
+        try {            
+            Iterable<Appointment> allAppts = getAppointments();
+            List<Appointment> dayAppts = new ArrayList<>();
+            for(Appointment appt : allAppts) {
+                int i = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(dayTime);
+                int j = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(endDayTime);
+                if(i >= 0 && j <= 0) {
+                    dayAppts.add(appt);
+                }
+            }
+            return dayAppts;
+        }
+        catch(SQLException sqEx) {  System.out.println("Error " + sqEx.getMessage()); }
+        return null; 
+    }
+    
+    public static Iterable<Appointment> getConsultantDayAppt(LocalDate d1, String uId) {
+        Iterable<Appointment> dayAppts = getDayAppointments(d1);
+        List<Appointment> dayApptUser = new ArrayList<>();
+        for(Appointment appointment : dayAppts) {
+            if(appointment.getUserId().equals(uId)) {
+                dayApptUser.add(appointment);
+            }
+        }
+        return dayApptUser;
+    }
+    
 }

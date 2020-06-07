@@ -10,11 +10,15 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Properties;
+import java.util.TimeZone;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,6 +27,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import schedulingapp.Models.Appointment;
 import schedulingapp.Models.User;
 import schedulingapp.UserCredentials;
 import utils.DBConnection;
@@ -72,11 +77,36 @@ private Boolean isAuthenticated(User userToAuth) {
         
         try {            
             //If user credentials are in db, open options window and clear credentials
-            if(isAuthenticated(userToAuth) == true) {             
-                Parent root = FXMLLoader.load(getClass().getResource("OnLogin.fxml"));
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.show();
+            if(isAuthenticated(userToAuth) == true) {                
+                
+                String uID = String.valueOf(UserCredentials.getCurrentUserId());
+                LocalDate today = LocalDate.now();
+                LocalDateTime todayDT = LocalDateTime.now();
+                Boolean apptSoon = false;
+                Iterable<Appointment> dayAppts = DBConnection.getConsultantDayAppt(today, uID);
+                
+                for(Appointment appt : dayAppts) {
+                    String timeToParse = appt.getStartTime();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+                    LocalDateTime startDateTime = LocalDateTime.parse(timeToParse, formatter);
+                    //the following if-else needs to be fixed
+                    if(startDateTime.plusMinutes(15).equals(todayDT)) {
+                    //change apptSoon in this if-else statement
+                    }
+                }
+                
+                if(apptSoon == false) {
+                    Parent root = FXMLLoader.load(getClass().getResource("OnLogin.fxml"));
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(root));
+                    stage.show();
+                }
+                else {
+                    Parent root = FXMLLoader.load(getClass().getResource("ApptWarning.fxml"));
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(root));
+                    stage.show();
+                }
                 usernameText.clear();
                 passwordText.clear();
                 errorMessages.setText("");
