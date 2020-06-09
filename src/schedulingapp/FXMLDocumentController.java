@@ -89,9 +89,15 @@ private Boolean isAuthenticated(User userToAuth) {
                     String timeToParse = appt.getStartTime();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
                     LocalDateTime startDateTime = LocalDateTime.parse(timeToParse, formatter);
-                    //the following if-else needs to be fixed
-                    if(startDateTime.plusMinutes(15).equals(todayDT)) {
-                    //change apptSoon in this if-else statement
+                    
+                    int startTimeInMin = (startDateTime.getHour() * 60) + startDateTime.getMinute();
+                    int currTimeInMin = (todayDT.getHour() * 60) + todayDT.getMinute();
+                    
+                    if(Math.abs(startTimeInMin - currTimeInMin) <= 15) {
+                        apptSoon = true;
+                    }                
+                    else {
+                        apptSoon = false;
                     }
                 }
                 
@@ -117,10 +123,8 @@ private Boolean isAuthenticated(User userToAuth) {
                     errorMessages.setText(rb.getString("Credentials") + " " + rb.getString("are") + " " + rb.getString("incorrect"));
                 }
                 else { errorMessages.setText("Credentials are incorrect"); }
-            }
-
-            
-        }            
+            }   
+        }
         catch(IOException ioEx) { System.out.println("Error " + ioEx.getMessage()); }        
     } 
     
