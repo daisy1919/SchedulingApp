@@ -38,7 +38,7 @@ public class SchedulingApp extends Application {
         DBConnection.startConnection();
         launch(args);
         DBConnection.closeConnection();
-        
+                
     }
     
 }

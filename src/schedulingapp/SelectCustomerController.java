@@ -76,7 +76,7 @@ public class SelectCustomerController implements Initializable {
     }
     
     @FXML
-    public void handleDatePicker(ActionEvent event) throws SQLException {       
+    public void handleDatePicker(ActionEvent event) throws SQLException {
         LocalDate apptDate = desiredApptDate.getValue();
         startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
