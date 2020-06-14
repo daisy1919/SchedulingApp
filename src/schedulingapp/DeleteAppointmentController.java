@@ -72,6 +72,15 @@ public class DeleteAppointmentController implements Initializable {
             Iterable<Appointment> aAppts = DBConnection.getAppointments();
             ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
             aAppts.forEach(allAppointments::add);
+            for(Appointment appt : allAppointments) {
+                String stTime = appt.getStartTime();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+                LocalDateTime startTime = LocalDateTime.parse(stTime, formatter); //still its original time from the db
+                ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+                ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
+                Instant databaseTimeToUserLocalTime = zonedStartTime.toInstant();
+                appt.setZonedStartTime(databaseTimeToUserLocalTime);
+            }
             appointmentsFound.setItems(allAppointments);
         }
         catch (SQLException e) { System.out.println("Error " + e.getMessage()); }
@@ -85,7 +94,6 @@ public class DeleteAppointmentController implements Initializable {
             Iterable<Appointment> aAppointments = DBConnection.getAppointments();
             ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
             aAppointments.forEach(allAppointments::add);
-            
             for(Appointment appt : allAppointments) {
                 String stTime = appt.getStartTime();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
@@ -94,8 +102,7 @@ public class DeleteAppointmentController implements Initializable {
                 ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
                 Instant databaseTimeToUserLocalTime = zonedStartTime.toInstant();
                 appt.setZonedStartTime(databaseTimeToUserLocalTime);
-        }
-            
+            }
             appointmentsFound.setItems(allAppointments);
         } 
         catch (SQLException ex) { System.out.println("Error " + ex.getMessage()); }

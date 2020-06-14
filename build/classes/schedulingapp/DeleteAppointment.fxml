@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="420.0" prefWidth="445.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedulingapp.DeleteAppointmentController">
+<AnchorPane id="AnchorPane" prefHeight="420.0" prefWidth="445.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedulingapp.DeleteAppointmentController">
     <Label layoutX="50.0" layoutY="20.0" text="Search by customer name or choose from all appointments.">
       <font>
          <Font name="System Bold" size="12.0" />
