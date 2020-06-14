@@ -80,9 +80,8 @@ public class ConsultantScheduleController implements Initializable {
         apptDateCol.setCellValueFactory(new PropertyValueFactory<>("zonedStartTime"));
         Iterable<Appointment> mAppointments = DBConnection.getConsultantSchedule(firstOfMonth, endOfMonth, uIdS);
         ObservableList<Appointment> monthAppointments = FXCollections.observableArrayList();
-        mAppointments.forEach(monthAppointments::add);
-        
-        //Need to convert the display time/date to local, not adding anything to DB
+        mAppointments.forEach(monthAppointments::add);        
+        //This converts the appointment time in the database to the user's local time to populate the tableview
         for(Appointment appt : monthAppointments) {
             String stTime = appt.getStartTime();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
@@ -91,8 +90,7 @@ public class ConsultantScheduleController implements Initializable {
             ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
             Instant databaseTimeToUserLocalTime = zonedStartTime.toInstant();
             appt.setZonedStartTime(databaseTimeToUserLocalTime);
-        }
-        
+        }        
         appointmentsFound.setItems(monthAppointments);
     }
     

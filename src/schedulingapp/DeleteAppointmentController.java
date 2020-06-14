@@ -7,8 +7,14 @@ package schedulingapp;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
@@ -75,10 +81,21 @@ public class DeleteAppointmentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         try {
             custNameCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getCustomer().getCustomerName()));
-            apptDateCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+            apptDateCol.setCellValueFactory(new PropertyValueFactory<>("zonedStartTime"));
             Iterable<Appointment> aAppointments = DBConnection.getAppointments();
             ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
             aAppointments.forEach(allAppointments::add);
+            
+            for(Appointment appt : allAppointments) {
+                String stTime = appt.getStartTime();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+                LocalDateTime startTime = LocalDateTime.parse(stTime, formatter); //still its original time from the db
+                ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+                ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
+                Instant databaseTimeToUserLocalTime = zonedStartTime.toInstant();
+                appt.setZonedStartTime(databaseTimeToUserLocalTime);
+        }
+            
             appointmentsFound.setItems(allAppointments);
         } 
         catch (SQLException ex) { System.out.println("Error " + ex.getMessage()); }
