@@ -7,9 +7,15 @@ package schedulingapp;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -71,10 +77,22 @@ public class ConsultantScheduleController implements Initializable {
         String uIdS = String.valueOf(uId);
         //Populate tableview with that week's appointments
         custNameCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getCustomer().getCustomerName()));
-        apptDateCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        apptDateCol.setCellValueFactory(new PropertyValueFactory<>("zonedStartTime"));
         Iterable<Appointment> mAppointments = DBConnection.getConsultantSchedule(firstOfMonth, endOfMonth, uIdS);
         ObservableList<Appointment> monthAppointments = FXCollections.observableArrayList();
         mAppointments.forEach(monthAppointments::add);
+        
+        //Need to convert the display time/date to local, not adding anything to DB
+        for(Appointment appt : monthAppointments) {
+            String stTime = appt.getStartTime();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+            LocalDateTime startTime = LocalDateTime.parse(stTime, formatter); //still its original time from the db
+            ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+            ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
+            Instant databaseTimeToUserLocalTime = zonedStartTime.toInstant();
+            appt.setZonedStartTime(databaseTimeToUserLocalTime);
+        }
+        
         appointmentsFound.setItems(monthAppointments);
     }
     

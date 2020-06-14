@@ -6,6 +6,8 @@
 package schedulingapp.Models;
 
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 
 /**
  *
@@ -27,7 +29,8 @@ public class Appointment {
     private String endTime;
     private Timestamp lastUpdate;
     private String lastUpdateBy;    
-    //createDate, createdBy can just be input in the DBConnection functions similar to customer information
+    private Instant zonedStartTime;
+    private Instant zonedEndTime;
     
     public void setAppointmentId(String appointmentId) { this.appointmentId = appointmentId; }
     public String getAppointmentId() { return appointmentId; }    
@@ -59,4 +62,8 @@ public class Appointment {
     public Timestamp getLastUpdate() { return lastUpdate; }
     public void setLastUpdateBy(String lastUpdateBy) { this.lastUpdateBy = lastUpdateBy; }
     public String getLastUpdateBy() { return lastUpdateBy; }
+    public void setZonedStartTime(Instant zonedStartTime) { this.zonedStartTime = zonedStartTime; }
+    public Instant getZonedStartTime() { return zonedStartTime; }
+    public void setZonedEndTime(Instant zonedEndTime) { this.zonedEndTime = zonedEndTime; }
+    public Instant getZonedEndTime() { return zonedEndTime; }
 }
