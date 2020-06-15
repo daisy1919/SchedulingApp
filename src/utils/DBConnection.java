@@ -16,6 +16,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -768,8 +770,14 @@ public class DBConnection {
                     currHour = currHour + 1;
                 }
             }
-            appointment.setStartTime(timeT);            
-            if (!allPossibleAppts.isEmpty()) { allPossibleAppts.get(allPossibleAppts.size() - 1).setEndTime(timeT); }  
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            ZoneId GMTZId = ZoneId.of("GMT");
+            LocalDateTime timeTL = LocalDateTime.parse(timeT, formatter);
+            ZonedDateTime startTimeGMT = timeTL.atZone(GMTZId);
+            startTimeGMT.withZoneSameLocal(GMTZId);
+            String startTimeGMTS = startTimeGMT.format(formatter).toString();
+            appointment.setStartTime(startTimeGMTS);            
+            if (!allPossibleAppts.isEmpty()) { allPossibleAppts.get(allPossibleAppts.size() - 1).setEndTime(startTimeGMTS); }  
             allPossibleAppts.add(appointment);
         }
         allPossibleAppts.get(numberOfAppts - 1).setEndTime(dateToAppend + " " + endOfDay + ":00:00");

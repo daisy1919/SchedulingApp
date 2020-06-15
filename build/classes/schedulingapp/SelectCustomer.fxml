@@ -11,7 +11,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="509.0" prefWidth="870.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="schedulingapp.SelectCustomerController">
     <children>
-    <Label layoutX="50.0" layoutY="20.0" text="Search for a customer by name or choose from all customers.">
+    <Label layoutX="50.0" layoutY="15.0" text="Search for a customer by name or choose from all customers.">
       <font>
          <Font name="System Bold" size="12.0" />
       </font>
@@ -25,10 +25,15 @@
           <TableColumn fx:id="custAddCol" maxWidth="135.0" prefWidth="135.0" resizable="false" text="Address" />
         </columns>
       </TableView>
-    <Label layoutX="440.0" layoutY="20.0" text="First, select a date below. Then, choose an available time on that day.">
+    <Label layoutX="440.0" layoutY="15.0" text="First, select a date below. Then, choose an available time on that day.">
     <font>
         <Font name="System Bold" size="12.0" />
     </font>
+    </Label>
+    <Label layoutX="457.0" layoutY="31.0" text="Appointment times are converted to your local time for convenience.">
+        <font>
+            <Font name="System Italic" size="12.0" />
+        </font>
     </Label>
       <DatePicker fx:id="desiredApptDate" layoutX="547.0" layoutY="50.0" onAction="#handleDatePicker" />
       <TableView fx:id="availableAppts" layoutX="442.0" layoutY="100.0" prefHeight="240.0" prefWidth="380.0">

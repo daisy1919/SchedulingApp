@@ -8,6 +8,7 @@ package schedulingapp;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -23,6 +24,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 import schedulingapp.Models.Appointment;
 import schedulingapp.Models.Customer;
 import utils.DBConnection;
@@ -78,11 +84,25 @@ public class SelectCustomerController implements Initializable {
     @FXML
     public void handleDatePicker(ActionEvent event) throws SQLException {
         LocalDate apptDate = desiredApptDate.getValue();
-        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-        endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("zonedStartTime"));
+        endTimeCol.setCellValueFactory(new PropertyValueFactory<>("zonedEndTime"));
         Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
         ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
         aTimes.forEach(availableTimes::add);
+        for(Appointment appt : availableTimes) {
+            String stTime = appt.getStartTime();
+            String eTime = appt.getEndTime();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
+            LocalDateTime endTime = LocalDateTime.parse(eTime, formatter);
+            ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+            ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
+            ZonedDateTime zonedEndTime = ZonedDateTime.of(endTime, localZoneId);
+            Instant gmtStartToLocalStart = zonedStartTime.toInstant();
+            Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
+            appt.setZonedStartTime(gmtStartToLocalStart);
+            appt.setZonedEndTime(gmtEndToLocalEnd);
+        }
         availableAppts.setItems(availableTimes);
     }
     

@@ -4,8 +4,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/utils/DBConnection.java</file>
-            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/utils/TimeZone.java</file>
-            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/CalendarOptionsController.java</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/MonthAppointments.fxml</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/WeekAppointmentsController.java</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/WeekAppointments.fxml</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/ConsultantScheduleController.java</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/MonthAppointmentsController.java</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/ConsultantSchedule.fxml</file>
         </group>
     </open-files>
 </project-private>
