@@ -66,6 +66,7 @@ private Boolean isAuthenticated(User userToAuth) {
         return isAuth;        
     }
 
+    //The following method is for requirement F. It shows an error message in English or German if the credentials are incorrect.
     //The following method validates the credentials. If they are incorrect, a message in either English or German is printed.
     @FXML
     void handleLoginButton (ActionEvent event) throws SQLException, IOException {        

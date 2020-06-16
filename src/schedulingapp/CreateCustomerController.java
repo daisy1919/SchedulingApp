@@ -36,6 +36,7 @@ public class CreateCustomerController implements Initializable {
     @FXML javafx.scene.control.TextField addPhoneText;
     @FXML javafx.scene.control.Label errorMessageLabel;
     
+    //The following method is for requirement F. It prevents customers from being added unless all data is entered.
     @FXML
     void handleAddButton(ActionEvent event) throws IOException {    
         try {
@@ -56,6 +57,7 @@ public class CreateCustomerController implements Initializable {
             String custCountry = this.addCountryText.getText();
             String custPhone = this.addPhoneText.getText();
             //add customer using entered data unless fields are empty
+            //The follwing if-else statement only allows users to create a customer if all the data (minus a middle initial and address line 2) is entered
             if (custName == null || custAddress1.isEmpty()
                     || custCity.isEmpty() || custZip.isEmpty()
                     || custCountry.isEmpty() || custPhone.isEmpty()) {

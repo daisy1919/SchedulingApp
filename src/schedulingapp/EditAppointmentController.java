@@ -114,6 +114,8 @@ public class EditAppointmentController implements Initializable {
         urlText.setText(selectedAppointment.getUrl());
     }
     
+    //The following is for requirement F to prevent overlapping appointments.
+    //The following method allows the user to choose a new appointment time, but it will not show appointment times that the currently logged in user has another appointment.
     @FXML
     public void handleDatePicker(ActionEvent event) throws SQLException {       
         try {

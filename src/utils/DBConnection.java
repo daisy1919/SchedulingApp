@@ -784,7 +784,9 @@ public class DBConnection {
         return allPossibleAppts;
     }
     
-    //The following function retrieves available appointment times by date for the user currently logged in
+    //The following method contains a lambda expression for requirement G
+    //The following method retrieves available appointment times by date for the user currently logged in
+    //The following method contains a lambda expression to make the program more efficient by removing the available appointments that would overlap existing appointments.
     public static Iterable<Appointment> getAvailableApptTimes(LocalDate desiredDate) throws SQLException {
         final int significantDigits = 16;        
         ArrayList<Appointment> availableAppts = (ArrayList<Appointment>) generateAllApptTimes(8,17,desiredDate);        

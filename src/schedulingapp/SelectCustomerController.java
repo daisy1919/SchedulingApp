@@ -81,12 +81,16 @@ public class SelectCustomerController implements Initializable {
         customersFound.setItems(foundCustomers);
     }
     
+    //The following is for requirement F to prevent overlapping appointments, as well as prevent users from scheduling appointments outside of business hours.
+    //The way the date picker loads times prevents users from scheduling outside of business hours, which are 8-17 GMT.
+    //The tableviews all print in the user's local time for their convenience, but the appointment times are stored in GMT.
+    //This method (as well as the method in the edit appt controller) also only shows times that the currently logged in user is not using for another appointment.
     @FXML
     public void handleDatePicker(ActionEvent event) throws SQLException {
         LocalDate apptDate = desiredApptDate.getValue();
         startTimeCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
         endTimeCol.setCellValueFactory(new PropertyValueFactory<>("eZLocal"));
-        Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
+        Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate); //This line retrieves available times for the logged in user, not populating times that they're already in another appointment. This is for requirement F.
         ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
         aTimes.forEach(availableTimes::add);
         for(Appointment appt : availableTimes) {
@@ -167,6 +171,8 @@ public class SelectCustomerController implements Initializable {
         stage.close();
     }
     
+    //The following method contains a lambda expression for requirement G
+    //It makes the program more efficient by effectively retrieving the correct property needed for the tableview
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
