@@ -81,7 +81,7 @@ private Boolean isAuthenticated(User userToAuth) {
         
         try {            
             //If user credentials are in db, open options window and clear credentials
-            if(isAuthenticated(userToAuth) == true) {                
+            if(isAuthenticated(userToAuth) == true) {
                 
                 String uID = String.valueOf(UserCredentials.getCurrentUserId());
                 LocalDate today = LocalDate.now();
