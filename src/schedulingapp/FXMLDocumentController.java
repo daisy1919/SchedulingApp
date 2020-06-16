@@ -35,6 +35,7 @@ import schedulingapp.Models.Appointment;
 import schedulingapp.Models.User;
 import schedulingapp.UserCredentials;
 import utils.DBConnection;
+import utils.UserActivity;
 
 /**
  *
@@ -84,8 +85,13 @@ private Boolean isAuthenticated(User userToAuth) {
             if(isAuthenticated(userToAuth) == true) {
                 
                 String uID = String.valueOf(UserCredentials.getCurrentUserId());
+                String uNameE = UserCredentials.getUsername();
                 LocalDate today = LocalDate.now();
                 LocalDateTime todayDT = LocalDateTime.now();
+                
+                UserActivity.addUserLogin(uNameE, todayDT);
+                System.out.println("File appended.");
+                
                 Boolean apptSoon = false;
                 Iterable<Appointment> dayAppts = DBConnection.getConsultantDayAppt(today, uID);
                 

@@ -6,7 +6,7 @@
 package utils;
 
 import java.io.*;
-import java.util.Scanner;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -15,32 +15,33 @@ import java.util.Scanner;
 public class UserActivity {
     
     private static PrintWriter createLogFile() throws IOException {
-        return new PrintWriter("userLoginTimes.txt");
+        String filename = "C:\\Users\\daisy\\Documents\\NetBeansProjects\\SchedulingApp\\userLoginTimes.txt";
+        FileWriter fWriter = new FileWriter(filename, true);
+        PrintWriter logFile = new PrintWriter(fWriter);
+        return logFile;
     }
     
     private static PrintWriter getLogFile() throws IOException {
         return createLogFile();
     }
-            
-    //addLogin inside this function: check if file does not exist, then call private createfile function
-            //else call loadfile to addrecord
     
-    public static void addUserLogin() throws IOException {
-        String filename = "groceries.txt", item;
-	Scanner keyboard = new Scanner(System.in);
-	System.out.println("How many items do you have?");
-	int numItems = keyboard.nextInt();
-	keyboard.nextLine();
-	PrintWriter outputFile = new PrintWriter(filename);
-	for (int i = 0; i < numItems; i++) {
-            System.out.print("Enter item " + (i+1) + ": ");
-            item = keyboard.nextLine();
-            outputFile.println();
-	}
-	outputFile.close();
-	System.out.println("File written");
-	//create it / don't create if exists
-	//write to end of file
+    private static void addStringToFile(String username, LocalDateTime loginDateTime) throws IOException {
+        String usernameAndLocalTime = "User " + username + " logged in at " + loginDateTime.toString() + " in their local timezone.";
+        getLogFile().println(usernameAndLocalTime);
+        getLogFile().close();
+    }
+
+    public static void addUserLogin(String username, LocalDateTime loginDateTime) throws IOException {
+        
+        if(getLogFile().equals(null)) {
+            createLogFile();
+            addStringToFile(username, loginDateTime);
+            
+        }
+        else {
+            addStringToFile(username, loginDateTime);
+        }
+        
     }
     
 }
