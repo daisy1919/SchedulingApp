@@ -74,7 +74,7 @@ public class MonthAppointmentsController implements Initializable {
         }
         //Populate tableview with that week's appointments
         custNameCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getCustomer().getCustomerName()));
-        apptDateCol.setCellValueFactory(new PropertyValueFactory<>("zonedStartTime"));
+        apptDateCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
         Iterable<Appointment> mAppointments = DBConnection.getApptsByMonth(firstOfMonth, endOfMonth);
         ObservableList<Appointment> monthAppointments = FXCollections.observableArrayList();
         mAppointments.forEach(monthAppointments::add);
@@ -87,6 +87,12 @@ public class MonthAppointmentsController implements Initializable {
             ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
             Instant databaseTimeToUserLocalTime = zonedStartTime.toInstant();
             appt.setZonedStartTime(databaseTimeToUserLocalTime);
+            //parse by converting letters to space
+            String zonedStartS = databaseTimeToUserLocalTime.toString();
+            String subStart = zonedStartS.substring(0, 10);
+            String subStart2 = zonedStartS.substring(11, 19);
+            String newZonedStart = subStart + " " + subStart2;
+            appt.setSZLocal(newZonedStart);
         }
         appointmentsFound.setItems(monthAppointments);
     }

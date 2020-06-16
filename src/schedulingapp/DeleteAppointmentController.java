@@ -75,11 +75,17 @@ public class DeleteAppointmentController implements Initializable {
             for(Appointment appt : allAppointments) {
                 String stTime = appt.getStartTime();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-                LocalDateTime startTime = LocalDateTime.parse(stTime, formatter); //still its original time from the db
+                LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
                 ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
                 ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
                 Instant databaseTimeToUserLocalTime = zonedStartTime.toInstant();
                 appt.setZonedStartTime(databaseTimeToUserLocalTime);
+                //parse by converting letters to space
+                String zonedStartS = databaseTimeToUserLocalTime.toString();
+                String subStart = zonedStartS.substring(0, 10);
+                String subStart2 = zonedStartS.substring(11, 19);
+                String newZonedStart = subStart + " " + subStart2;
+                appt.setSZLocal(newZonedStart);
             }
             appointmentsFound.setItems(allAppointments);
         }
@@ -90,7 +96,7 @@ public class DeleteAppointmentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         try {
             custNameCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getCustomer().getCustomerName()));
-            apptDateCol.setCellValueFactory(new PropertyValueFactory<>("zonedStartTime"));
+            apptDateCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
             Iterable<Appointment> aAppointments = DBConnection.getAppointments();
             ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
             aAppointments.forEach(allAppointments::add);
@@ -102,6 +108,12 @@ public class DeleteAppointmentController implements Initializable {
                 ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
                 Instant databaseTimeToUserLocalTime = zonedStartTime.toInstant();
                 appt.setZonedStartTime(databaseTimeToUserLocalTime);
+                //parse by converting letters to space
+                String zonedStartS = databaseTimeToUserLocalTime.toString();
+                String subStart = zonedStartS.substring(0, 10);
+                String subStart2 = zonedStartS.substring(11, 19);
+                String newZonedStart = subStart + " " + subStart2;
+                appt.setSZLocal(newZonedStart);
             }
             appointmentsFound.setItems(allAppointments);
         } 

@@ -88,6 +88,17 @@ public class EditAppointmentController implements Initializable {
             Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
             appt.setZonedStartTime(gmtStartToLocalStart);
             appt.setZonedEndTime(gmtEndToLocalEnd);
+            //parse by converting letters to space
+            String zonedStartS = gmtStartToLocalStart.toString();
+            String zonedEndS = gmtEndToLocalEnd.toString();
+            String subStart = zonedStartS.substring(0, 10);
+            String subEnd = zonedEndS.substring(0, 10);
+            String subStart2 = zonedStartS.substring(11, 19);
+            String subEnd2 = zonedEndS.substring(11, 19);
+            String newZonedStart = subStart + " " + subStart2;
+            String newZonedEnd = subEnd + " " + subEnd2;
+            appt.setSZLocal(newZonedStart);
+            appt.setEZLocal(newZonedEnd);
         }
         appointmentsFound.setItems(foundAppointments);
     }
@@ -107,8 +118,8 @@ public class EditAppointmentController implements Initializable {
     public void handleDatePicker(ActionEvent event) throws SQLException {       
         try {
             LocalDate apptDate = desiredApptDate.getValue();
-            startTimeCol.setCellValueFactory(new PropertyValueFactory<>("zonedStartTime"));
-            endTimeCol.setCellValueFactory(new PropertyValueFactory<>("zonedEndTime"));
+            startTimeCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
+            endTimeCol.setCellValueFactory(new PropertyValueFactory<>("eZLocal"));
             Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
             ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
             aTimes.forEach(availableTimes::add);
@@ -125,6 +136,17 @@ public class EditAppointmentController implements Initializable {
                 Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
                 appt.setZonedStartTime(gmtStartToLocalStart);
                 appt.setZonedEndTime(gmtEndToLocalEnd);
+                //parse by converting letters to space
+                String zonedStartS = gmtStartToLocalStart.toString();
+                String zonedEndS = gmtEndToLocalEnd.toString();
+                String subStart = zonedStartS.substring(0, 10);
+                String subEnd = zonedEndS.substring(0, 10);
+                String subStart2 = zonedStartS.substring(11, 19);
+                String subEnd2 = zonedEndS.substring(11, 19);
+                String newZonedStart = subStart + " " + subStart2;
+                String newZonedEnd = subEnd + " " + subEnd2;
+                appt.setSZLocal(newZonedStart);
+                appt.setEZLocal(newZonedEnd);
             }
             availableAppts.setItems(availableTimes);
         }
@@ -152,8 +174,8 @@ public class EditAppointmentController implements Initializable {
             fAppointments.forEach(foundAppointments::add);
             appointmentsFound.setItems(foundAppointments);
             LocalDate apptDate = desiredApptDate.getValue();
-            startTimeCol.setCellValueFactory(new PropertyValueFactory<>("zonedStartTime"));
-            endTimeCol.setCellValueFactory(new PropertyValueFactory<>("zonedEndTime"));
+            startTimeCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
+            endTimeCol.setCellValueFactory(new PropertyValueFactory<>("eZLocal"));
             Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
             ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
             aTimes.forEach(availableTimes::add);
@@ -170,6 +192,17 @@ public class EditAppointmentController implements Initializable {
                 Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
                 appt.setZonedStartTime(gmtStartToLocalStart);
                 appt.setZonedEndTime(gmtEndToLocalEnd);
+                //parse by converting letters to space
+                String zonedStartS = gmtStartToLocalStart.toString();
+                String zonedEndS = gmtEndToLocalEnd.toString();
+                String subStart = zonedStartS.substring(0, 10);
+                String subEnd = zonedEndS.substring(0, 10);
+                String subStart2 = zonedStartS.substring(11, 19);
+                String subEnd2 = zonedEndS.substring(11, 19);
+                String newZonedStart = subStart + " " + subStart2;
+                String newZonedEnd = subEnd + " " + subEnd2;
+                appt.setSZLocal(newZonedStart);
+                appt.setEZLocal(newZonedEnd);
             }
             availableAppts.setItems(availableTimes);
             Stage stage = (Stage) updateButton.getScene().getWindow();
@@ -192,7 +225,7 @@ public class EditAppointmentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         try {
             custNameCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getCustomer().getCustomerName()));
-            apptDateCol.setCellValueFactory(new PropertyValueFactory<>("zonedStartTime"));
+            apptDateCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
             Iterable<Appointment> aAppointments = DBConnection.getAppointments();
             ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
             aAppointments.forEach(allAppointments::add);
@@ -204,6 +237,12 @@ public class EditAppointmentController implements Initializable {
                 ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
                 Instant gmtStartToLocalStart = zonedStartTime.toInstant();
                 appt.setZonedStartTime(gmtStartToLocalStart);
+                //parse by converting letters to space
+                String zonedStartS = gmtStartToLocalStart.toString();
+                String subStart = zonedStartS.substring(0, 10);
+                String subStart2 = zonedStartS.substring(11, 19);
+                String newZonedStart = subStart + " " + subStart2;
+                appt.setSZLocal(newZonedStart);
             }
             appointmentsFound.setItems(allAppointments);
         } 
