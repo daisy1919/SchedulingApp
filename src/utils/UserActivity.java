@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class UserActivity {
     
     private static PrintWriter createLogFile() throws IOException {
-        String filename = "C:\\Users\\daisy\\Documents\\NetBeansProjects\\SchedulingApp\\userLoginTimes.txt";
+        String filename = "userLoginTimes.txt";
         FileWriter fWriter = new FileWriter(filename, true);
         PrintWriter logFile = new PrintWriter(fWriter);
         return logFile;
@@ -25,12 +25,13 @@ public class UserActivity {
         return createLogFile();
     }
     
-    private static void addStringToFile(String username, LocalDateTime loginDateTime) throws IOException {
-        String usernameAndLocalTime = "User " + username + " logged in at " + loginDateTime.toString() + " in their local timezone.";
+    public static void addStringToFile(String username, LocalDateTime loginDateTime, String userTZ) throws IOException {
+        String usernameAndLocalTime = "User " + username + " logged in at " + loginDateTime.toString() + " in their local timezone, which is " + userTZ + ".\n";
         getLogFile().println(usernameAndLocalTime);
         getLogFile().close();
     }
 
+    /*
     public static void addUserLogin(String username, LocalDateTime loginDateTime) throws IOException {
         
         if(getLogFile().equals(null)) {
@@ -43,5 +44,6 @@ public class UserActivity {
         }
         
     }
+    */
     
 }
