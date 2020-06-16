@@ -84,15 +84,15 @@ public class SelectCustomerController implements Initializable {
     @FXML
     public void handleDatePicker(ActionEvent event) throws SQLException {
         LocalDate apptDate = desiredApptDate.getValue();
-        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("zonedStartTime"));
-        endTimeCol.setCellValueFactory(new PropertyValueFactory<>("zonedEndTime"));
+        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
+        endTimeCol.setCellValueFactory(new PropertyValueFactory<>("eZLocal"));
         Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
         ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
         aTimes.forEach(availableTimes::add);
         for(Appointment appt : availableTimes) {
             String stTime = appt.getStartTime();
             String eTime = appt.getEndTime();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); 
             LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
             LocalDateTime endTime = LocalDateTime.parse(eTime, formatter);
             ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
@@ -102,6 +102,17 @@ public class SelectCustomerController implements Initializable {
             Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
             appt.setZonedStartTime(gmtStartToLocalStart);
             appt.setZonedEndTime(gmtEndToLocalEnd);
+            //parse by converting letters to space
+            String zonedStartS = gmtStartToLocalStart.toString();
+            String zonedEndS = gmtEndToLocalEnd.toString();
+            String subStart = zonedStartS.substring(0, 10);
+            String subEnd = zonedEndS.substring(0, 10);
+            String subStart2 = zonedStartS.substring(11, 19);
+            String subEnd2 = zonedEndS.substring(11, 19);
+            String newZonedStart = subStart + " " + subStart2;
+            String newZonedEnd = subEnd + " " + subEnd2;
+            appt.setSZLocal(newZonedStart);
+            appt.setEZLocal(newZonedEnd);
         }
         availableAppts.setItems(availableTimes);
     }
@@ -134,7 +145,7 @@ public class SelectCustomerController implements Initializable {
         }
         try {
             if (!(selectedCustomer == null) && !(selectedDateTime == null) && !(apptType.isEmpty()) && !(apptDescription.isEmpty())) {
-                DBConnection.addAppointment(custId, uId, apptTitle, apptDescription, apptLocation, apptContact, apptType, apptUrl, startTime, endTime, unameE);
+                DBConnection.addAppointment(custId, uId, apptTitle, apptDescription, apptLocation, apptContact, apptType, apptUrl, startTime, endTime, unameE);                
                 errorLabel.setText("");
                 Stage stage = (Stage) useCustomerButton.getScene().getWindow();
                 stage.close();

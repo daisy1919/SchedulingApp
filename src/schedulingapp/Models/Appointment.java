@@ -7,7 +7,6 @@ package schedulingapp.Models;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 
 /**
  *
@@ -31,6 +30,8 @@ public class Appointment {
     private String lastUpdateBy;    
     private Instant zonedStartTime;
     private Instant zonedEndTime;
+    private String sZLocal;
+    private String eZLocal;
     
     public void setAppointmentId(String appointmentId) { this.appointmentId = appointmentId; }
     public String getAppointmentId() { return appointmentId; }    
@@ -66,4 +67,8 @@ public class Appointment {
     public Instant getZonedStartTime() { return zonedStartTime; }
     public void setZonedEndTime(Instant zonedEndTime) { this.zonedEndTime = zonedEndTime; }
     public Instant getZonedEndTime() { return zonedEndTime; }
+    public void setSZLocal ( String sZLocal ) { this.sZLocal = sZLocal; }
+    public String getSZLocal () { return sZLocal; }
+    public void setEZLocal ( String eZLocal ) { this.eZLocal = eZLocal; }
+    public String getEZLocal () { return eZLocal; }
 }

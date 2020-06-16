@@ -34,7 +34,7 @@
         <Font name="System Bold" size="12.0" />
     </font>
     </Label>
-    <Label layoutX="440.0" layoutY="35.0" text="Appointment times are converted to your local time for convenience.">
+    <Label layoutX="447.0" layoutY="35.0" text="Appointment times are converted to your local time for convenience.">
         <font>
             <Font name="System Italic" size="12.0" />
         </font>

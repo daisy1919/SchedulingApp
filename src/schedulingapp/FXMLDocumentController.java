@@ -10,8 +10,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
@@ -86,11 +90,23 @@ private Boolean isAuthenticated(User userToAuth) {
                 Iterable<Appointment> dayAppts = DBConnection.getConsultantDayAppt(today, uID);
                 
                 for(Appointment appt : dayAppts) {
-                    String timeToParse = appt.getStartTime();
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-                    LocalDateTime startDateTime = LocalDateTime.parse(timeToParse, formatter);
                     
-                    int startTimeInMin = (startDateTime.getHour() * 60) + startDateTime.getMinute();
+                    String stTime = appt.getStartTime();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                    LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
+                    ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+                    ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
+                    Instant gmtStartToLocalStart = zonedStartTime.toInstant();
+                    String zonedStartS = gmtStartToLocalStart.toString();
+                    appt.setZonedStartTime(gmtStartToLocalStart);                    
+                    //parse by converting letters to space
+                    String subStart = zonedStartS.substring(0, 10);
+                    String subStart2 = zonedStartS.substring(11, 19);
+                    String newZoned = subStart + " " + subStart2;
+                    LocalDateTime startDateTimeZ = LocalDateTime.parse(newZoned, formatter2);
+                    
+                    int startTimeInMin = (startDateTimeZ.getHour() * 60) + startDateTimeZ.getMinute();
                     int currTimeInMin = (todayDT.getHour() * 60) + todayDT.getMinute();
                     
                     if(Math.abs(startTimeInMin - currTimeInMin) <= 15) {
