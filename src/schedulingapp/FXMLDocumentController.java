@@ -88,9 +88,10 @@ private Boolean isAuthenticated(User userToAuth) {
                 String uNameE = UserCredentials.getUsername();
                 LocalDate today = LocalDate.now();
                 LocalDateTime todayDT = LocalDateTime.now();
-                String userTZ = TimeZone.getDefault().toString();
+                String todayDTS = todayDT.toString();
+                String userTZ = TimeZone.getDefault().getID().toString();
                 
-                UserActivity.addStringToFile(uNameE, todayDT, userTZ);
+                UserActivity.userLoginTimes(uNameE, todayDTS, userTZ);
                 System.out.println("File appended.");
                 
                 Boolean apptSoon = false;

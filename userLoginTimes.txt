@@ -1,0 +1,4 @@
+A user with the username of test logged in at 2020-06-16T15:30:18.054 in their local timezone, which is America/Los_Angeles.
+
+A user with the username of userr logged in at 2020-06-16T15:30:28.390 in their local timezone, which is America/Los_Angeles.
+
