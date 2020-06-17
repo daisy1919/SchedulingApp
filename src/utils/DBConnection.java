@@ -642,19 +642,8 @@ public class DBConnection {
                 Timestamp stTime = appointmentToAdd.getGMTStartTime();
                 Timestamp eTime = appointmentToAdd.getGMTEndTime();
                 
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 LocalDateTime startTime = stTime.toLocalDateTime();
                 LocalDateTime endTime = eTime.toLocalDateTime();
-                
-                /*
-                
-                //ZoneId gmtZId = ZoneId.of("GMT");
-                //ZoneId localZId = ZoneId.systemDefault();
-                LocalDateTime startTimeL = startTime.toLocalDateTime();
-                LocalDateTime endTimeL = endTime.toLocalDateTime();
-                
-                ZonedDateTime startTimeLocal = ZonedDateTime.of(startTimeL, localZId);
-                ZonedDateTime ss = startTimeLocal.withZoneSameInstant(gmtZId);*/
                 
                 ZoneId gmtZoneId = ZoneId.of("GMT");
                 ZoneId localZoneId = ZoneId.systemDefault();
@@ -665,17 +654,8 @@ public class DBConnection {
                 ZonedDateTime endTimeLocal = ZonedDateTime.of(endTime, gmtZoneId);
                 ZonedDateTime ee = endTimeLocal.withZoneSameInstant(localZoneId);
                 
-                //ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
-                //ZonedDateTime zonedEndTime = ZonedDateTime.of(endTime, localZoneId);
-                //Instant gmtStartToLocalStart = zonedStartTime.toInstant();
-                //Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
                 appointmentToAdd.setStartTime(ss);
                 appointmentToAdd.setEndTime(ee);
-                
-                //appointmentToAdd.setStartTime(startTime);
-                //appointmentToAdd.setEndTime(endTime);
-                //the start and end times that get pulled from the db should be in gmt so use gmtStartTime/gmtEndTime
-                //then convert these to the local times and set those to the startTime and endTime
                 
                 appointmentToAdd.setLocation(sqlRs.getString("location"));
                 appointmentToAdd.setTitle(sqlRs.getString("title"));

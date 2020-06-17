@@ -91,38 +91,27 @@ public class SelectCustomerController implements Initializable {
     @FXML
     public void handleDatePicker(ActionEvent event) throws SQLException {
         LocalDate apptDate = desiredApptDate.getValue();
-        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-        endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
+        endTimeCol.setCellValueFactory(new PropertyValueFactory<>("eZLocal"));
         Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate); //This line retrieves available times for the logged in user, not populating times that they're already in another appointment. This is for requirement F.
         ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
         aTimes.forEach(availableTimes::add);
         
-        /*for(Appointment appt : availableTimes) {
-            String stTime = appt.getStartTime();
-            String eTime = appt.getEndTime();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); 
-            LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
-            LocalDateTime endTime = LocalDateTime.parse(eTime, formatter);
-            /*ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-            ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
-            ZonedDateTime zonedEndTime = ZonedDateTime.of(endTime, localZoneId);
-            Instant gmtStartToLocalStart = zonedStartTime.toInstant();
-            Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
-            appt.setZonedStartTime(gmtStartToLocalStart);
-            appt.setZonedEndTime(gmtEndToLocalEnd);
+        for(Appointment appt : availableTimes) {
             //parse by converting letters to space
-            String zonedStartS = gmtStartToLocalStart.toString();
-            String zonedEndS = gmtEndToLocalEnd.toString();
+            ZonedDateTime startZL = appt.getStartTime();
+            ZonedDateTime endZL = appt.getEndTime();
+            String zonedStartS = startZL.toString();
+            String zonedEndS = endZL.toString();
             String subStart = zonedStartS.substring(0, 10);
             String subEnd = zonedEndS.substring(0, 10);
-            String subStart2 = zonedStartS.substring(11, 19);
-            String subEnd2 = zonedEndS.substring(11, 19);
+            String subStart2 = zonedStartS.substring(11, 16);
+            String subEnd2 = zonedEndS.substring(11, 16);
             String newZonedStart = subStart + " " + subStart2;
             String newZonedEnd = subEnd + " " + subEnd2;
             appt.setSZLocal(newZonedStart);
             appt.setEZLocal(newZonedEnd);
-            
-        }*/
+        }
         availableAppts.setItems(availableTimes);
     }
     
