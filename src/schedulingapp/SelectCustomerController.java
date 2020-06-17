@@ -8,6 +8,7 @@ package schedulingapp;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
@@ -88,18 +89,19 @@ public class SelectCustomerController implements Initializable {
     @FXML
     public void handleDatePicker(ActionEvent event) throws SQLException {
         LocalDate apptDate = desiredApptDate.getValue();
-        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
-        endTimeCol.setCellValueFactory(new PropertyValueFactory<>("eZLocal"));
+        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
         Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate); //This line retrieves available times for the logged in user, not populating times that they're already in another appointment. This is for requirement F.
         ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
         aTimes.forEach(availableTimes::add);
-        for(Appointment appt : availableTimes) {
+        
+        /*for(Appointment appt : availableTimes) {
             String stTime = appt.getStartTime();
             String eTime = appt.getEndTime();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); 
             LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
             LocalDateTime endTime = LocalDateTime.parse(eTime, formatter);
-            ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+            /*ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
             ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
             ZonedDateTime zonedEndTime = ZonedDateTime.of(endTime, localZoneId);
             Instant gmtStartToLocalStart = zonedStartTime.toInstant();
@@ -117,7 +119,8 @@ public class SelectCustomerController implements Initializable {
             String newZonedEnd = subEnd + " " + subEnd2;
             appt.setSZLocal(newZonedStart);
             appt.setEZLocal(newZonedEnd);
-        }
+            
+        }*/
         availableAppts.setItems(availableTimes);
     }
     
@@ -127,8 +130,8 @@ public class SelectCustomerController implements Initializable {
         int uId = UserCredentials.getCurrentUserId();
         Customer selectedCustomer = customersFound.getSelectionModel().getSelectedItem();
         Appointment selectedDateTime = availableAppts.getSelectionModel().getSelectedItem();
-        String startTime = new String();
-        String endTime = new String();
+        ZonedDateTime startTime = ZonedDateTime.now();
+        ZonedDateTime endTime = ZonedDateTime.now();
         String custId = new String();
         String apptTitle = new String();
         String apptDescription = new String();
@@ -149,7 +152,34 @@ public class SelectCustomerController implements Initializable {
         }
         try {
             if (!(selectedCustomer == null) && !(selectedDateTime == null) && !(apptType.isEmpty()) && !(apptDescription.isEmpty())) {
-                DBConnection.addAppointment(custId, uId, apptTitle, apptDescription, apptLocation, apptContact, apptType, apptUrl, startTime, endTime, unameE);                
+                
+                //need to instead at gmtStartTime and gmtEndTime by convert start/end to gmt
+                
+                /*
+                String stTime = appt.getStartTime();
+                String eTime = appt.getEndTime();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
+                LocalDateTime endTime = LocalDateTime.parse(eTime, formatter);
+                ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+                ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
+                ZonedDateTime zonedEndTime = ZonedDateTime.of(endTime, localZoneId);
+                Instant gmtStartToLocalStart = zonedStartTime.toInstant();
+                Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
+                appt.setZonedStartTime(gmtStartToLocalStart);
+                appt.setZonedEndTime(gmtEndToLocalEnd);*/
+                
+                ZoneId gmtZId = ZoneId.of("GMT");
+                LocalDateTime startTimeL = startTime.toLocalDateTime();
+                LocalDateTime endTimeL = endTime.toLocalDateTime();
+                ZonedDateTime startTimeGMT = ZonedDateTime.of(startTimeL, gmtZId);
+                ZonedDateTime endTimeGMT = ZonedDateTime.of(endTimeL, gmtZId);
+                LocalDateTime gmtStartTimeS = startTimeGMT.toLocalDateTime();
+                LocalDateTime gmtEndTimeS = endTimeGMT.toLocalDateTime();
+                Timestamp gmtStartTime = Timestamp.valueOf(gmtStartTimeS);
+                Timestamp gmtEndTime = Timestamp.valueOf(gmtEndTimeS);
+                
+                DBConnection.addAppointment(custId, uId, apptTitle, apptDescription, apptLocation, apptContact, apptType, apptUrl, gmtStartTime, gmtEndTime, unameE);                
                 errorLabel.setText("");
                 Stage stage = (Stage) useCustomerButton.getScene().getWindow();
                 stage.close();

@@ -7,6 +7,7 @@ package schedulingapp.Models;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 
 /**
  *
@@ -24,10 +25,14 @@ public class Appointment {
     private String contact;
     private String type;
     private String url;
-    private String startTime;
-    private String endTime;
+    private ZonedDateTime startTime;
+    private ZonedDateTime endTime;
     private Timestamp lastUpdate;
-    private String lastUpdateBy;    
+    private String lastUpdateBy; 
+    
+    private Timestamp gmtStartTime;
+    private Timestamp gmtEndTime;
+    
     private Instant zonedStartTime;
     private Instant zonedEndTime;
     private String sZLocal;
@@ -55,10 +60,10 @@ public class Appointment {
     public String getType() { return type; }    
     public void setUrl(String url) { this.url = url; }
     public String getUrl() { return url; }
-    public void setStartTime(String startTime) { this.startTime = startTime; }
-    public String getStartTime() { return startTime; }    
-    public void setEndTime(String endTime) { this.endTime = endTime; }
-    public String getEndTime() { return endTime; }
+    public void setStartTime(ZonedDateTime startTime) { this.startTime = startTime; }
+    public ZonedDateTime getStartTime() { return startTime; }    
+    public void setEndTime(ZonedDateTime endTime) { this.endTime = endTime; }
+    public ZonedDateTime getEndTime() { return endTime; }
     public void setLastUpdate(Timestamp lastUpdate) { this.lastUpdate = lastUpdate; }
     public Timestamp getLastUpdate() { return lastUpdate; }
     public void setLastUpdateBy(String lastUpdateBy) { this.lastUpdateBy = lastUpdateBy; }
@@ -71,4 +76,9 @@ public class Appointment {
     public String getSZLocal () { return sZLocal; }
     public void setEZLocal ( String eZLocal ) { this.eZLocal = eZLocal; }
     public String getEZLocal () { return eZLocal; }
+    
+    public void setGMTStartTime(Timestamp gmtStartTime) { this.gmtStartTime = gmtStartTime; }
+    public Timestamp getGMTStartTime() { return gmtStartTime; }
+    public void setGMTEndTime(Timestamp gmtEndTime) { this.gmtEndTime = gmtEndTime; }
+    public Timestamp getGMTEndTime() { return gmtEndTime; }
 }

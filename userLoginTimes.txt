@@ -8,3 +8,15 @@ A user with the username of test logged in at 2020-06-17T02:46:11.364 in their l
 
 A user with the username of test logged in at 2020-06-17T02:46:45.051 in their local timezone, which is America/Los_Angeles.
 
+A user with the username of test logged in at 2020-06-17T03:02:46.720 in their local timezone, which is America/Los_Angeles.
+
+A user with the username of test logged in at 2020-06-17T03:03:40.343 in their local timezone, which is America/Los_Angeles.
+
+A user with the username of test logged in at 2020-06-17T03:04:53.713 in their local timezone, which is America/Los_Angeles.
+
+A user with the username of test logged in at 2020-06-17T03:07:03.329 in their local timezone, which is America/Los_Angeles.
+
+A user with the username of test logged in at 2020-06-17T03:09:23.294 in their local timezone, which is America/Los_Angeles.
+
+A user with the username of test logged in at 2020-06-17T03:10:59.207 in their local timezone, which is America/Los_Angeles.
+

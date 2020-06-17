@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import schedulingapp.Models.Customer;
 import schedulingapp.Models.User;
 import schedulingapp.Models.Address;
@@ -632,8 +633,19 @@ public class DBConnection {
                 appointmentToAdd.setUserId(sqlRs.getString("userId"));
                 appointmentToAdd.setContact(sqlRs.getString("contact"));
                 appointmentToAdd.setDescription(sqlRs.getString("description"));
-                appointmentToAdd.setStartTime(sqlRs.getString("start"));
-                appointmentToAdd.setEndTime(sqlRs.getString("end"));
+                //
+                appointmentToAdd.setGMTStartTime(sqlRs.getTimestamp("start"));
+                appointmentToAdd.setGMTEndTime(sqlRs.getTimestamp("end"));
+                
+                appointmentToAdd.getGMTStartTime();
+                appointmentToAdd.getGMTEndTime();
+                //need to convert these to zoneddatetime in gmt then convert to user's local 
+                
+                //appointmentToAdd.setStartTime(startTime);
+                //appointmentToAdd.setEndTime(endTime);
+                //the start and end times that get pulled from the db should be in gmt so use gmtStartTime/gmtEndTime
+                //then convert these to the local times and set those to the startTime and endTime
+                
                 appointmentToAdd.setLocation(sqlRs.getString("location"));
                 appointmentToAdd.setTitle(sqlRs.getString("title"));
                 appointmentToAdd.setType(sqlRs.getString("type"));
@@ -712,7 +724,7 @@ public class DBConnection {
 
     //The following function adds a new appointment to the database
     public static void addAppointment(String customerId, int userId, String title, String description, String location, String contact, String type, String url,
-                                      String start, String end, String unameEntered) throws SQLException {
+                                      Timestamp start, Timestamp end, String unameEntered) throws SQLException {
         PreparedStatement stmt = null;
         String sql = "INSERT INTO appointment "
                 + "(appointmentId, customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy) "
@@ -731,8 +743,8 @@ public class DBConnection {
             stmt.setString(7, contact);
             stmt.setString(8, type);
             stmt.setString(9, url);
-            stmt.setString(10, start);
-            stmt.setString(11, end);
+            stmt.setString(10, start.toString());
+            stmt.setString(11, end.toString());
             stmt.setString(12, currDateTime);
             stmt.setString(13, unameEntered);
             stmt.setString(14, currDateTime);
@@ -771,16 +783,45 @@ public class DBConnection {
                 }
             }
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            ZoneId GMTZId = ZoneId.of("GMT");
+            //ZoneId GMTZId = ZoneId.of("GMT");
+            ZoneId userZoneId = ZoneId.of(TimeZone.getDefault().getID());
             LocalDateTime timeTL = LocalDateTime.parse(timeT, formatter);
-            ZonedDateTime startTimeGMT = timeTL.atZone(GMTZId);
-            startTimeGMT.withZoneSameLocal(GMTZId);
-            String startTimeGMTS = startTimeGMT.format(formatter).toString();
-            appointment.setStartTime(startTimeGMTS);            
-            if (!allPossibleAppts.isEmpty()) { allPossibleAppts.get(allPossibleAppts.size() - 1).setEndTime(startTimeGMTS); }  
+            ZonedDateTime startTimeUserZone = timeTL.atZone(userZoneId);
+            startTimeUserZone.withZoneSameLocal(userZoneId);
+            //ZonedDateTime startTimeUserZoneF = startTimeUserZone.format(formatter);
+            appointment.setStartTime(startTimeUserZone);            
+            if (!allPossibleAppts.isEmpty()) { allPossibleAppts.get(allPossibleAppts.size() - 1).setEndTime(startTimeUserZone); }  
             allPossibleAppts.add(appointment);
+            /*
+            //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); 
+            LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
+            //LocalDateTime endTime = LocalDateTime.parse(eTime, formatter);
+            //ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+            ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
+            ZonedDateTime zonedEndTime = ZonedDateTime.of(endTime, localZoneId);
+            Instant gmtStartToLocalStart = zonedStartTime.toInstant();
+            Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
+            appt.setZonedStartTime(gmtStartToLocalStart);
+            appt.setZonedEndTime(gmtEndToLocalEnd);
+            //parse by converting letters to space
+            String zonedStartS = gmtStartToLocalStart.toString();
+            String zonedEndS = gmtEndToLocalEnd.toString();
+            String subStart = zonedStartS.substring(0, 10);
+            String subEnd = zonedEndS.substring(0, 10);
+            String subStart2 = zonedStartS.substring(11, 19);
+            String subEnd2 = zonedEndS.substring(11, 19);
+            String newZonedStart = subStart + " " + subStart2;
+            String newZonedEnd = subEnd + " " + subEnd2;
+            appt.setSZLocal(newZonedStart);
+            appt.setEZLocal(newZonedEnd);*/
         }
-        allPossibleAppts.get(numberOfAppts - 1).setEndTime(dateToAppend + " " + endOfDay + ":00:00");
+        ZonedDateTime lastApptEnd = allPossibleAppts.get(numberOfAppts - 1).getEndTime().plusMinutes(20);
+        allPossibleAppts.get(numberOfAppts - 1).setEndTime(lastApptEnd);
+        /*ZonedDateTime startTimeUserZone = timeTL.atZone(userZoneId);
+            startTimeUserZone.withZoneSameLocal(userZoneId);*/
+        //add 20 mins instead of this stupid string shit
+        
+        //allPossibleAppts.get(numberOfAppts - 1).setEndTime(dateToAppend + " " + endOfDay + ":00:00");
         return allPossibleAppts;
     }
     
@@ -792,9 +833,13 @@ public class DBConnection {
         ArrayList<Appointment> availableAppts = (ArrayList<Appointment>) generateAllApptTimes(8,17,desiredDate);        
         int uId = UserCredentials.getCurrentUserId();
         Iterable<Appointment> apptsToRemove = getApptsByDate(desiredDate.toString(), uId);
+        
+        //int i = LocalDateTime.parse(appt.getStartTime().format(formatter)).compareTo(dayTime);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S"); 
+        
         for(Appointment appointment : apptsToRemove)
-            availableAppts.removeIf(e -> (e.getStartTime().substring(0, significantDigits)
-                    .contains(appointment.getStartTime().substring(0, significantDigits))));
+            availableAppts.removeIf(e -> (e.getStartTime().format(formatter).toString().substring(0, significantDigits)
+                    .contains(appointment.getStartTime().format(formatter).toString().substring(0, significantDigits))));
         return availableAppts;
     }
     
@@ -804,7 +849,7 @@ public class DBConnection {
             Iterable<Appointment> appointments = getAppointments();
             List<Appointment> foundAppointments = new ArrayList<>();
             for(Appointment appointment : appointments) {
-                if(appointment.getStartTime().contains(desiredDate) && appointment.getUserId().equals(String.valueOf(userId))) {
+                if(appointment.getStartTime().toString().contains(desiredDate) && appointment.getUserId().equals(String.valueOf(userId))) {
                     foundAppointments.add(appointment);
                 }
             }
@@ -827,7 +872,7 @@ public class DBConnection {
     
     //The following method updates appointments
     public static void updateAppointment(String appointmentId, String title, String description, String location, String contact, String apptType, 
-                                         String apptUrl, String startTime, String endTime, String lastUpdate, String lastUpdateBy) throws SQLException {
+                                         String apptUrl, Timestamp start, Timestamp end, String lastUpdate, String lastUpdateBy) throws SQLException {
         PreparedStatement stmt = null;
         String sql = "UPDATE appointment SET title=?, description=?, location=?, contact=?, type=?, "
                 + "url=?, start=?, end=?, lastUpdate=?, lastUpdateBy=? WHERE appointmentId=?";
@@ -839,8 +884,8 @@ public class DBConnection {
             stmt.setString(4, contact);
             stmt.setString(5, apptType);
             stmt.setString(6, apptUrl);
-            stmt.setString(7, startTime);
-            stmt.setString(8, endTime);
+            stmt.setString(7, start.toString());
+            stmt.setString(8, end.toString());
             stmt.setString(9, lastUpdate);
             stmt.setString(10, lastUpdateBy);
             stmt.setString(11, String.valueOf(appointmentId));
@@ -860,8 +905,10 @@ public class DBConnection {
             Iterable<Appointment> allAppts = getAppointments();
             List<Appointment> weekAppts = new ArrayList<>();
             for(Appointment appt : allAppts) {
-                int i = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(startOfWeekTime);
-                int j = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(endOfWeekTime);
+                int i = LocalDateTime.parse(appt.getStartTime().format(formatter)).compareTo(startOfWeekTime);
+                //int i = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(startOfWeekTime);
+                //int j = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(endOfWeekTime);
+                int j = LocalDateTime.parse(appt.getEndTime().format(formatter)).compareTo(endOfWeekTime);
                 if(i >= 0 && j <= 0) {
                     weekAppts.add(appt);
                 }
@@ -882,8 +929,10 @@ public class DBConnection {
             Iterable<Appointment> allAppts = getAppointments();
             List<Appointment> monthAppts = new ArrayList<>();
             for(Appointment appt : allAppts) {
-                int i = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(startOfMonthTime);
-                int j = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(endOfMonthTime);
+                int i = LocalDateTime.parse(appt.getStartTime().format(formatter)).compareTo(startOfMonthTime);
+                int j = LocalDateTime.parse(appt.getEndTime().format(formatter)).compareTo(endOfMonthTime);
+                //int i = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(startOfMonthTime);
+                //int j = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(endOfMonthTime);
                 if(i >= 0 && j <= 0) {
                     monthAppts.add(appt);
                 }
@@ -959,8 +1008,10 @@ public class DBConnection {
             Iterable<Appointment> allAppts = getAppointments();
             List<Appointment> dayAppts = new ArrayList<>();
             for(Appointment appt : allAppts) {
-                int i = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(dayTime);
-                int j = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(endDayTime);
+                int i = LocalDateTime.parse(appt.getStartTime().format(formatter)).compareTo(dayTime);
+                int j = LocalDateTime.parse(appt.getEndTime().format(formatter)).compareTo(endDayTime);
+                //int i = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(dayTime);
+                //int j = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(endDayTime);
                 if(i >= 0 && j <= 0) {
                     dayAppts.add(appt);
                 }

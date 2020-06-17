@@ -8,6 +8,7 @@ package schedulingapp;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -75,7 +76,7 @@ public class EditAppointmentController implements Initializable {
         ObservableList<Appointment> foundAppointments = FXCollections.observableArrayList();
         fAppointments.forEach(foundAppointments::add);
         foundAppointments.removeIf(e -> !(e.getCustomer().getCustomerName().toLowerCase().contains(nameToSearch.toLowerCase())));
-        for(Appointment appt : foundAppointments) {
+        /*for(Appointment appt : foundAppointments) {
             String stTime = appt.getStartTime();
             String eTime = appt.getEndTime();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
@@ -99,7 +100,7 @@ public class EditAppointmentController implements Initializable {
             String newZonedEnd = subEnd + " " + subEnd2;
             appt.setSZLocal(newZonedStart);
             appt.setEZLocal(newZonedEnd);
-        }
+        }*/
         appointmentsFound.setItems(foundAppointments);
     }
     
@@ -120,26 +121,26 @@ public class EditAppointmentController implements Initializable {
     public void handleDatePicker(ActionEvent event) throws SQLException {       
         try {
             LocalDate apptDate = desiredApptDate.getValue();
-            startTimeCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
-            endTimeCol.setCellValueFactory(new PropertyValueFactory<>("eZLocal"));
+            startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+            endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
             Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
             ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
             aTimes.forEach(availableTimes::add);
-            for(Appointment appt : availableTimes) {
-                String stTime = appt.getStartTime();
-                String eTime = appt.getEndTime();
+            /*for(Appointment appt : availableTimes) {
+                //String stTime = appt.getStartTime();
+                //String eTime = appt.getEndTime();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
-                LocalDateTime endTime = LocalDateTime.parse(eTime, formatter);
+                //LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
+                //LocalDateTime endTime = LocalDateTime.parse(eTime, formatter);
                 ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-                ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
-                ZonedDateTime zonedEndTime = ZonedDateTime.of(endTime, localZoneId);
-                Instant gmtStartToLocalStart = zonedStartTime.toInstant();
-                Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
-                appt.setZonedStartTime(gmtStartToLocalStart);
-                appt.setZonedEndTime(gmtEndToLocalEnd);
+                //ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
+                //ZonedDateTime zonedEndTime = ZonedDateTime.of(endTime, localZoneId);
+                //Instant gmtStartToLocalStart = zonedStartTime.toInstant();
+                //Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
+                //appt.setZonedStartTime(gmtStartToLocalStart);
+                //appt.setZonedEndTime(gmtEndToLocalEnd);
                 //parse by converting letters to space
-                String zonedStartS = gmtStartToLocalStart.toString();
+                /*String zonedStartS = gmtStartToLocalStart.toString();
                 String zonedEndS = gmtEndToLocalEnd.toString();
                 String subStart = zonedStartS.substring(0, 10);
                 String subEnd = zonedEndS.substring(0, 10);
@@ -149,7 +150,7 @@ public class EditAppointmentController implements Initializable {
                 String newZonedEnd = subEnd + " " + subEnd2;
                 appt.setSZLocal(newZonedStart);
                 appt.setEZLocal(newZonedEnd);
-            }
+            }*/
             availableAppts.setItems(availableTimes);
         }
         catch (SQLException e) { System.out.println("Error " + e.getMessage()); }
@@ -165,11 +166,22 @@ public class EditAppointmentController implements Initializable {
             String contact = contactText.getText();
             String apptType = typeText.getText();
             String apptUrl = urlText.getText();
-            String startTime = availableAppts.getSelectionModel().getSelectedItem().getStartTime();
-            String endTime = availableAppts.getSelectionModel().getSelectedItem().getEndTime();
+            ZonedDateTime startTime = availableAppts.getSelectionModel().getSelectedItem().getStartTime();
+            ZonedDateTime endTime = availableAppts.getSelectionModel().getSelectedItem().getEndTime();
             String lastUpdate = java.time.LocalDateTime.now().toString();
             String lastUpdateBy = UserCredentials.getUsername();
-            DBConnection.updateAppointment(appointmentId, title, description, location, contact, apptType, apptUrl, startTime, endTime, lastUpdate, lastUpdateBy);
+            
+                ZoneId gmtZId = ZoneId.of("GMT");
+                LocalDateTime startTimeL = startTime.toLocalDateTime();
+                LocalDateTime endTimeL = endTime.toLocalDateTime();
+                ZonedDateTime startTimeGMT = ZonedDateTime.of(startTimeL, gmtZId);
+                ZonedDateTime endTimeGMT = ZonedDateTime.of(endTimeL, gmtZId);
+                LocalDateTime gmtStartTimeS = startTimeGMT.toLocalDateTime();
+                LocalDateTime gmtEndTimeS = endTimeGMT.toLocalDateTime();
+                Timestamp gmtStartTime = Timestamp.valueOf(gmtStartTimeS);
+                Timestamp gmtEndTime = Timestamp.valueOf(gmtEndTimeS);
+            
+            DBConnection.updateAppointment(appointmentId, title, description, location, contact, apptType, apptUrl, gmtStartTime, gmtEndTime, lastUpdate, lastUpdateBy);
             searchCustomerText.clear();
             Iterable<Appointment> fAppointments = DBConnection.getAppointments();
             ObservableList<Appointment> foundAppointments = FXCollections.observableArrayList();
@@ -181,7 +193,7 @@ public class EditAppointmentController implements Initializable {
             Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
             ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
             aTimes.forEach(availableTimes::add);
-            for(Appointment appt : availableTimes) {
+            /*for(Appointment appt : availableTimes) {
                 String stTime = appt.getStartTime();
                 String eTime = appt.getEndTime();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -205,7 +217,7 @@ public class EditAppointmentController implements Initializable {
                 String newZonedEnd = subEnd + " " + subEnd2;
                 appt.setSZLocal(newZonedStart);
                 appt.setEZLocal(newZonedEnd);
-            }
+            }*/
             availableAppts.setItems(availableTimes);
             Stage stage = (Stage) updateButton.getScene().getWindow();
             stage.close();
@@ -231,7 +243,7 @@ public class EditAppointmentController implements Initializable {
             Iterable<Appointment> aAppointments = DBConnection.getAppointments();
             ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
             aAppointments.forEach(allAppointments::add);
-            for(Appointment appt : allAppointments) {
+            /*for(Appointment appt : allAppointments) {
                 String stTime = appt.getStartTime();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
                 LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
@@ -245,7 +257,7 @@ public class EditAppointmentController implements Initializable {
                 String subStart2 = zonedStartS.substring(11, 19);
                 String newZonedStart = subStart + " " + subStart2;
                 appt.setSZLocal(newZonedStart);
-            }
+            }*/
             appointmentsFound.setItems(allAppointments);
         } 
         catch (SQLException ex) { System.out.println("Error " + ex.getMessage()); }
