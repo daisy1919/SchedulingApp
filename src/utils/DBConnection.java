@@ -638,25 +638,39 @@ public class DBConnection {
                 appointmentToAdd.setGMTStartTime(sqlRs.getTimestamp("start"));
                 appointmentToAdd.setGMTEndTime(sqlRs.getTimestamp("end"));
                 
+                
                 Timestamp stTime = appointmentToAdd.getGMTStartTime();
                 Timestamp eTime = appointmentToAdd.getGMTEndTime();
-                //need to convert these to zoneddatetime in gmt then convert to user's local
                 
-                
-                //String stTime = appt.getStartTime();
-                //String eTime = appt.getEndTime();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 LocalDateTime startTime = stTime.toLocalDateTime();
                 LocalDateTime endTime = eTime.toLocalDateTime();
-                //LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
-                //LocalDateTime endTime = LocalDateTime.parse(eTime, formatter);
-                ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-                ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
-                ZonedDateTime zonedEndTime = ZonedDateTime.of(endTime, localZoneId);
+                
+                /*
+                
+                //ZoneId gmtZId = ZoneId.of("GMT");
+                //ZoneId localZId = ZoneId.systemDefault();
+                LocalDateTime startTimeL = startTime.toLocalDateTime();
+                LocalDateTime endTimeL = endTime.toLocalDateTime();
+                
+                ZonedDateTime startTimeLocal = ZonedDateTime.of(startTimeL, localZId);
+                ZonedDateTime ss = startTimeLocal.withZoneSameInstant(gmtZId);*/
+                
+                ZoneId gmtZoneId = ZoneId.of("GMT");
+                ZoneId localZoneId = ZoneId.systemDefault();
+                
+                ZonedDateTime startTimeLocal = ZonedDateTime.of(startTime, gmtZoneId);
+                ZonedDateTime ss = startTimeLocal.withZoneSameInstant(localZoneId);
+                
+                ZonedDateTime endTimeLocal = ZonedDateTime.of(endTime, gmtZoneId);
+                ZonedDateTime ee = endTimeLocal.withZoneSameInstant(localZoneId);
+                
+                //ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
+                //ZonedDateTime zonedEndTime = ZonedDateTime.of(endTime, localZoneId);
                 //Instant gmtStartToLocalStart = zonedStartTime.toInstant();
                 //Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
-                appointmentToAdd.setStartTime(zonedStartTime);
-                appointmentToAdd.setEndTime(zonedEndTime);
+                appointmentToAdd.setStartTime(ss);
+                appointmentToAdd.setEndTime(ee);
                 
                 //appointmentToAdd.setStartTime(startTime);
                 //appointmentToAdd.setEndTime(endTime);
