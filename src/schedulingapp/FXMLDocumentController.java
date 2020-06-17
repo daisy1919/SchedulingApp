@@ -46,6 +46,17 @@ public class FXMLDocumentController implements Initializable {
     @FXML javafx.scene.control.TextField usernameText;
     @FXML javafx.scene.control.TextField passwordText;
     @FXML javafx.scene.control.Label errorMessages;
+    @FXML javafx.scene.control.Button submitButton;
+    @FXML javafx.scene.control.Button exitButton;
+    @FXML javafx.scene.control.Label loginLabel;
+    @FXML javafx.scene.control.Label usernameLabel;
+    @FXML javafx.scene.control.Label passwordLabel;
+    
+    //Please log in below
+    //Username:
+    //Password:
+    //Exit
+    //Log in
     
 
 private Boolean isAuthenticated(User userToAuth) {        
@@ -159,8 +170,32 @@ private Boolean isAuthenticated(User userToAuth) {
     }
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+    public void initialize(URL url, ResourceBundle rbb) {
+        /*@FXML javafx.scene.control.Button submitButton;
+    @FXML javafx.scene.control.Button exitButton;
+
+        
+
+    //Exit
+    //Log in*/
+        
+        ResourceBundle rb = ResourceBundle.getBundle("schedulingapp/Nat", Locale.getDefault());
+        if (rb.getLocale().getLanguage().equals("de")) {
+            loginLabel.setText(rb.getString("Login") + " " + rb.getString("please"));
+            usernameLabel.setText(rb.getString("Username") + ": ");
+            passwordLabel.setText(rb.getString("Password") + ": ");
+            submitButton.setText(rb.getString("Login"));
+            exitButton.setText(rb.getString("Exit"));
+            //errorMessages.setText(rb.getString("Credentials") + " " + rb.getString("are") + " " + rb.getString("incorrect"));
+        }
+        else { 
+            loginLabel.setText("Login please");
+            usernameLabel.setText("Username: ");
+            passwordLabel.setText("Password: ");
+            submitButton.setText("Login");
+            exitButton.setText("Exit");
+            //errorMessages.setText("Credentials are incorrect"); 
+        }
     }    
     
 }
