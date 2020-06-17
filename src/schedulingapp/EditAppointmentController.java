@@ -29,6 +29,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import schedulingapp.Models.Appointment;
+import schedulingapp.Models.Customer;
 import utils.DBConnection;
 
 /**
@@ -47,6 +48,7 @@ public class EditAppointmentController implements Initializable {
     @FXML javafx.scene.control.TextField contactText;
     @FXML javafx.scene.control.TextField typeText;
     @FXML javafx.scene.control.TextField urlText;
+    @FXML javafx.scene.control.Label errorLabel;
     
     @FXML
     private TableView<Appointment> appointmentsFound;
@@ -121,15 +123,33 @@ public class EditAppointmentController implements Initializable {
     @FXML
     public void handleUpdateButton(ActionEvent event) throws SQLException, IOException {
         try {
-            String appointmentId = appointmentsFound.getSelectionModel().getSelectedItem().getAppointmentId();
-            String title = titleText.getText();
-            String description = descriptionText.getText();
-            String location = locationText.getText();
-            String contact = contactText.getText();
-            String apptType = typeText.getText();
-            String apptUrl = urlText.getText();
-            ZonedDateTime startTime = availableAppts.getSelectionModel().getSelectedItem().getStartTime();
-            ZonedDateTime endTime = availableAppts.getSelectionModel().getSelectedItem().getEndTime();
+            
+            Appointment apptSel = availableAppts.getSelectionModel().getSelectedItem();
+            Customer customerSel = appointmentsFound.getSelectionModel().getSelectedItem().getCustomer();
+            String appointmentId = new String();
+            ZonedDateTime startTime = ZonedDateTime.now();
+            ZonedDateTime endTime = ZonedDateTime.now();
+            String title = new String();
+            String description = new String();
+            String location = new String();
+            String contact = new String();
+            String apptType = new String();
+            String apptUrl = new String();
+            
+            
+        if (!(customerSel == null) && !(apptSel == null)) {
+            appointmentId = appointmentsFound.getSelectionModel().getSelectedItem().getAppointmentId();
+            startTime = apptSel.getStartTime();
+            endTime = apptSel.getEndTime();
+            title = titleText.getText();
+            description = descriptionText.getText();
+            location = locationText.getText();
+            contact = contactText.getText();
+            apptType = typeText.getText();
+            apptUrl = urlText.getText();
+        }
+            
+/*        
             String lastUpdate = java.time.LocalDateTime.now().toString();
             String lastUpdateBy = UserCredentials.getUsername();
             
@@ -158,41 +178,79 @@ public class EditAppointmentController implements Initializable {
                 
             Timestamp gmtStartTime = Timestamp.valueOf(startI);;
             Timestamp gmtEndTime = Timestamp.valueOf(endI);
+*/
                             
-            DBConnection.updateAppointment(appointmentId, title, description, location, contact, apptType, apptUrl, gmtStartTime, gmtEndTime, lastUpdate, lastUpdateBy);
-            searchCustomerText.clear();
-            Iterable<Appointment> fAppointments = DBConnection.getAppointments();
-            ObservableList<Appointment> foundAppointments = FXCollections.observableArrayList();
-            fAppointments.forEach(foundAppointments::add);
-            appointmentsFound.setItems(foundAppointments);
-            LocalDate apptDate = desiredApptDate.getValue();
-            startTimeCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
-            endTimeCol.setCellValueFactory(new PropertyValueFactory<>("eZLocal"));
-            Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
-            ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
-            aTimes.forEach(availableTimes::add);
-            for(Appointment appt : availableTimes) {
-                //parse by converting letters to space
-                ZonedDateTime startZL = appt.getStartTime();
-                ZonedDateTime endZL = appt.getEndTime();
-                String zonedStartS = startZL.toString();
-                String zonedEndS = endZL.toString();
-                String subStart = zonedStartS.substring(0, 10);
-                String subEnd = zonedEndS.substring(0, 10);
-                String subStart2 = zonedStartS.substring(11, 16);
-                String subEnd2 = zonedEndS.substring(11, 16);
-                String newZonedStart = subStart + " " + subStart2;
-                String newZonedEnd = subEnd + " " + subEnd2;
-                appt.setSZLocal(newZonedStart);
-                appt.setEZLocal(newZonedEnd);
+            if (!(customerSel == null) && !(apptSel == null) && !(apptType.isEmpty()) && !(description.isEmpty())) {
+                
+                String lastUpdate = java.time.LocalDateTime.now().toString();
+                String lastUpdateBy = UserCredentials.getUsername();
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                ZoneId gmtZId = ZoneId.of("GMT");
+                ZoneId localZId = ZoneId.systemDefault();
+                LocalDateTime startTimeL = startTime.toLocalDateTime();
+                LocalDateTime endTimeL = endTime.toLocalDateTime();
+                ZonedDateTime startTimeLocal = ZonedDateTime.of(startTimeL, localZId);
+                ZonedDateTime ss = startTimeLocal.withZoneSameInstant(gmtZId);
+                ZonedDateTime endTimeLocal = ZonedDateTime.of(endTimeL, localZId);
+                ZonedDateTime ee = endTimeLocal.withZoneSameInstant(gmtZId);
+
+                String startInstant = ss.toInstant().toString();
+                String endInstant = ee.toInstant().toString();
+
+                String subS = startInstant.substring(0, 10);
+                String subS2 = startInstant.substring(11, 19);
+                String subE = endInstant.substring(0, 10);
+                String subE2 = endInstant.substring(11, 19);
+                String nSI = subS + " " + subS2;
+                String nEI = subE + " " + subE2;
+
+                LocalDateTime startI = LocalDateTime.parse(nSI, formatter);
+                LocalDateTime endI = LocalDateTime.parse(nEI, formatter);
+
+                Timestamp gmtStartTime = Timestamp.valueOf(startI);;
+                Timestamp gmtEndTime = Timestamp.valueOf(endI);
+                
+                DBConnection.updateAppointment(appointmentId, title, description, location, contact, apptType, apptUrl, gmtStartTime, gmtEndTime, lastUpdate, lastUpdateBy);
+                searchCustomerText.clear();
+                Iterable<Appointment> fAppointments = DBConnection.getAppointments();
+                ObservableList<Appointment> foundAppointments = FXCollections.observableArrayList();
+                fAppointments.forEach(foundAppointments::add);
+                appointmentsFound.setItems(foundAppointments);
+                LocalDate apptDate = desiredApptDate.getValue();
+                startTimeCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
+                endTimeCol.setCellValueFactory(new PropertyValueFactory<>("eZLocal"));
+                Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
+                ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
+                aTimes.forEach(availableTimes::add);
+                for(Appointment appt : availableTimes) {
+                    //parse by converting letters to space
+                    ZonedDateTime startZL = appt.getStartTime();
+                    ZonedDateTime endZL = appt.getEndTime();
+                    String zonedStartS = startZL.toString();
+                    String zonedEndS = endZL.toString();
+                    String subStart = zonedStartS.substring(0, 10);
+                    String subEnd = zonedEndS.substring(0, 10);
+                    String subStart2 = zonedStartS.substring(11, 16);
+                    String subEnd2 = zonedEndS.substring(11, 16);
+                    String newZonedStart = subStart + " " + subStart2;
+                    String newZonedEnd = subEnd + " " + subEnd2;
+                    appt.setSZLocal(newZonedStart);
+                    appt.setEZLocal(newZonedEnd);
+                }
+                availableAppts.setItems(availableTimes);
+                Stage stage = (Stage) updateButton.getScene().getWindow();
+                stage.close();
+                Parent root = FXMLLoader.load(getClass().getResource("ApptEditContinueDialogue.fxml"));
+                Stage stage2 = new Stage();
+                stage2.setScene(new Scene(root));
+                stage2.show();
             }
-            availableAppts.setItems(availableTimes);
-            Stage stage = (Stage) updateButton.getScene().getWindow();
-            stage.close();
-            Parent root = FXMLLoader.load(getClass().getResource("ApptEditContinueDialogue.fxml"));
-            Stage stage2 = new Stage();
-            stage2.setScene(new Scene(root));
-            stage2.show();
+            
+            else {
+                errorLabel.setText("You must choose a customer, appointment time, type, and description to continue.");
+            }
+            
         }
         catch(SQLException e) { System.out.println("Error " + e.getMessage()); }
     }

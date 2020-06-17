@@ -934,18 +934,31 @@ public class DBConnection {
         zeroTime = LocalTime.parse("00:00:00");        
         LocalDateTime startOfMonthTime = LocalDateTime.of(startOfMonth, zeroTime);
         LocalDateTime endOfMonthTime = LocalDateTime.of(endOfMonth, zeroTime);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");        
         try {            
             Iterable<Appointment> allAppts = getAppointments();
             List<Appointment> monthAppts = new ArrayList<>();
             for(Appointment appt : allAppts) {
-                int i = LocalDateTime.parse(appt.getStartTime().format(formatter)).compareTo(startOfMonthTime);
-                int j = LocalDateTime.parse(appt.getEndTime().format(formatter)).compareTo(endOfMonthTime);
-                //int i = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(startOfMonthTime);
-                //int j = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(endOfMonthTime);
+                
+                ZonedDateTime startZL = appt.getStartTime();
+                String zonedStartS = startZL.format(formatter);
+                String subStart = zonedStartS.substring(0, 10);
+                String subStart2 = zonedStartS.substring(11, 19);
+                String newZonedStart = subStart + " " + subStart2;
+                
+                ZonedDateTime endZL = appt.getEndTime();
+                String zonedEndS = endZL.format(formatter);
+                String subEnd = zonedEndS.substring(0, 10);
+                String subEnd2 = zonedEndS.substring(11, 19);
+                String newZonedEnd = subEnd + " " + subEnd2;
+                
+                int i = LocalDateTime.parse(newZonedStart, formatter).compareTo(startOfMonthTime);
+                int j = LocalDateTime.parse(newZonedEnd, formatter).compareTo(endOfMonthTime);
+                
                 if(i >= 0 && j <= 0) {
                     monthAppts.add(appt);
                 }
+                
             }
             return monthAppts;
         }
