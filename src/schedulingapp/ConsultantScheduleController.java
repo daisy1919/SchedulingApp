@@ -77,12 +77,12 @@ public class ConsultantScheduleController implements Initializable {
         String uIdS = String.valueOf(uId);
         //Populate tableview with that week's appointments
         custNameCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getCustomer().getCustomerName()));
-        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
+        startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         Iterable<Appointment> mAppointments = DBConnection.getConsultantSchedule(firstOfMonth, endOfMonth, uIdS);
         ObservableList<Appointment> monthAppointments = FXCollections.observableArrayList();
         mAppointments.forEach(monthAppointments::add);        
         //This converts the appointment time in the database to the user's local time to populate the tableview
-        for(Appointment appt : monthAppointments) {
+        /*for(Appointment appt : monthAppointments) {
             String stTime = appt.getStartTime();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
             LocalDateTime startTime = LocalDateTime.parse(stTime, formatter); //still its original time from the db
@@ -98,7 +98,7 @@ public class ConsultantScheduleController implements Initializable {
             String newZonedStart = subStart + " " + subStart2;
             appt.setSZLocal(newZonedStart);
             
-        }        
+        }*/     
         appointmentsFound.setItems(monthAppointments);
     }
     

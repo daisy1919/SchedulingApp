@@ -26,7 +26,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
@@ -152,14 +154,9 @@ public class SelectCustomerController implements Initializable {
         }
         try {
             if (!(selectedCustomer == null) && !(selectedDateTime == null) && !(apptType.isEmpty()) && !(apptDescription.isEmpty())) {
-                
-                //need to instead at gmtStartTime and gmtEndTime by convert start/end to gmt
-                
-                /*
-                String stTime = appt.getStartTime();
-                String eTime = appt.getEndTime();
+
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
+                /*LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
                 LocalDateTime endTime = LocalDateTime.parse(eTime, formatter);
                 ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
                 ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
@@ -170,14 +167,28 @@ public class SelectCustomerController implements Initializable {
                 appt.setZonedEndTime(gmtEndToLocalEnd);*/
                 
                 ZoneId gmtZId = ZoneId.of("GMT");
+                ZoneId localZId = ZoneId.systemDefault();
                 LocalDateTime startTimeL = startTime.toLocalDateTime();
                 LocalDateTime endTimeL = endTime.toLocalDateTime();
-                ZonedDateTime startTimeGMT = ZonedDateTime.of(startTimeL, gmtZId);
-                ZonedDateTime endTimeGMT = ZonedDateTime.of(endTimeL, gmtZId);
-                LocalDateTime gmtStartTimeS = startTimeGMT.toLocalDateTime();
-                LocalDateTime gmtEndTimeS = endTimeGMT.toLocalDateTime();
-                Timestamp gmtStartTime = Timestamp.valueOf(gmtStartTimeS);
-                Timestamp gmtEndTime = Timestamp.valueOf(gmtEndTimeS);
+                
+                ZonedDateTime startTimeLocal = ZonedDateTime.of(startTimeL, localZId);
+                ZonedDateTime ss = startTimeLocal.withZoneSameInstant(gmtZId);
+                ZonedDateTime endTimeLocal = ZonedDateTime.of(endTimeL, localZId);
+                String startInstant = ss.toInstant().toString();
+                String endInstant = endTimeLocal.toInstant().toString();
+                
+                String subS = startInstant.substring(0, 10);
+                String subS2 = startInstant.substring(11, 19);
+                String subE = endInstant.substring(0, 10);
+                String subE2 = endInstant.substring(11, 19);
+                String nSI = subS + " " + subS2;
+                String nEI = subE + " " + subE2;
+                
+                LocalDateTime startI = LocalDateTime.parse(nSI, formatter);
+                LocalDateTime endI = LocalDateTime.parse(nEI, formatter);
+                
+                Timestamp gmtStartTime = Timestamp.valueOf(startI);;
+                Timestamp gmtEndTime = Timestamp.valueOf(endI);
                 
                 DBConnection.addAppointment(custId, uId, apptTitle, apptDescription, apptLocation, apptContact, apptType, apptUrl, gmtStartTime, gmtEndTime, unameE);                
                 errorLabel.setText("");

@@ -111,7 +111,8 @@ private Boolean isAuthenticated(User userToAuth) {
                 
                 for(Appointment appt : dayAppts) {
                     
-                    String stTime = appt.getStartTime();
+                    ZonedDateTime startTime = appt.getStartTime();
+                    /*String stTime = appt.getStartTime();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
                     DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                     LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
@@ -124,9 +125,9 @@ private Boolean isAuthenticated(User userToAuth) {
                     String subStart = zonedStartS.substring(0, 10);
                     String subStart2 = zonedStartS.substring(11, 19);
                     String newZoned = subStart + " " + subStart2;
-                    LocalDateTime startDateTimeZ = LocalDateTime.parse(newZoned, formatter2);
+                    LocalDateTime startDateTimeZ = LocalDateTime.parse(newZoned, formatter2);*/
                     
-                    int startTimeInMin = (startDateTimeZ.getHour() * 60) + startDateTimeZ.getMinute();
+                    int startTimeInMin = (startTime.getHour() * 60) + startTime.getMinute();
                     int currTimeInMin = (todayDT.getHour() * 60) + todayDT.getMinute();
                     
                     if(Math.abs(startTimeInMin - currTimeInMin) <= 15) {

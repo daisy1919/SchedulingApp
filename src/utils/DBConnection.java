@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -637,9 +638,25 @@ public class DBConnection {
                 appointmentToAdd.setGMTStartTime(sqlRs.getTimestamp("start"));
                 appointmentToAdd.setGMTEndTime(sqlRs.getTimestamp("end"));
                 
-                appointmentToAdd.getGMTStartTime();
-                appointmentToAdd.getGMTEndTime();
-                //need to convert these to zoneddatetime in gmt then convert to user's local 
+                Timestamp stTime = appointmentToAdd.getGMTStartTime();
+                Timestamp eTime = appointmentToAdd.getGMTEndTime();
+                //need to convert these to zoneddatetime in gmt then convert to user's local
+                
+                
+                //String stTime = appt.getStartTime();
+                //String eTime = appt.getEndTime();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime startTime = stTime.toLocalDateTime();
+                LocalDateTime endTime = eTime.toLocalDateTime();
+                //LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
+                //LocalDateTime endTime = LocalDateTime.parse(eTime, formatter);
+                ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+                ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
+                ZonedDateTime zonedEndTime = ZonedDateTime.of(endTime, localZoneId);
+                //Instant gmtStartToLocalStart = zonedStartTime.toInstant();
+                //Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
+                appointmentToAdd.setStartTime(zonedStartTime);
+                appointmentToAdd.setEndTime(zonedEndTime);
                 
                 //appointmentToAdd.setStartTime(startTime);
                 //appointmentToAdd.setEndTime(endTime);
@@ -815,11 +832,11 @@ public class DBConnection {
             appt.setSZLocal(newZonedStart);
             appt.setEZLocal(newZonedEnd);*/
         }
-        ZonedDateTime lastApptEnd = allPossibleAppts.get(numberOfAppts - 1).getEndTime().plusMinutes(20);
-        allPossibleAppts.get(numberOfAppts - 1).setEndTime(lastApptEnd);
-        /*ZonedDateTime startTimeUserZone = timeTL.atZone(userZoneId);
-            startTimeUserZone.withZoneSameLocal(userZoneId);*/
-        //add 20 mins instead of this stupid string shit
+        //ZonedDateTime lastApptEnd = (allPossibleAppts.get(numberOfAppts - 1).getEndTime()).plusMinutes(20);
+        Appointment lastAppt = allPossibleAppts.get(numberOfAppts - 2);
+        ZonedDateTime lastApptE = lastAppt.getEndTime();
+        ZonedDateTime lastApptEe = lastApptE.plusMinutes(20);
+        allPossibleAppts.get(numberOfAppts - 1).setEndTime(lastApptEe);
         
         //allPossibleAppts.get(numberOfAppts - 1).setEndTime(dateToAppend + " " + endOfDay + ":00:00");
         return allPossibleAppts;
@@ -838,8 +855,7 @@ public class DBConnection {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S"); 
         
         for(Appointment appointment : apptsToRemove)
-            availableAppts.removeIf(e -> (e.getStartTime().format(formatter).toString().substring(0, significantDigits)
-                    .contains(appointment.getStartTime().format(formatter).toString().substring(0, significantDigits))));
+            availableAppts.removeIf(e -> ((e.getStartTime().format(formatter).substring(0, significantDigits)).contains(appointment.getStartTime().format(formatter).substring(0, significantDigits))));
         return availableAppts;
     }
     
@@ -1003,13 +1019,17 @@ public class DBConnection {
         endTime = LocalTime.parse("23:59:59");
         LocalDateTime dayTime = LocalDateTime.of(todayDate, zeroTime);
         LocalDateTime endDayTime = LocalDateTime.of(todayDate, endTime);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");        
         try {            
             Iterable<Appointment> allAppts = getAppointments();
             List<Appointment> dayAppts = new ArrayList<>();
             for(Appointment appt : allAppts) {
-                int i = LocalDateTime.parse(appt.getStartTime().format(formatter)).compareTo(dayTime);
-                int j = LocalDateTime.parse(appt.getEndTime().format(formatter)).compareTo(endDayTime);
+                int i = 0;
+                int j = 0;
+                //i = LocalDateTime.parse(appt.getStartTime().format(formatter)).compareTo(dayTime);
+                i = (LocalDateTime.parse(appt.getStartTime().format(formatter).toString(), formatter)).compareTo(dayTime);
+                j = (LocalDateTime.parse(appt.getEndTime().format(formatter).toString(), formatter)).compareTo(endDayTime);
+                //j = LocalDateTime.parse(appt.getEndTime().format(formatter)).compareTo(endDayTime);
                 //int i = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(dayTime);
                 //int j = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(endDayTime);
                 if(i >= 0 && j <= 0) {

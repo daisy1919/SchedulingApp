@@ -72,7 +72,7 @@ public class DeleteAppointmentController implements Initializable {
             Iterable<Appointment> aAppts = DBConnection.getAppointments();
             ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
             aAppts.forEach(allAppointments::add);
-            for(Appointment appt : allAppointments) {
+            /*for(Appointment appt : allAppointments) {
                 String stTime = appt.getStartTime();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
                 LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
@@ -86,7 +86,7 @@ public class DeleteAppointmentController implements Initializable {
                 String subStart2 = zonedStartS.substring(11, 19);
                 String newZonedStart = subStart + " " + subStart2;
                 appt.setSZLocal(newZonedStart);
-            }
+            }*/
             appointmentsFound.setItems(allAppointments);
         }
         catch (SQLException e) { System.out.println("Error " + e.getMessage()); }
@@ -96,11 +96,11 @@ public class DeleteAppointmentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         try {
             custNameCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getCustomer().getCustomerName()));
-            apptDateCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
+            apptDateCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
             Iterable<Appointment> aAppointments = DBConnection.getAppointments();
             ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
             aAppointments.forEach(allAppointments::add);
-            for(Appointment appt : allAppointments) {
+            /*for(Appointment appt : allAppointments) {
                 String stTime = appt.getStartTime();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
                 LocalDateTime startTime = LocalDateTime.parse(stTime, formatter); //still its original time from the db
@@ -114,7 +114,7 @@ public class DeleteAppointmentController implements Initializable {
                 String subStart2 = zonedStartS.substring(11, 19);
                 String newZonedStart = subStart + " " + subStart2;
                 appt.setSZLocal(newZonedStart);
-            }
+            }*/
             appointmentsFound.setItems(allAppointments);
         } 
         catch (SQLException ex) { System.out.println("Error " + ex.getMessage()); }

@@ -73,12 +73,12 @@ public class WeekAppointmentsController implements Initializable {
         DBConnection.getApptsByWeek(selectedDate);
         //Populate tableview with that week's appointments
         custNameCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getCustomer().getCustomerName()));
-        apptDateCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
+        apptDateCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         Iterable<Appointment> wAppointments = DBConnection.getApptsByWeek(selectedDate);
         ObservableList<Appointment> weekAppointments = FXCollections.observableArrayList();
         wAppointments.forEach(weekAppointments::add);
         //This converts the appointment time in the database to the user's local time to populate the tableview
-        for(Appointment appt : weekAppointments) {
+        /*for(Appointment appt : weekAppointments) {
             String stTime = appt.getStartTime();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
             LocalDateTime startTime = LocalDateTime.parse(stTime, formatter); //still its original time from the db
@@ -92,7 +92,7 @@ public class WeekAppointmentsController implements Initializable {
             String subStart2 = zonedStartS.substring(11, 19);
             String newZonedStart = subStart + " " + subStart2;
             appt.setSZLocal(newZonedStart);
-        }
+        }*/
         appointmentsFound.setItems(weekAppointments);
     }
     
