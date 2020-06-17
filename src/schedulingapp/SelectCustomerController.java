@@ -145,15 +145,6 @@ public class SelectCustomerController implements Initializable {
             if (!(selectedCustomer == null) && !(selectedDateTime == null) && !(apptType.isEmpty()) && !(apptDescription.isEmpty())) {
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                /*LocalDateTime startTime = LocalDateTime.parse(stTime, formatter);
-                LocalDateTime endTime = LocalDateTime.parse(eTime, formatter);
-                ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-                ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
-                ZonedDateTime zonedEndTime = ZonedDateTime.of(endTime, localZoneId);
-                Instant gmtStartToLocalStart = zonedStartTime.toInstant();
-                Instant gmtEndToLocalEnd = zonedEndTime.toInstant();
-                appt.setZonedStartTime(gmtStartToLocalStart);
-                appt.setZonedEndTime(gmtEndToLocalEnd);*/
                 
                 ZoneId gmtZId = ZoneId.of("GMT");
                 ZoneId localZId = ZoneId.systemDefault();
@@ -163,8 +154,9 @@ public class SelectCustomerController implements Initializable {
                 ZonedDateTime startTimeLocal = ZonedDateTime.of(startTimeL, localZId);
                 ZonedDateTime ss = startTimeLocal.withZoneSameInstant(gmtZId);
                 ZonedDateTime endTimeLocal = ZonedDateTime.of(endTimeL, localZId);
+                ZonedDateTime ee = endTimeLocal.withZoneSameInstant(gmtZId);
                 String startInstant = ss.toInstant().toString();
-                String endInstant = endTimeLocal.toInstant().toString();
+                String endInstant = ee.toInstant().toString();
                 
                 String subS = startInstant.substring(0, 10);
                 String subS2 = startInstant.substring(11, 19);
