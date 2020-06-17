@@ -121,8 +121,8 @@ public class EditAppointmentController implements Initializable {
     public void handleDatePicker(ActionEvent event) throws SQLException {       
         try {
             LocalDate apptDate = desiredApptDate.getValue();
-            startTimeCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-            endTimeCol.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+            startTimeCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
+            endTimeCol.setCellValueFactory(new PropertyValueFactory<>("eZLocal"));
             Iterable<Appointment> aTimes = DBConnection.getAvailableApptTimes(apptDate);
             ObservableList<Appointment> availableTimes = FXCollections.observableArrayList();
             aTimes.forEach(availableTimes::add);
@@ -151,6 +151,21 @@ public class EditAppointmentController implements Initializable {
                 appt.setSZLocal(newZonedStart);
                 appt.setEZLocal(newZonedEnd);
             }*/
+            for(Appointment appt : availableTimes) {
+                //parse by converting letters to space
+                ZonedDateTime startZL = appt.getStartTime();
+                ZonedDateTime endZL = appt.getEndTime();
+                String zonedStartS = startZL.toString();
+                String zonedEndS = endZL.toString();
+                String subStart = zonedStartS.substring(0, 10);
+                String subEnd = zonedEndS.substring(0, 10);
+                String subStart2 = zonedStartS.substring(11, 16);
+                String subEnd2 = zonedEndS.substring(11, 16);
+                String newZonedStart = subStart + " " + subStart2;
+                String newZonedEnd = subEnd + " " + subEnd2;
+                appt.setSZLocal(newZonedStart);
+                appt.setEZLocal(newZonedEnd);
+            }
             availableAppts.setItems(availableTimes);
         }
         catch (SQLException e) { System.out.println("Error " + e.getMessage()); }
@@ -218,6 +233,21 @@ public class EditAppointmentController implements Initializable {
                 appt.setSZLocal(newZonedStart);
                 appt.setEZLocal(newZonedEnd);
             }*/
+            for(Appointment appt : availableTimes) {
+                //parse by converting letters to space
+                ZonedDateTime startZL = appt.getStartTime();
+                ZonedDateTime endZL = appt.getEndTime();
+                String zonedStartS = startZL.toString();
+                String zonedEndS = endZL.toString();
+                String subStart = zonedStartS.substring(0, 10);
+                String subEnd = zonedEndS.substring(0, 10);
+                String subStart2 = zonedStartS.substring(11, 16);
+                String subEnd2 = zonedEndS.substring(11, 16);
+                String newZonedStart = subStart + " " + subStart2;
+                String newZonedEnd = subEnd + " " + subEnd2;
+                appt.setSZLocal(newZonedStart);
+                appt.setEZLocal(newZonedEnd);
+            }
             availableAppts.setItems(availableTimes);
             Stage stage = (Stage) updateButton.getScene().getWindow();
             stage.close();
@@ -258,6 +288,15 @@ public class EditAppointmentController implements Initializable {
                 String newZonedStart = subStart + " " + subStart2;
                 appt.setSZLocal(newZonedStart);
             }*/
+            for(Appointment appt : allAppointments) {
+                //parse by converting letters to space
+                ZonedDateTime startZL = appt.getStartTime();
+                String zonedStartS = startZL.toString();
+                String subStart = zonedStartS.substring(0, 10);
+                String subStart2 = zonedStartS.substring(11, 16);
+                String newZonedStart = subStart + " " + subStart2;
+                appt.setSZLocal(newZonedStart);
+        }
             appointmentsFound.setItems(allAppointments);
         } 
         catch (SQLException ex) { System.out.println("Error " + ex.getMessage()); }
