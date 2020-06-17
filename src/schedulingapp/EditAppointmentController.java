@@ -148,37 +148,6 @@ public class EditAppointmentController implements Initializable {
             apptType = typeText.getText();
             apptUrl = urlText.getText();
         }
-            
-/*        
-            String lastUpdate = java.time.LocalDateTime.now().toString();
-            String lastUpdateBy = UserCredentials.getUsername();
-            
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            ZoneId gmtZId = ZoneId.of("GMT");
-            ZoneId localZId = ZoneId.systemDefault();
-            LocalDateTime startTimeL = startTime.toLocalDateTime();
-            LocalDateTime endTimeL = endTime.toLocalDateTime();
-            ZonedDateTime startTimeLocal = ZonedDateTime.of(startTimeL, localZId);
-            ZonedDateTime ss = startTimeLocal.withZoneSameInstant(gmtZId);
-            ZonedDateTime endTimeLocal = ZonedDateTime.of(endTimeL, localZId);
-            ZonedDateTime ee = endTimeLocal.withZoneSameInstant(gmtZId);
-            
-            String startInstant = ss.toInstant().toString();
-            String endInstant = ee.toInstant().toString();
-            
-            String subS = startInstant.substring(0, 10);
-            String subS2 = startInstant.substring(11, 19);
-            String subE = endInstant.substring(0, 10);
-            String subE2 = endInstant.substring(11, 19);
-            String nSI = subS + " " + subS2;
-            String nEI = subE + " " + subE2;
-                
-            LocalDateTime startI = LocalDateTime.parse(nSI, formatter);
-            LocalDateTime endI = LocalDateTime.parse(nEI, formatter);
-                
-            Timestamp gmtStartTime = Timestamp.valueOf(startI);;
-            Timestamp gmtEndTime = Timestamp.valueOf(endI);
-*/
                             
             if (!(customerSel == null) && !(apptSel == null) && !(apptType.isEmpty()) && !(description.isEmpty())) {
                 
