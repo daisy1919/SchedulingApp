@@ -43,8 +43,22 @@ public class DeleteAppointmentController implements Initializable {
     private TableColumn<Appointment, String> apptDateCol;
     
     @FXML
-    public void handleSearchByCustomerButton(ActionEvent event) {
-    
+    public void handleSearchByCustomerButton(ActionEvent event) throws SQLException {
+        String nameToSearch = searchByCustomerText.getText();
+        Iterable<Appointment> fAppointments = DBConnection.getAppointments();
+        ObservableList<Appointment> foundAppointments = FXCollections.observableArrayList();
+        fAppointments.forEach(foundAppointments::add);
+        foundAppointments.removeIf(e -> !(e.getCustomer().getCustomerName().toLowerCase().contains(nameToSearch.toLowerCase())));
+        for(Appointment appt : foundAppointments) {
+                //parse by converting letters to space
+                ZonedDateTime startZL = appt.getStartTime();
+                String zonedStartS = startZL.toString();
+                String subStart = zonedStartS.substring(0, 10);
+                String subStart2 = zonedStartS.substring(11, 16);
+                String newZonedStart = subStart + " " + subStart2;
+                appt.setSZLocal(newZonedStart);
+            }
+        appointmentsFound.setItems(foundAppointments);
     }
     
     @FXML
