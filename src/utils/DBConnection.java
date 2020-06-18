@@ -904,21 +904,33 @@ public class DBConnection {
         catch(SQLException ex) { System.out.println("Error " + ex.getMessage()); }
     }
     
-    public static Iterable<Appointment> getApptsByWeek(LocalDate startOfWeek) {
+    public static Iterable<Appointment> getApptsByWeek(LocalDate startOfWeek) throws SQLException {
         LocalDate endOfWeek = startOfWeek.plusDays(7);        
         LocalTime zeroTime;
         zeroTime = LocalTime.parse("00:00:00");        
         LocalDateTime startOfWeekTime = LocalDateTime.of(startOfWeek, zeroTime);
         LocalDateTime endOfWeekTime = LocalDateTime.of(endOfWeek, zeroTime);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");        
-        try {            
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");        
+        try {         
             Iterable<Appointment> allAppts = getAppointments();
             List<Appointment> weekAppts = new ArrayList<>();
+            
             for(Appointment appt : allAppts) {
-                int i = LocalDateTime.parse(appt.getStartTime().format(formatter)).compareTo(startOfWeekTime);
-                //int i = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(startOfWeekTime);
-                //int j = (LocalDateTime.parse(appt.getStartTime(), formatter)).compareTo(endOfWeekTime);
-                int j = LocalDateTime.parse(appt.getEndTime().format(formatter)).compareTo(endOfWeekTime);
+                ZonedDateTime startZL = appt.getStartTime();
+                String zonedStartS = startZL.format(formatter);
+                String subStart = zonedStartS.substring(0, 10);
+                String subStart2 = zonedStartS.substring(11, 19);
+                String newZonedStart = subStart + " " + subStart2;
+                
+                ZonedDateTime endZL = appt.getEndTime();
+                String zonedEndS = endZL.format(formatter);
+                String subEnd = zonedEndS.substring(0, 10);
+                String subEnd2 = zonedEndS.substring(11, 19);
+                String newZonedEnd = subEnd + " " + subEnd2;
+                
+                int i = LocalDateTime.parse(newZonedStart, formatter).compareTo(startOfWeekTime);
+                int j = LocalDateTime.parse(newZonedEnd, formatter).compareTo(endOfWeekTime);
+                
                 if(i >= 0 && j <= 0) {
                     weekAppts.add(appt);
                 }
@@ -939,7 +951,6 @@ public class DBConnection {
             Iterable<Appointment> allAppts = getAppointments();
             List<Appointment> monthAppts = new ArrayList<>();
             for(Appointment appt : allAppts) {
-                
                 ZonedDateTime startZL = appt.getStartTime();
                 String zonedStartS = startZL.format(formatter);
                 String subStart = zonedStartS.substring(0, 10);
@@ -958,7 +969,6 @@ public class DBConnection {
                 if(i >= 0 && j <= 0) {
                     monthAppts.add(appt);
                 }
-                
             }
             return monthAppts;
         }

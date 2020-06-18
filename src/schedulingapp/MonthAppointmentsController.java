@@ -59,22 +59,22 @@ public class MonthAppointmentsController implements Initializable {
         LocalDate firstOfMonth = LocalDate.parse(dateToParse);
         LocalDate endOfMonth = LocalDate.of(2020, 01, 01);
         if (monthNumber == 1 || monthNumber == 3 || monthNumber == 5 || monthNumber == 7 || monthNumber == 8 || monthNumber == 10 || monthNumber == 12) {
-            endOfMonth = firstOfMonth.plusDays(30);
+            endOfMonth = firstOfMonth.plusDays(31);
         }
         else if (monthNumber == 4 || monthNumber == 6 || monthNumber == 9 || monthNumber == 11) {
-            endOfMonth = firstOfMonth.plusDays(29);
+            endOfMonth = firstOfMonth.plusDays(30);
         }
         else if (monthNumber == 2) {
             if (yearNumber % 4 == 0) {
-                endOfMonth = firstOfMonth.plusDays(28);
+                endOfMonth = firstOfMonth.plusDays(29);
             }
             else {
-                endOfMonth = firstOfMonth.plusDays(27);
+                endOfMonth = firstOfMonth.plusDays(28);
             }
         }
         //Populate tableview with that week's appointments
         custNameCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getCustomer().getCustomerName()));
-        apptDateCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        apptDateCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
         Iterable<Appointment> mAppointments = DBConnection.getApptsByMonth(firstOfMonth, endOfMonth);
         ObservableList<Appointment> monthAppointments = FXCollections.observableArrayList();
         mAppointments.forEach(monthAppointments::add);
@@ -94,6 +94,15 @@ public class MonthAppointmentsController implements Initializable {
             String newZonedStart = subStart + " " + subStart2;
             appt.setSZLocal(newZonedStart);
         }*/
+        for(Appointment appt : monthAppointments) {
+            //parse by converting letters to space
+            ZonedDateTime startZL = appt.getStartTime();
+            String zonedStartS = startZL.toString();
+            String subStart = zonedStartS.substring(0, 10);
+            String subStart2 = zonedStartS.substring(11, 16);
+            String newZonedStart = subStart + " " + subStart2;
+            appt.setSZLocal(newZonedStart);
+        }
         appointmentsFound.setItems(monthAppointments);
     }
     

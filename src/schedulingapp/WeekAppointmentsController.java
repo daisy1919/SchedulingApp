@@ -6,6 +6,7 @@
 package schedulingapp;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,7 +46,7 @@ public class WeekAppointmentsController implements Initializable {
     
     //This method will show the appointments for the week beginning on Sunday
     @FXML
-    public void handleDatePicker(ActionEvent event) {
+    public void handleDatePicker(ActionEvent event) throws SQLException {
         LocalDate selectedDate = datePicker.getValue();
         int dayNumber = selectedDate.getDayOfWeek().getValue();
         switch (dayNumber) {
@@ -73,26 +74,20 @@ public class WeekAppointmentsController implements Initializable {
         DBConnection.getApptsByWeek(selectedDate);
         //Populate tableview with that week's appointments
         custNameCol.setCellValueFactory(tf -> new SimpleStringProperty(tf.getValue().getCustomer().getCustomerName()));
-        apptDateCol.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        apptDateCol.setCellValueFactory(new PropertyValueFactory<>("sZLocal"));
         Iterable<Appointment> wAppointments = DBConnection.getApptsByWeek(selectedDate);
         ObservableList<Appointment> weekAppointments = FXCollections.observableArrayList();
         wAppointments.forEach(weekAppointments::add);
         //This converts the appointment time in the database to the user's local time to populate the tableview
-        /*for(Appointment appt : weekAppointments) {
-            String stTime = appt.getStartTime();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-            LocalDateTime startTime = LocalDateTime.parse(stTime, formatter); //still its original time from the db
-            ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
-            ZonedDateTime zonedStartTime = ZonedDateTime.of(startTime, localZoneId);
-            Instant databaseTimeToUserLocalTime = zonedStartTime.toInstant();
-            appt.setZonedStartTime(databaseTimeToUserLocalTime);
+        for(Appointment appt : weekAppointments) {
             //parse by converting letters to space
-            String zonedStartS = databaseTimeToUserLocalTime.toString();
+            ZonedDateTime startZL = appt.getStartTime();
+            String zonedStartS = startZL.toString();
             String subStart = zonedStartS.substring(0, 10);
-            String subStart2 = zonedStartS.substring(11, 19);
+            String subStart2 = zonedStartS.substring(11, 16);
             String newZonedStart = subStart + " " + subStart2;
             appt.setSZLocal(newZonedStart);
-        }*/
+        }
         appointmentsFound.setItems(weekAppointments);
     }
     

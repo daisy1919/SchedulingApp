@@ -136,7 +136,6 @@ public class EditAppointmentController implements Initializable {
             String apptType = new String();
             String apptUrl = new String();
             
-            
         if (!(customerSel == null) && !(apptSel == null)) {
             appointmentId = appointmentsFound.getSelectionModel().getSelectedItem().getAppointmentId();
             startTime = apptSel.getStartTime();

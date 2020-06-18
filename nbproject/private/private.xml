@@ -5,10 +5,13 @@
         <group>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/utils/DBConnection.java</file>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/WeekAppointmentsController.java</file>
-            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/DeleteAppointmentController.java</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/TypesReportController.java</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/MonthlyApptNumberController.java</file>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/FXMLDocumentController.java</file>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/ConsultantScheduleController.java</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/EditAppointment.fxml</file>
             <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/MonthAppointmentsController.java</file>
+            <file>file:/C:/Users/daisy/Documents/NetBeansProjects/SchedulingApp/src/schedulingapp/EditAppointmentController.java</file>
         </group>
     </open-files>
 </project-private>
